@@ -9,6 +9,12 @@ make
 make upload
 ```
 
+Use *screen* to connect to the Arduino board and control the LED.
+
+```Shell
+screen /dev/ttyUSB0 9600
+```
+
 Also see: http://www.wedesoft.de/arduino-hello-world.html
 
 [1]: http://www.jamesrobertson.eu/blog/2012/sep/20/uploading-a-sketch-from-the-comman.html
