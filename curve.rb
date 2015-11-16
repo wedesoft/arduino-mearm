@@ -1,14 +1,16 @@
 class Linear
-  SPEED = 10
-  def initialize pos, target
+  def initialize pos, target, options = {}
     @pos = pos
     @target = target
+    @speed =  options[:speed] || 1
   end
   def get
     @pos
   end
   def advance time
     difference = @target - @pos
-    Linear.new @pos + (difference <=> 0) * [difference.abs, time * SPEED].min, @target
+    sign = difference <=> 0
+    step = [difference.abs, time * @speed].min
+    Linear.new @pos + sign * step, @target
   end
 end

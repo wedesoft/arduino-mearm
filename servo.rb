@@ -1,13 +1,12 @@
 #!/usr/bin/env ruby
 require 'Qt'
+require_relative 'curve'
+
 class CurveWindow < Qt::Widget
   def initialize parent = nil
     super parent
     @arr = []
-    @target = 0
-    @speed = 0
-    @offset = 0
-    @time = 0
+    @curve = Linear.new 0, 0
     startTimer 20
   end
   def paintEvent e
@@ -23,21 +22,12 @@ class CurveWindow < Qt::Widget
     p.end
   end
   def mousePressEvent e
-    current = value
-    @target = height - 1 - e.y
-    @speed = current < @target ? 1 : -1
-    @offset = @time - (current - @target) / @speed
-  end
-  def value
-    if @time < @offset
-      @target + @speed * (@time - @offset)
-    else
-      @target
-    end
+    target = height - 1 - e.y
+    @curve = Linear.new @curve.get, target
   end
   def timerEvent e
-    @time += 1
-    @arr.push value
+    @curve = @curve.advance 1
+    @arr.push @curve.get
     update
   end
 end

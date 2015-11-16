@@ -3,7 +3,7 @@ require_relative '../curve'
 describe Linear do
   context 'when going forward' do
     let :linear do
-      Linear.new 100, 200
+      Linear.new 100, 200, speed: 10
     end
 
     it 'should start with initial value' do
@@ -21,7 +21,7 @@ describe Linear do
 
   context 'when going backward' do
     let :linear do
-      Linear.new 100, 0
+      Linear.new 100, 0, speed: 10
     end
 
     it 'should advance with time' do
