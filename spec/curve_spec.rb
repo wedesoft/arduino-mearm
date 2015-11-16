@@ -73,4 +73,14 @@ describe Quadratic do
       expect(curve.advance(3).get).to be 135
     end
   end
+
+  context 'when moving backward' do
+    let :curve do
+      Quadratic.new(100, acceleration: 10).target 60
+    end
+
+    it 'should advance with time' do
+      expect(curve.advance(1).get).to be 95
+    end
+  end
 end
