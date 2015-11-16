@@ -4,7 +4,10 @@ class CurveWindow < Qt::Widget
   def initialize parent = nil
     super parent
     @arr = []
-    @n = 0
+    @target = 0
+    @speed = 0
+    @offset = 0
+    @time = 0
     startTimer 10
   end
   def paintEvent e
@@ -19,11 +22,20 @@ class CurveWindow < Qt::Widget
     end
   end
   def mousePressEvent e
-    v = height - 1 - e.y
-    @n = v
+    current = value
+    @target = height - 1 - e.y
+    @speed = current < @target ? 1 : -1
+    @offset = @time - (current - @target) / @speed
+  end
+  def value
+    if @time < @offset
+      @target + @speed * (@time - @offset)
+    else
+      @target
+    end
   end
   def timerEvent e
-    value = @n
+    @time += 1
     @arr.push value
     update
   end
