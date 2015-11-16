@@ -1,35 +1,72 @@
 require_relative '../curve'
 
 describe Linear do
-  context 'when going forward' do
-    let :linear do
-      Linear.new 100, 200, speed: 10
-    end
+  let :curve do
+    Linear.new 100
+  end
 
-    it 'should start with initial value' do
-      expect(linear.get).to be 100
+  it 'should start with the given value' do
+    expect(curve.get).to be 100
+  end
+
+  it 'should stay constant over time' do
+    expect(curve.advance(5).get).to be 100
+  end
+
+  context 'when moving forward' do
+    let :curve do
+      Linear.new(100, speed: 10).target 200
     end
 
     it 'should advance with time' do
-      expect(linear.advance(5).get).to be 150
+      expect(curve.advance(5).get).to be 150
     end
 
     it 'should stop at the target position' do
-      expect(linear.advance(15).get).to be 200
+      expect(curve.advance(15).get).to be 200
     end
   end
 
-  context 'when going backward' do
-    let :linear do
-      Linear.new 100, 0, speed: 10
+  context 'when moving backward' do
+    let :curve do
+      Linear.new(100, speed: 20).target 0
     end
 
     it 'should advance with time' do
-      expect(linear.advance(5).get).to be 50
+      expect(curve.advance(2).get).to be 60
     end
 
     it 'should stop at the target position' do
-      expect(linear.advance(15).get).to be 0
+      expect(curve.advance(10).get).to be 0
+    end
+  end
+end
+
+describe Quadratic do
+  let :curve do
+    Quadratic.new 0
+  end
+
+  it 'should start with the given value' do
+    expect(curve.get).to be 0
+  end
+
+  it 'should stay constant over time' do
+    expect(curve.advance(5).get).to be 100
+  end
+
+  context 'when moving forward' do
+    let :curve do
+      Quadratic.new(100, acceleration: 10).target 260
+    end
+
+    it 'should advance with time' do
+      expect(curve.advance(1).get).to be 105
+    end
+
+    it 'should accelerate over time' do
+      expect(curve.advance(1).advance(1).get).to be 120
+      expect(curve.advance(2).get).to be 120
     end
   end
 end
