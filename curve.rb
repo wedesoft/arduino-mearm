@@ -31,6 +31,10 @@ class Quadratic
     @pos
   end
   def advance time
-    Quadratic.new @target > @pos ? @pos + 5 * time ** 2 + @speed * time : 100, speed: @speed + 10 * time, target: @target
+    difference = @target - @pos
+    sign = difference <=> 0
+    pos_step = 5 * time ** 2 + @speed * time
+    speed_step = 10 * time
+    Quadratic.new @pos + pos_step * sign, speed: @speed + speed_step * sign, target: @target
   end
 end
