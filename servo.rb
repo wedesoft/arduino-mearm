@@ -8,7 +8,7 @@ class CurveWindow < Qt::Widget
     @speed = 0
     @offset = 0
     @time = 0
-    startTimer 10
+    startTimer 20
   end
   def paintEvent e
     @arr = [0] + @arr while @arr.size < width
@@ -20,6 +20,7 @@ class CurveWindow < Qt::Widget
       p.drawLine x, y, xs, ys
       x, y = xs, ys
     end
+    p.end
   end
   def mousePressEvent e
     current = value
