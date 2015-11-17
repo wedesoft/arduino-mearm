@@ -74,8 +74,15 @@ describe Quadratic do
       expect(curve.advance(1).get).to be 10
     end
 
-    it 'should decelerate before the target' do
-      expect(curve.advance(2).get).to be 135
+    it 'should determine time of reversal' do
+      expect(curve.reversal).to eq 2
+      expect(curve.advance(1).reversal).to eq 1
+      expect(curve.advance(2).reversal).to eq 0
+    end
+
+    xit 'should decelerate before the target' do
+      curve.advance(1).advance(1).advance 1
+      expect(curve.advance(3).get).to be 135
     end
   end
 

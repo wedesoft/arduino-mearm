@@ -31,12 +31,15 @@ class Quadratic
   def get
     @pos
   end
+  def reversal
+    (Math.sqrt(2 * @speed ** 2 + 4 * @acceleration * (@target - @pos)) - 2 * @speed) / (2 * @acceleration)
+  end
   def advance time
     pos_diff = @target - @pos
     sign = pos_diff <=> 0
-    #tx = (Math.sqrt(2 * @acceleration * pos_diff.abs) - @speed) / @acceleration
-    pos_step = @acceleration / 2 * time ** 2 + @speed * time
-    speed_step = @acceleration * time
-    Quadratic.new @pos + pos_step * sign, speed: @speed + speed_step * sign, target: @target, acceleration: @acceleration
+    acceleration = sign * @acceleration
+    pos_step = acceleration / 2 * time ** 2 + @speed * time
+    speed_step = acceleration * time
+    Quadratic.new @pos + pos_step, speed: @speed + speed_step, target: @target, acceleration: @acceleration
   end
 end
