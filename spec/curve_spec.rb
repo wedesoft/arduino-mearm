@@ -52,7 +52,7 @@ describe Quadratic do
   end
 
   it 'should stay constant over time' do
-    expect(curve.advance(5).get).to be 0
+    expect(curve.advance(5).get).to eq 0.0
   end
 
   context 'when moving forward' do
@@ -80,9 +80,16 @@ describe Quadratic do
       expect(curve.advance(2).reversal).to eq 0
     end
 
-    xit 'should decelerate before the target' do
+    it 'should determine time of reversal when moving backward' do
+      curve = Quadratic.new(100, acceleration: 10).target 60
+      expect(curve.reversal).to eq 2
+      expect(curve.advance(1).reversal).to eq 1
+      expect(curve.advance(2).reversal).to eq 0
+    end
+
+    it 'should decelerate before the target' do
       curve.advance(1).advance(1).advance 1
-      expect(curve.advance(3).get).to be 135
+      expect(curve.advance(3).get).to eq 135
     end
   end
 
