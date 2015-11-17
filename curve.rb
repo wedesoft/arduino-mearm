@@ -21,12 +21,12 @@ end
 class Quadratic
   def initialize pos, options = {}
     @pos = pos
-    @speed = options[:speed] || 0
-    @target = options[:target] || pos
-    @acceleration = options[:acceleration] || 1
+    @speed = options[:speed] || 0.0
+    @target = options[:target] || pos.to_f
+    @acceleration = options[:acceleration] || 1.0
   end
   def target value
-    Quadratic.new @pos, target: value, acceleration: @acceleration
+    Quadratic.new @pos, target: value.to_f, speed: @speed, acceleration: @acceleration
   end
   def get
     @pos
@@ -42,7 +42,7 @@ class Quadratic
   def advance time
     t1 = [time, reversal].min
     t2 = time - t1
-    sign = @target<=> @pos
+    sign = @target <=> @pos
     accelerate(sign * @acceleration, t1).accelerate -sign * @acceleration, t2
   end
 end

@@ -6,7 +6,7 @@ class CurveWindow < Qt::Widget
   def initialize parent = nil
     super parent
     @arr = []
-    @curve = Linear.new 0, 0
+    @curve = Quadratic.new 0, acceleration: 0.02
     startTimer 20
   end
   def paintEvent e
@@ -22,8 +22,7 @@ class CurveWindow < Qt::Widget
     p.end
   end
   def mousePressEvent e
-    target = height - 1 - e.y
-    @curve = Linear.new @curve.get, target
+    @curve = @curve.target height - 1 - e.y
   end
   def timerEvent e
     @curve = @curve.advance 1
