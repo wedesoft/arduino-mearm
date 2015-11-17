@@ -69,8 +69,13 @@ describe Quadratic do
       expect(curve.advance(2).get).to be 120
     end
 
-    xit 'should decelerate before the target' do
-      expect(curve.advance(3).get).to be 135
+    it 'should use the specified acceleration' do
+      curve = Quadratic.new(0, acceleration: 20).target 200
+      expect(curve.advance(1).get).to be 10
+    end
+
+    it 'should decelerate before the target' do
+      expect(curve.advance(2).get).to be 135
     end
   end
 
