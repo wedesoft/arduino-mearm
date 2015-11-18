@@ -64,7 +64,7 @@ class Quadratic
         accelerate -sign * @acceleration, time
       end
     else
-      return self
+      self
     end
   end
 end
