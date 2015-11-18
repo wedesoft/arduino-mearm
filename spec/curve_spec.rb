@@ -91,7 +91,7 @@ describe Quadratic do
       expect(curve.advance(3).get).to eq 135
     end
 
-    xit 'should stop at the target' do
+    it 'should stop at the target' do
       expect(curve.advance(4).get).to eq 140
       expect(curve.advance(5).get).to eq 140
     end
