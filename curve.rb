@@ -24,10 +24,11 @@ class Quadratic
     @speed = options[:speed] || 0.0
     @target = options[:target] || pos.to_f
     @acceleration = options[:acceleration] || 1.0
+    @sign = options[:sign] || 0
     @state = options[:state] || :stop
   end
   def target value
-    Quadratic.new @pos, target: value.to_f, speed: @speed, acceleration: @acceleration, state: :accel
+    Quadratic.new @pos, target: value.to_f, speed: @speed, acceleration: @acceleration, state: :accel, sign: value <=> @pos
   end
   def get
     @pos
@@ -39,29 +40,28 @@ class Quadratic
     @speed.abs / @acceleration
   end
   def state value
-    Quadratic.new @pos, target: @target, speed: @speed, acceleration: @acceleration, state: value
+    Quadratic.new @pos, target: @target, speed: @speed, acceleration: @acceleration, state: value, sign: @sign
   end
   def accelerate acceleration, time
-    pos_step = acceleration / 2 * time ** 2 + @speed * time
-    speed_step = acceleration * time
-    Quadratic.new @pos + pos_step, speed: @speed + speed_step, target: @target, acceleration: @acceleration, state: @state
+    pos = @pos + acceleration / 2 * time ** 2 + @speed * time
+    speed = @speed + acceleration * time
+    Quadratic.new pos, speed: speed, target: @target, acceleration: @acceleration, state: @state, sign: @sign
   end
   def advance time
-    sign = @target <=> @pos
     case @state
     when :accel
       rev = [reversal, 0].max
       if time > rev
-        accelerate(sign * @acceleration, rev).state(:decel).advance time - rev
+        accelerate(@sign * @acceleration, rev).state(:decel).advance time - rev
       else
-        accelerate sign * @acceleration, time
+        accelerate @sign * @acceleration, time
       end
     when :decel
       st = stop
       if time > st
-        accelerate(-sign * @acceleration, st).state :stop
+        accelerate(-@sign * @acceleration, st).state :stop
       else
-        accelerate -sign * @acceleration, time
+        accelerate -@sign * @acceleration, time
       end
     else
       self
