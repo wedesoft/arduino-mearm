@@ -50,7 +50,7 @@ class Quadratic
     sign = @target <=> @pos
     case @state
     when :accel
-      rev = reversal
+      rev = [reversal, 0].max
       if time > rev
         accelerate(sign * @acceleration, rev).state(:decel).advance time - rev
       else
