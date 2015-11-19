@@ -100,7 +100,7 @@ describe Quadratic do
       expect(curve.advance(2).target(120).advance(0).get).to eq 120
     end
 
-    xit 'should ramp down the speed when getting the reduced target' do
+    it 'should ramp down the speed when getting the reduced target' do
       expect(curve.advance(2).target(120).advance(2).get).to eq 140
     end
   end

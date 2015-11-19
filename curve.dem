@@ -1,0 +1,2 @@
+solve(1/2*a*t^2+v*t+x+(v+a*t)^2/(2*a)-d,t);
+solve(-1/2*a*t^2+v*t+x-(v-a*t)^2/(2*a)-d,t);
