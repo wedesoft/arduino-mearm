@@ -1,4 +1,5 @@
 class Curve
+  attr_reader :pos, :speed, :target
   def initialize pos, options = {}
     @pos = pos
     @speed = options[:speed] || 0.0
@@ -7,11 +8,11 @@ class Curve
     @sign = options[:sign] || 0
     @state = options[:state] || :stop
   end
-  def target value
-    Curve.new @pos, target: value.to_f, speed: @speed, acceleration: @acceleration, state: :accel, sign: value <=> stop_value
+  def acceleration
+    @acceleration * @sign
   end
-  def get
-    @pos
+  def retarget value
+    Curve.new @pos, target: value.to_f, speed: @speed, acceleration: @acceleration, state: :accel, sign: value <=> stop_value
   end
   def reverse_time
     acceleration = @sign * @acceleration
@@ -27,6 +28,9 @@ class Curve
   def state value
     Curve.new @pos, target: @target, speed: @speed, acceleration: @acceleration, state: value, sign: @sign
   end
+  def sign value
+    Curve.new @pos, target: @target, speed: @speed, acceleration: @acceleration, state: @state, sign: value
+  end
   def accelerate acceleration, time
     pos = @pos + acceleration / 2 * time ** 2 + @speed * time
     speed = @speed + acceleration * time
@@ -37,16 +41,16 @@ class Curve
     when :accel
       reverse = [reverse_time, 0].max
       if time > reverse
-        accelerate(@sign * @acceleration, reverse).state(:decel).advance time - reverse
+        accelerate(@sign * @acceleration, reverse).state(:decel).sign(-@sign).advance time - reverse
       else
         accelerate @sign * @acceleration, time
       end
     when :decel
       stop = stop_time
       if time > stop
-        accelerate(-@sign * @acceleration, stop).state :stop
+        accelerate(@sign * @acceleration, stop).state(:stop).sign 0
       else
-        accelerate -@sign * @acceleration, time
+        accelerate @sign * @acceleration, time
       end
     else
       self
