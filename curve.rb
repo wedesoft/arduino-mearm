@@ -13,7 +13,7 @@ class Curve
   def get
     @pos
   end
-  def reversal
+  def reverse_time
     acceleration = @sign * @acceleration
     (Math.sqrt(2 * @speed ** 2 + 4 * acceleration * (@target - @pos)) - 2 * @sign * @speed) / (2 * @acceleration)
   end
@@ -35,7 +35,7 @@ class Curve
   def advance time
     case @state
     when :accel
-      reverse = [reversal, 0].max
+      reverse = [reverse_time, 0].max
       if time > reverse
         accelerate(@sign * @acceleration, reverse).state(:decel).advance time - reverse
       else

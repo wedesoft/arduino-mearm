@@ -33,16 +33,16 @@ describe Curve do
     end
 
     it 'should determine time of reversal' do
-      expect(curve.reversal).to eq 2
-      expect(curve.advance(1).reversal).to eq 1
-      expect(curve.advance(2).reversal).to eq 0
+      expect(curve.reverse_time).to eq 2
+      expect(curve.advance(1).reverse_time).to eq 1
+      expect(curve.advance(2).reverse_time).to eq 0
     end
 
     it 'should determine time of reversal when moving backward' do
       curve = Curve.new(100, acceleration: 10).target 60
-      expect(curve.reversal).to eq 2
-      expect(curve.advance(1).reversal).to eq 1
-      expect(curve.advance(2).reversal).to eq 0
+      expect(curve.reverse_time).to eq 2
+      expect(curve.advance(1).reverse_time).to eq 1
+      expect(curve.advance(2).reverse_time).to eq 0
     end
 
     it 'should decelerate before the target' do
