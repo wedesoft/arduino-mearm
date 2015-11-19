@@ -1,24 +1,4 @@
-class Linear
-  def initialize pos, options = {}
-    @pos = pos
-    @target = options[:target] || pos
-    @speed =  options[:speed] || 1
-  end
-  def target value
-    Linear.new @pos, speed: @speed, target: value
-  end
-  def get
-    @pos
-  end
-  def advance time
-    difference = @target - @pos
-    sign = difference <=> 0
-    step = [difference.abs, time * @speed].min
-    Linear.new @pos + sign * step, speed: @speed, target: @target
-  end
-end
-
-class Quadratic
+class Curve
   def initialize pos, options = {}
     @pos = pos
     @speed = options[:speed] || 0.0
@@ -28,7 +8,7 @@ class Quadratic
     @state = options[:state] || :stop
   end
   def target value
-    Quadratic.new @pos, target: value.to_f, speed: @speed, acceleration: @acceleration, state: :accel, sign: value <=> stop_value
+    Curve.new @pos, target: value.to_f, speed: @speed, acceleration: @acceleration, state: :accel, sign: value <=> stop_value
   end
   def get
     @pos
@@ -45,12 +25,12 @@ class Quadratic
     @pos + @speed * t - 0.5 * (@speed <=> 0) * @acceleration * t ** 2
   end
   def state value
-    Quadratic.new @pos, target: @target, speed: @speed, acceleration: @acceleration, state: value, sign: @sign
+    Curve.new @pos, target: @target, speed: @speed, acceleration: @acceleration, state: value, sign: @sign
   end
   def accelerate acceleration, time
     pos = @pos + acceleration / 2 * time ** 2 + @speed * time
     speed = @speed + acceleration * time
-    Quadratic.new pos, speed: speed, target: @target, acceleration: @acceleration, state: @state, sign: @sign
+    Curve.new pos, speed: speed, target: @target, acceleration: @acceleration, state: @state, sign: @sign
   end
   def advance time
     case @state
