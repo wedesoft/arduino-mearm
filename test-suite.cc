@@ -80,6 +80,13 @@ TEST_F(MovingForwardTest, RampDownForReducedTarget) {
   EXPECT_EQ(140, m_curve.pos());
 }
 
+TEST_F(MovingForwardTest, ContinueIfIdentical) {
+  m_curve.update(2);
+  m_curve.retarget(140);
+  m_curve.update(2);
+  EXPECT_EQ(140, m_curve.pos());
+}
+
 class MovingBackwardTest: public ::testing::Test {
 public:
   MovingBackwardTest(void):

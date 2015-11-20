@@ -12,8 +12,7 @@ class Curve
     @acceleration
   end
   def retarget value
-    acceleration = @bound * (value <=> stop_value)
-    # test 0 ?
+    acceleration = @bound * (value > stop_value ? 1 : -1)
     Curve.new @pos, target: value.to_f, speed: @speed, acceleration: acceleration, bound: @bound, state: :accelerate
   end
   def reverse_time

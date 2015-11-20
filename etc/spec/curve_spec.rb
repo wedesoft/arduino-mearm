@@ -54,6 +54,10 @@ describe Curve do
     it 'should ramp down the speed when getting the reduced target' do
       expect(curve.update(2).retarget(120).update(2).pos).to eq 140
     end
+
+    it 'should continue if updated target is identical' do
+      expect(curve.update(2).retarget(140).update(2).pos).to eq 140
+    end
   end
 
   context 'when moving backward' do
