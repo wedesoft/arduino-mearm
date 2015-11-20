@@ -1,21 +1,32 @@
 #include <Servo.h>
+#include "../curve.h"
 
+/*
 Servo servo;
 unsigned long t0;
 int pulse;
 int wait;
 char dir;
+*/
 
 void setup() {
+  /*
   servo.attach(6);
   t0 = millis();
   pulse = DEFAULT_PULSE_WIDTH;
   dir = 0;
   wait = 5000;
+  */
 }
 
 void loop() {
+  // (millis)
+  // (target #:middle 200 #:left 100 #:right 200 #:acceleration 3)
+  // (pos); '((#:millis ...) (#:middle . 200) ...)
+  // (target)
+
   // use writeMicroseconds, MIN_PULSE_WIDTH, MAX_PULSE_WIDTH
+  /*
   int dt = millis() - t0;
   t0 += dt;
   if (dir == 0) {
@@ -44,4 +55,5 @@ void loop() {
     }
   };
   servo.writeMicroseconds(pulse);
+  */
 }
