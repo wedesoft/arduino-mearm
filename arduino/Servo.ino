@@ -1,19 +1,22 @@
 #include <Servo.h>
 #include "../curve.hh"
 
+// /usr/share/arduino/hardware/arduino/cores/arduino/CDC.cpp (serial stuff)
+
+unsigned long t0;
 /*
 Servo servo;
-unsigned long t0;
 int pulse;
 int wait;
 char dir;
 */
-Curve middle(DEFAULT_PULSE_WIDTH, 0.1);
+Curve middle(DEFAULT_PULSE_WIDTH, 250);
 
 void setup() {
+  Serial.begin(9600);
+  t0 = millis();
   /*
   servo.attach(6);
-  t0 = millis();
   pulse = DEFAULT_PULSE_WIDTH;
   dir = 0;
   wait = 5000;
@@ -21,6 +24,18 @@ void setup() {
 }
 
 void loop() {
+  int dt = millis() - t0;
+  if (Serial.available()) {
+    char c = Serial.read();
+    if (c >= '0' && c <= '9')
+      middle.retarget((c - '0') * 100);
+    else {
+      Serial.print(middle.pos());
+      Serial.write("\r\n");
+    };
+  };
+  middle.update(dt * 0.001);
+  t0 += dt;
   // (millis)
   // (target #:middle 200 #:left 100 #:right 200 #:acceleration 3)
   // (pos); '((#:millis ...) (#:middle . 200) ...)

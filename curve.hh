@@ -3,7 +3,6 @@
 
 #include <math.h>
 
-// /usr/share/arduino/hardware/arduino/cores/arduino/CDC.cpp (serial stuff)
 class Curve
 {
 public:
@@ -41,6 +40,8 @@ public:
         m_state = halt;
       } else
         advance(time);
+      break;
+    default:
       break;
     };
   }
