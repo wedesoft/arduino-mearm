@@ -15,7 +15,7 @@ describe Curve do
 
   context 'when moving forward' do
     let :curve do
-      Curve.new(100, acceleration: 10).retarget 140
+      Curve.new(100, bound: 10).retarget 140
     end
 
     it 'should advance with time' do
@@ -28,7 +28,7 @@ describe Curve do
     end
 
     it 'should use the specified acceleration' do
-      curve = Curve.new(0, acceleration: 20).retarget 200
+      curve = Curve.new(0, bound: 20).retarget 200
       expect(curve.advance(1).pos).to eq 10
     end
 
@@ -39,7 +39,7 @@ describe Curve do
     end
 
     it 'should determine time of reversal when moving backward' do
-      curve = Curve.new(100, acceleration: 10).retarget 60
+      curve = Curve.new(100, bound: 10).retarget 60
       expect(curve.reverse_time).to eq 2
       expect(curve.advance(1).reverse_time).to eq 1
       expect(curve.advance(2).reverse_time).to eq 0
@@ -65,7 +65,7 @@ describe Curve do
 
   context 'when moving backward' do
     let :curve do
-      Curve.new(100, acceleration: 10).retarget 60
+      Curve.new(100, bound: 10).retarget 60
     end
 
     it 'should advance with time' do

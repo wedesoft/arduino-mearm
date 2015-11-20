@@ -9,7 +9,7 @@ class CurveWindow < Qt::Widget
     @acceleration = []
     @speed = []
     @pos = []
-    @curve = Curve.new 0, acceleration: 0.02
+    @curve = Curve.new 0, bound: 0.02
     startTimer 20
   end
   def enlarge arr, len

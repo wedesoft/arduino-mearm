@@ -1,5 +1,5 @@
 #include <Servo.h>
-#include "../curve.h"
+#include "../curve.hh"
 
 /*
 Servo servo;
@@ -8,6 +8,7 @@ int pulse;
 int wait;
 char dir;
 */
+Curve middle(DEFAULT_PULSE_WIDTH);
 
 void setup() {
   /*

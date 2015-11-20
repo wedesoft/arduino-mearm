@@ -11,7 +11,7 @@ check: all-local
 test-suite: test-suite.o gtest-all.o
 	$(CXX) -o $@ test-suite.o gtest-all.o -lpthread
 
-test-suite.o: test-suite.cc
+test-suite.o: test-suite.cc curve.hh
 	$(CXX) -c -o $@ $<
 
 gtest-all.o: $(GTEST)/src/gtest-all.cc
