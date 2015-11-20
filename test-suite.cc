@@ -28,10 +28,23 @@ protected:
   Curve m_curve;
 };
 
-//TEST_F(MovingForwardTest, ShouldAdvanceWithTime) {
-//  m_curve.advance(1);
-//  EXPECT_EQ(105, m_curve.pos());
-//}
+TEST_F(MovingForwardTest, ShouldAdvanceWithTime) {
+  m_curve.advance(1);
+  EXPECT_EQ(105, m_curve.pos());
+}
+
+TEST_F(MovingForwardTest, ShouldAccelerateOverTime) {
+  m_curve.advance(1);
+  m_curve.advance(1);
+  EXPECT_EQ(120, m_curve.pos());
+}
+
+TEST_F(MovingForwardTest, ShouldUseSpecifiedAcceleration) {
+  Curve curve(0, 20);
+  curve.retarget(200);
+  curve.advance(1);
+  EXPECT_EQ(10, curve.pos());
+}
 
 int main(int argc, char **argv) {
   ::testing::InitGoogleTest(&argc, argv);

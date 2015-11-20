@@ -13,6 +13,7 @@ class Curve
   end
   def retarget value
     acceleration = @bound * (value <=> stop_value)
+    # test 0 ?
     Curve.new @pos, target: value.to_f, speed: @speed, acceleration: acceleration, bound: @bound, state: :accelerate
   end
   def reverse_time
@@ -30,7 +31,7 @@ class Curve
     Curve.new @pos, target: @target, speed: @speed, bound: @bound, state: :decelerate, acceleration: -@acceleration
   end
   def halt
-    Curve.new @pos, target: @target, speed: @speed, bound: @bound, state: :stop, acceleration: 0
+    Curve.new @target, target: @target, speed: @speed, bound: @bound, state: :stop, acceleration: 0
   end
   def accelerate time
     pos = @pos + @acceleration / 2 * time ** 2 + @speed * time
@@ -40,7 +41,7 @@ class Curve
   def advance time
     case @state
     when :accelerate
-      reverse = [reverse_time, 0].max
+      reverse = reverse_time
       if time > reverse
         accelerate(reverse).reverse.advance time - reverse
       else
