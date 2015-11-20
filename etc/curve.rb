@@ -33,26 +33,26 @@ class Curve
   def halt
     Curve.new @target, target: @target, speed: @speed, bound: @bound, state: :stop, acceleration: 0
   end
-  def accelerate time
+  def advance time
     pos = @pos + @acceleration / 2 * time ** 2 + @speed * time
     speed = @speed + @acceleration * time
     Curve.new pos, speed: speed, target: @target, bound: @bound, state: @state, acceleration: @acceleration
   end
-  def advance time
+  def update time
     case @state
     when :accelerate
       reverse = reverse_time
       if time > reverse
-        accelerate(reverse).reverse.advance time - reverse
+        advance(reverse).reverse.update time - reverse
       else
-        accelerate time
+        advance time
       end
     when :decelerate
       stop = stop_time
       if time > stop
-        accelerate(stop).halt
+        advance(stop).halt
       else
-        accelerate time
+        advance time
       end
     else
       self
