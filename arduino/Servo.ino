@@ -8,7 +8,7 @@ int pulse;
 int wait;
 char dir;
 */
-Curve middle(DEFAULT_PULSE_WIDTH);
+Curve middle(DEFAULT_PULSE_WIDTH, 0.1);
 
 void setup() {
   /*
