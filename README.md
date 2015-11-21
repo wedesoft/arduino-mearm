@@ -7,6 +7,7 @@ Note, you might have to [uninstall *brltty* if it conflicts with the Arduino tty
 ## test and build
 
 ```
+sudo aptitude install arduino-mk screen
 make check
 make
 ```
