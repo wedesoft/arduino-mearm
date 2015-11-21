@@ -7,7 +7,7 @@ unsigned long t0;
 class Controller: public ControllerBase
 {
 public:
-  Controller(void): m_middleCurve(DEFAULT_PULSE_WIDTH, 0.00025) {}
+  Controller(void): m_middleCurve(DEFAULT_PULSE_WIDTH, 0.0015) {}
   void setup(void) {
     m_middleServo.attach(6);
   }

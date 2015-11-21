@@ -1,6 +1,6 @@
 # arduino-mearm
 
-Control a [MeArm][1] robot using the [Arduino][2] microcontroller board.
+Responsive servo steering of the [MeArm][1] robot using the [Arduino][2] microcontroller board.
 
 Note, you might have to [uninstall *brltty* if it conflicts with the Arduino ttyUSB0][3].
 
@@ -10,6 +10,26 @@ Note, you might have to [uninstall *brltty* if it conflicts with the Arduino tty
 make check
 make
 ```
+
+## install on Arduino
+
+```
+make upload
+```
+
+## control robot
+
+```
+screen /dev/ttyUSB0 9600
+```
+
+Examples of servo commands are:
+
+* **t**: get time
+* **m**: get middle servo position
+* **1500m**: set middle servo to center position
+
+You can exit the *screen* terminal using Ctrl-A \.
 
 ## file structure
 

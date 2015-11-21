@@ -9,6 +9,9 @@ all-local: test-suite
 check: all-local
 	./test-suite
 
+upload:
+	cd arduino && make upload && cd ..
+
 test-suite: test-suite.o gtest-all.o gmock-all.o
 	$(CXX) -o $@ test-suite.o gtest-all.o gmock-all.o -lpthread
 
