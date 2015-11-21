@@ -4,4 +4,4 @@ ARDUINO_PORT = /dev/ttyUSB0
 ARDUINO_LIBS =
 include /usr/share/arduino/Arduino.mk
 
-build-$(BOARD_TAG)/Servo.o: ../curve.hh
+build-$(BOARD_TAG)/Servo.o: ../curve.hh ../controller.hh

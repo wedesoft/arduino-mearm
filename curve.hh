@@ -1,5 +1,5 @@
-#ifndef __CURVE_H
-#define __CURVE_H
+#ifndef __CURVE_HH
+#define __CURVE_HH
 
 #include <math.h>
 

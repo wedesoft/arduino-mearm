@@ -1,4 +1,6 @@
 #include <gtest/gtest.h>
+#include <gmock/gmock.h>
+#include "controller.hh"
 #include "curve.hh"
 
 class StationaryTest: public ::testing::Test {
@@ -109,6 +111,55 @@ TEST_F(MovingBackwardTest, DetermineTimeOfReversal) {
 TEST_F(MovingBackwardTest, AdvanceWithTime) {
   m_curve.update(1);
   EXPECT_EQ(95, m_curve.pos());
+}
+
+class MockController: public ControllerBase
+{
+public:
+  MOCK_METHOD0(reportTime, void());
+  MOCK_METHOD0(reportMiddle, void());
+  MOCK_METHOD1(retargetMiddle, void(int));
+};
+
+class ControllerTest: public ::testing::Test {
+public:
+  ControllerTest(void) {}
+protected:
+  MockController m_controller;
+};
+
+TEST_F(ControllerTest, CheckTime) {
+  EXPECT_CALL(m_controller, reportTime());
+  m_controller.parseChar('t');
+}
+
+TEST_F(ControllerTest, ReportMiddle) {
+  EXPECT_CALL(m_controller, reportMiddle());
+  m_controller.parseChar('m');
+}
+
+TEST_F(ControllerTest, RetargetMiddle) {
+  EXPECT_CALL(m_controller, retargetMiddle(567));
+  m_controller.parseChar('5');
+  m_controller.parseChar('6');
+  m_controller.parseChar('7');
+  m_controller.parseChar('m');
+}
+
+TEST_F(ControllerTest, AbortRetarget) {
+  EXPECT_CALL(m_controller, reportMiddle());
+  m_controller.parseChar('5');
+  m_controller.parseChar('x');
+  m_controller.parseChar('m');
+}
+
+TEST_F(ControllerTest, RetargetMiddleOnce) {
+  EXPECT_CALL(m_controller, retargetMiddle(567)).Times(1);
+  m_controller.parseChar('5');
+  m_controller.parseChar('6');
+  m_controller.parseChar('7');
+  m_controller.parseChar('m');
+  m_controller.parseChar('m');
 }
 
 int main(int argc, char **argv) {
