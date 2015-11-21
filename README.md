@@ -29,7 +29,7 @@ Examples of servo commands are:
 * **m**: get middle servo position
 * **1500m**: set middle servo to center position
 
-You can exit the *screen* terminal using Ctrl-A \.
+You can exit the *screen* terminal using Ctrl-A \\.
 
 ## file structure
 
