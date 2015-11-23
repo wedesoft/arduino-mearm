@@ -48,6 +48,13 @@ TEST_F(MovingForwardTest, UseSpecifiedAcceleration) {
   EXPECT_EQ(10, curve.pos());
 }
 
+TEST_F(MovingForwardTest, UpdateReturnsPosition) {
+  Curve curve(0, 20);
+  curve.retarget(200);
+  EXPECT_EQ(10, curve.update(1));
+  EXPECT_EQ(40, curve.update(1));
+}
+
 TEST_F(MovingForwardTest, DetermineTimeOfReversal) {
   EXPECT_EQ(2, m_curve.reverseTime());
   m_curve.update(1);

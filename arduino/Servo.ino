@@ -18,10 +18,8 @@ public:
       m_servo[drive].attach(servoPin[drive]);
   }
   void update(int dt) {
-    for (int drive=0; drive<DRIVES; drive++) {
-      m_curve[drive].update(dt);
-      m_servo[drive].writeMicroseconds(m_curve[drive].pos());
-    };
+    for (int drive=0; drive<DRIVES; drive++)
+      m_servo[drive].writeMicroseconds(m_curve[drive].update(dt));
   };
   void reportTime(void) {
     Serial.print(millis());

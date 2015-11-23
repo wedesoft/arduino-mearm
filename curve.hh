@@ -18,7 +18,7 @@ public:
     m_pos += 0.5 * m_acceleration * time * time + m_speed * time;
     m_speed += m_acceleration * time;
   }
-  void update(float time) {
+  float update(float time) {
     float t;
     switch (m_state) {
     case accelerate:
@@ -44,6 +44,7 @@ public:
     default:
       break;
     };
+    return m_pos;
   }
   float reverseTime(void) {
     char sign = m_acceleration >= 0 ? 1 : -1;
