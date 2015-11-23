@@ -14,13 +14,13 @@ test-suite: test-suite.o gtest-all.o gmock-all.o
 	$(CXX) -o $@ test-suite.o gtest-all.o gmock-all.o -lpthread
 
 test-suite.o: test-suite.cc curve.hh controller.hh
-	$(CXX) -c -o $@ $<
+	$(CXX) -c -I$(GMOCK)/include -I$(GTEST)/include -o $@ $<
 
 gtest-all.o: $(GTEST)/src/gtest-all.cc
-	g++ -c -I$(GTEST) -o $@ $<
+	g++ -c -I$(GTEST)/include -I$(GTEST) -o $@ $<
 
 gmock-all.o: $(GMOCK)/src/gmock-all.cc
-	g++ -c -I$(GMOCK) -o $@ $<
+	g++ -c -I$(GMOCK)/include -I$(GTEST)/include -I$(GMOCK) -o $@ $<
 
 clean: clean-recursive clean-local
 
