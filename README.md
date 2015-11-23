@@ -9,7 +9,7 @@ Note, you might have to [uninstall *brltty* if it conflicts with the Arduino tty
 ## build
 
 ```
-sudo aptitude install arduino-mk screen
+sudo aptitude install arduino-mk screen google-mock
 make
 ```
 
