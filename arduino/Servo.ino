@@ -29,7 +29,7 @@ public:
       break;
     };
   }
-  void retargetMiddle(int value) {
+  void retargetDrive(Drive drive, int value) {
     int target;
     if (value < MIN_PULSE_WIDTH)
       target = MIN_PULSE_WIDTH;
@@ -38,8 +38,6 @@ public:
     else
       target = value;
     m_middleCurve.retarget(target);
-  }
-  void retargetLeft(int value) {
   }
 protected:
   Curve m_middleCurve;

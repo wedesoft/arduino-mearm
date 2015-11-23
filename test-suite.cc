@@ -118,8 +118,7 @@ class MockController: public ControllerBase
 public:
   MOCK_METHOD0(reportTime, void());
   MOCK_METHOD1(reportPosition, void(ControllerBase::Drive));
-  MOCK_METHOD1(retargetMiddle, void(int));
-  MOCK_METHOD1(retargetLeft, void(int));
+  MOCK_METHOD2(retargetDrive, void(ControllerBase::Drive,int));
 };
 
 class ControllerTest: public ::testing::Test {
@@ -140,7 +139,7 @@ TEST_F(ControllerTest, ReportMiddle) {
 }
 
 TEST_F(ControllerTest, RetargetMiddle) {
-  EXPECT_CALL(m_controller, retargetMiddle(567));
+  EXPECT_CALL(m_controller, retargetDrive(MockController::Middle, 567));
   m_controller.parseChar('5');
   m_controller.parseChar('6');
   m_controller.parseChar('7');
@@ -155,7 +154,8 @@ TEST_F(ControllerTest, AbortRetargetMiddle) {
 }
 
 TEST_F(ControllerTest, RetargetMiddleOnce) {
-  EXPECT_CALL(m_controller, retargetMiddle(567)).Times(1);
+  EXPECT_CALL(m_controller, retargetDrive(MockController::Middle, 567)).Times(1);
+  EXPECT_CALL(m_controller, reportPosition(MockController::Middle));
   m_controller.parseChar('5');
   m_controller.parseChar('6');
   m_controller.parseChar('7');
@@ -169,18 +169,21 @@ TEST_F(ControllerTest, ReportLeft) {
 }
 
 TEST_F(ControllerTest, RetargetLeft) {
-  EXPECT_CALL(m_controller, retargetLeft(567));
-  m_controller.parseChar('5');
-  m_controller.parseChar('6');
+  EXPECT_CALL(m_controller, retargetDrive(MockController::Left, 789));
   m_controller.parseChar('7');
+  m_controller.parseChar('8');
+  m_controller.parseChar('9');
   m_controller.parseChar('l');
 }
 
-TEST_F(ControllerTest, AbortRetargetLeft) {
-  EXPECT_CALL(m_controller, reportPosition(MockController::Left));
-  m_controller.parseChar('5');
-  m_controller.parseChar('x');
-  m_controller.parseChar('l');
+TEST_F(ControllerTest, ReportRight) {
+  EXPECT_CALL(m_controller, reportPosition(MockController::Right));
+  m_controller.parseChar('r');
+}
+
+TEST_F(ControllerTest, ReportClaw) {
+  EXPECT_CALL(m_controller, reportPosition(MockController::Claw));
+  m_controller.parseChar('c');
 }
 
 int main(int argc, char **argv) {

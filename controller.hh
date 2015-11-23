@@ -4,27 +4,35 @@
 class ControllerBase
 {
 public:
-  typedef enum { Middle, Left, Right, Claw } Drive;
+  typedef enum {Middle, Left, Right, Claw} Drive;
   ControllerBase(void): m_number(0) {}
   virtual ~ControllerBase() {}
+  Drive drive(char c) {
+    switch (c) {
+    case 'l':
+      return Left;
+    case 'r':
+      return Right;
+    case 'c':
+      return Claw;
+    default:
+      return Middle;
+    };
+  }
   void parseChar(char c) {
     switch (c) {
     case 't':
       reportTime();
       break;
     case 'm':
-      if (m_number > 0) {
-        retargetMiddle(m_number);
-        m_number = 0;
-      } else
-        reportPosition(Middle);
-      break;
     case 'l':
+    case 'r':
+    case 'c':
       if (m_number > 0) {
-        retargetLeft(m_number);
+        retargetDrive(drive(c), m_number);
         m_number = 0;
       } else
-        reportPosition(Left);
+        reportPosition(drive(c));
       break;
     default:
       if (c >= '0' && c <= '9')
@@ -35,8 +43,7 @@ public:
   }
   virtual void reportTime() = 0;
   virtual void reportPosition(Drive) = 0;
-  virtual void retargetMiddle(int) = 0;
-  virtual void retargetLeft(int) = 0;
+  virtual void retargetDrive(Drive, int) = 0;
 protected:
   int m_number;
 };

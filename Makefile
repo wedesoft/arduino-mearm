@@ -2,11 +2,9 @@ GTEST=/usr/src/gtest
 GMOCK=/usr/src/gmock
 CXX = g++
 
-all: all-recursive all-local
+all: all-recursive
 
-all-local: test-suite
-
-check: all-local
+check: test-suite
 	./test-suite
 
 upload:
