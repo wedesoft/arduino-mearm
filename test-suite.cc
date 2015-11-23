@@ -117,8 +117,9 @@ class MockController: public ControllerBase
 {
 public:
   MOCK_METHOD0(reportTime, void());
-  MOCK_METHOD0(reportMiddle, void());
+  MOCK_METHOD1(reportPosition, void(ControllerBase::Drive));
   MOCK_METHOD1(retargetMiddle, void(int));
+  MOCK_METHOD1(retargetLeft, void(int));
 };
 
 class ControllerTest: public ::testing::Test {
@@ -134,7 +135,7 @@ TEST_F(ControllerTest, CheckTime) {
 }
 
 TEST_F(ControllerTest, ReportMiddle) {
-  EXPECT_CALL(m_controller, reportMiddle());
+  EXPECT_CALL(m_controller, reportPosition(MockController::Middle));
   m_controller.parseChar('m');
 }
 
@@ -146,8 +147,8 @@ TEST_F(ControllerTest, RetargetMiddle) {
   m_controller.parseChar('m');
 }
 
-TEST_F(ControllerTest, AbortRetarget) {
-  EXPECT_CALL(m_controller, reportMiddle());
+TEST_F(ControllerTest, AbortRetargetMiddle) {
+  EXPECT_CALL(m_controller, reportPosition(MockController::Middle));
   m_controller.parseChar('5');
   m_controller.parseChar('x');
   m_controller.parseChar('m');
@@ -160,6 +161,26 @@ TEST_F(ControllerTest, RetargetMiddleOnce) {
   m_controller.parseChar('7');
   m_controller.parseChar('m');
   m_controller.parseChar('m');
+}
+
+TEST_F(ControllerTest, ReportLeft) {
+  EXPECT_CALL(m_controller, reportPosition(MockController::Left));
+  m_controller.parseChar('l');
+}
+
+TEST_F(ControllerTest, RetargetLeft) {
+  EXPECT_CALL(m_controller, retargetLeft(567));
+  m_controller.parseChar('5');
+  m_controller.parseChar('6');
+  m_controller.parseChar('7');
+  m_controller.parseChar('l');
+}
+
+TEST_F(ControllerTest, AbortRetargetLeft) {
+  EXPECT_CALL(m_controller, reportPosition(MockController::Left));
+  m_controller.parseChar('5');
+  m_controller.parseChar('x');
+  m_controller.parseChar('l');
 }
 
 int main(int argc, char **argv) {

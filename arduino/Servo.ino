@@ -19,9 +19,15 @@ public:
     Serial.print(millis());
     Serial.write("\r\n");
   }
-  void reportMiddle(void) {
-    Serial.print(m_middleCurve.pos());
-    Serial.write("\r\n");
+  void reportPosition(Drive drive) {
+    switch (drive) {
+    case Middle:
+      Serial.print(m_middleCurve.pos());
+      Serial.write("\r\n");
+      break;
+    default:
+      break;
+    };
   }
   void retargetMiddle(int value) {
     int target;
@@ -32,6 +38,8 @@ public:
     else
       target = value;
     m_middleCurve.retarget(target);
+  }
+  void retargetLeft(int value) {
   }
 protected:
   Curve m_middleCurve;
