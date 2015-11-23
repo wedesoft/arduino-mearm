@@ -35,6 +35,9 @@ Examples of servo commands are:
 
 * **t**: get time
 * **m**: get middle servo position
+* **l**: get left servo position
+* **r**: get right servo position
+* **c**: get claw servo position
 * **1500m**: set middle servo to center position
 
 You can exit the *screen* terminal using Ctrl-A \\.
