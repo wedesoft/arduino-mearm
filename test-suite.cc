@@ -117,8 +117,8 @@ class MockController: public ControllerBase
 {
 public:
   MOCK_METHOD0(reportTime, void());
-  MOCK_METHOD1(reportPosition, void(ControllerBase::Drive));
-  MOCK_METHOD2(retargetDrive, void(ControllerBase::Drive,int));
+  MOCK_METHOD1(reportPosition, void(int));
+  MOCK_METHOD2(retargetDrive, void(int,int));
 };
 
 class ControllerTest: public ::testing::Test {
@@ -134,12 +134,24 @@ TEST_F(ControllerTest, CheckTime) {
 }
 
 TEST_F(ControllerTest, ReportMiddle) {
-  EXPECT_CALL(m_controller, reportPosition(MockController::Middle));
+  EXPECT_CALL(m_controller, reportPosition(MIDDLE));
   m_controller.parseChar('m');
 }
 
+TEST_F(ControllerTest, ClipAcceptsValues) {
+  EXPECT_EQ(100, m_controller.clip(100, 50, 200));
+}
+
+TEST_F(ControllerTest, ClipLowerBound) {
+  EXPECT_EQ(50, m_controller.clip(20, 50, 200));
+}
+
+TEST_F(ControllerTest, ClipUpperBound) {
+  EXPECT_EQ(200, m_controller.clip(500, 50, 200));
+}
+
 TEST_F(ControllerTest, RetargetMiddle) {
-  EXPECT_CALL(m_controller, retargetDrive(MockController::Middle, 567));
+  EXPECT_CALL(m_controller, retargetDrive(MIDDLE, 567));
   m_controller.parseChar('5');
   m_controller.parseChar('6');
   m_controller.parseChar('7');
@@ -147,15 +159,15 @@ TEST_F(ControllerTest, RetargetMiddle) {
 }
 
 TEST_F(ControllerTest, AbortRetargetMiddle) {
-  EXPECT_CALL(m_controller, reportPosition(MockController::Middle));
+  EXPECT_CALL(m_controller, reportPosition(MIDDLE));
   m_controller.parseChar('5');
   m_controller.parseChar('x');
   m_controller.parseChar('m');
 }
 
 TEST_F(ControllerTest, RetargetMiddleOnce) {
-  EXPECT_CALL(m_controller, retargetDrive(MockController::Middle, 567)).Times(1);
-  EXPECT_CALL(m_controller, reportPosition(MockController::Middle));
+  EXPECT_CALL(m_controller, retargetDrive(MIDDLE, 567)).Times(1);
+  EXPECT_CALL(m_controller, reportPosition(MIDDLE));
   m_controller.parseChar('5');
   m_controller.parseChar('6');
   m_controller.parseChar('7');
@@ -164,12 +176,12 @@ TEST_F(ControllerTest, RetargetMiddleOnce) {
 }
 
 TEST_F(ControllerTest, ReportLeft) {
-  EXPECT_CALL(m_controller, reportPosition(MockController::Left));
+  EXPECT_CALL(m_controller, reportPosition(LEFT));
   m_controller.parseChar('l');
 }
 
 TEST_F(ControllerTest, RetargetLeft) {
-  EXPECT_CALL(m_controller, retargetDrive(MockController::Left, 789));
+  EXPECT_CALL(m_controller, retargetDrive(LEFT, 789));
   m_controller.parseChar('7');
   m_controller.parseChar('8');
   m_controller.parseChar('9');
@@ -177,12 +189,12 @@ TEST_F(ControllerTest, RetargetLeft) {
 }
 
 TEST_F(ControllerTest, ReportRight) {
-  EXPECT_CALL(m_controller, reportPosition(MockController::Right));
+  EXPECT_CALL(m_controller, reportPosition(RIGHT));
   m_controller.parseChar('r');
 }
 
 TEST_F(ControllerTest, ReportClaw) {
-  EXPECT_CALL(m_controller, reportPosition(MockController::Claw));
+  EXPECT_CALL(m_controller, reportPosition(CLAW));
   m_controller.parseChar('c');
 }
 

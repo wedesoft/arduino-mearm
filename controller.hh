@@ -1,23 +1,31 @@
 #ifndef __CONTROLLER_HH
 #define __CONTROLLER_HH
 
+#define MIDDLE 0
+#define LEFT   1
+#define RIGHT  2
+#define CLAW   3
+#define DRIVES 4
+
 class ControllerBase
 {
 public:
-  typedef enum {Middle, Left, Right, Claw} Drive;
   ControllerBase(void): m_number(0) {}
   virtual ~ControllerBase() {}
-  Drive drive(char c) {
+  int drive(char c) {
     switch (c) {
     case 'l':
-      return Left;
+      return LEFT;
     case 'r':
-      return Right;
+      return RIGHT;
     case 'c':
-      return Claw;
+      return CLAW;
     default:
-      return Middle;
+      return MIDDLE;
     };
+  }
+  int clip(int value, int lower, int upper) {
+    return value < lower ? lower : value > upper ? upper : value;
   }
   void parseChar(char c) {
     switch (c) {
@@ -42,8 +50,8 @@ public:
     };
   }
   virtual void reportTime() = 0;
-  virtual void reportPosition(Drive) = 0;
-  virtual void retargetDrive(Drive, int) = 0;
+  virtual void reportPosition(int) = 0;
+  virtual void retargetDrive(int, int) = 0;
 protected:
   int m_number;
 };
