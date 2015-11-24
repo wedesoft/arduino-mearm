@@ -165,6 +165,22 @@ TEST_F(ControllerTest, ClipUpperBound) {
   EXPECT_EQ(200, m_controller.clip(500, 50, 200));
 }
 
+TEST_F(ControllerTest, ConvertZeroAngleToPWM) {
+  EXPECT_EQ(1500, m_controller.angleToPWM(0, 1500, 12, 544, 2400));
+}
+
+TEST_F(ControllerTest, ConvertAngleToPWM) {
+  EXPECT_EQ(1740, m_controller.angleToPWM(20, 1500, 12, 544, 2400));
+}
+
+TEST_F(ControllerTest, CheckPWMLowerBound) {
+  EXPECT_EQ(544, m_controller.angleToPWM(-90, 1500, 12, 544, 2400));
+}
+
+TEST_F(ControllerTest, CheckPWMUpperBound) {
+  EXPECT_EQ(2400, m_controller.angleToPWM(90, 1500, 12, 544, 2400));
+}
+
 TEST_F(ControllerTest, RetargetBase) {
   EXPECT_CALL(m_controller, retargetDrive(BASE, 567));
   m_controller.parseChar('5');

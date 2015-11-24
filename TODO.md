@@ -1,7 +1,6 @@
 # TODO
 
-* use rounding
-* angle2pwm (see meArm project), limits, self-collisions
+* limits, self-collisions
 * instructions (screw terminal)
 * synchronised approach
 * reduce acceleration

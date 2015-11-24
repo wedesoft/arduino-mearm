@@ -27,6 +27,9 @@ public:
   int clip(int value, int lower, int upper) {
     return value < lower ? lower : value > upper ? upper : value;
   }
+  int angleToPWM(float angle, float offset, float resolution, int lower, int upper) {
+    return clip(offset + angle * resolution, lower, upper);
+  }
   void parseChar(char c) {
     switch (c) {
     case 't':
