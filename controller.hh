@@ -45,13 +45,16 @@ public:
     default:
       if (c >= '0' && c <= '9')
         m_number = 10 * m_number + (c - '0');
-      else
+      else {
         m_number = 0;
+        stopDrives();
+      };
     };
   }
-  virtual void reportTime() = 0;
+  virtual void reportTime(void) = 0;
   virtual void reportPosition(int) = 0;
   virtual void retargetDrive(int, int) = 0;
+  virtual void stopDrives(void) = 0;
 protected:
   int m_number;
 };

@@ -32,6 +32,11 @@ public:
   void retargetDrive(int drive, int target) {
     m_curve[drive].retarget(clip(target, MIN_PULSE_WIDTH, MAX_PULSE_WIDTH));
   }
+  void stopDrives(void)
+  {
+    for (int drive=0; drive<DRIVES; drive++)
+      m_curve[drive].stop();
+  }
 protected:
   ServoCurve m_curve[4];
   Servo m_servo[4];

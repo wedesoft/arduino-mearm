@@ -35,9 +35,8 @@ public:
       t = stopTime();
       if (time > t) {
         advance(t);
-        m_acceleration = 0;
         m_pos = m_target;
-        m_state = halt;
+        finish();
       } else
         advance(time);
       break;
@@ -49,6 +48,15 @@ public:
   float reverseTime(void) {
     char sign = m_acceleration >= 0 ? 1 : -1;
     return (sqrt(2 * m_speed * m_speed + 4 * m_acceleration * (m_target - m_pos)) - 2 * sign * m_speed) / (2 * m_bound);
+  }
+  void stop(void) {
+    m_target = m_pos;
+    finish();
+  }
+  void finish(void) {
+    m_speed = 0;
+    m_acceleration = 0;
+    m_state = halt;
   }
   float stopTime(void) {
     return fabs(m_speed) / m_bound;

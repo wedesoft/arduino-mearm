@@ -96,6 +96,13 @@ TEST_F(MovingForwardTest, ContinueIfIdentical) {
   EXPECT_EQ(140, m_curve.pos());
 }
 
+TEST_F(MovingForwardTest, AbortMotion) {
+  m_curve.update(2);
+  m_curve.stop();
+  m_curve.update(2);
+  EXPECT_EQ(120, m_curve.pos());
+}
+
 class MovingBackwardTest: public ::testing::Test {
 public:
   MovingBackwardTest(void):
@@ -126,6 +133,7 @@ public:
   MOCK_METHOD0(reportTime, void());
   MOCK_METHOD1(reportPosition, void(int));
   MOCK_METHOD2(retargetDrive, void(int,int));
+  MOCK_METHOD0(stopDrives, void());
 };
 
 class ControllerTest: public ::testing::Test {
@@ -203,6 +211,11 @@ TEST_F(ControllerTest, ReportRight) {
 TEST_F(ControllerTest, ReportClaw) {
   EXPECT_CALL(m_controller, reportPosition(CLAW));
   m_controller.parseChar('c');
+}
+
+TEST_F(ControllerTest, AbortPathForOtherKey) {
+  EXPECT_CALL(m_controller, stopDrives());
+  m_controller.parseChar('x');
 }
 
 int main(int argc, char **argv) {
