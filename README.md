@@ -56,6 +56,8 @@ You can exit the *screen* terminal using Ctrl-A \\.
 * [Turnigy TG9e servo][5]
 * [Control the position of a RC servo motor with your Arduino][6]
 * [Multi-tasking the Arduino][7]
+* [MeArm kinematics][8]
+* [MeArm inverse kinematics project][9]
 
 [1]: http://mearm.com/
 [2]: https://www.arduino.cc/
@@ -64,3 +66,5 @@ You can exit the *screen* terminal using Ctrl-A \\.
 [5]: http://www.servodatabase.com/servo/turnigy/tg9e
 [6]: https://www.arduino.cc/en/Tutorial/Knob
 [7]: https://learn.adafruit.com/multi-tasking-the-arduino-part-1?view=all
+[8]: http://bitofahack.com/post/1433701488
+[9]: https://github.com/yorkhackspace/meArm
