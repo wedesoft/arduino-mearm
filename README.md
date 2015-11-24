@@ -1,6 +1,8 @@
 # arduino-mearm
 
-Responsive servo steering of the [MeArm][1] robot using the [Arduino][2] microcontroller board.
+**Warning: code currently does not prevent self-collisions of the robot!!!**
+
+Responsive servo steering of the Phenoptix [MeArm][1] robot using the [Arduino][2] microcontroller board.
 
 [![MeArm servo steering](http://img.youtube.com/vi/pa5znudwhvE/0.jpg)](http://www.youtube.com/watch?v=pa5znudwhvE)
 
