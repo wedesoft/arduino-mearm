@@ -5,7 +5,7 @@
 class ServoCurve: public Curve
 {
 public:
-  ServoCurve(void): Curve(DEFAULT_PULSE_WIDTH, 0.0015) {}
+  ServoCurve(void): Curve(DEFAULT_PULSE_WIDTH, 0.00015) {}
 };
 
 class Controller: public ControllerBase
@@ -26,11 +26,17 @@ public:
     Serial.write("\r\n");
   }
   void reportPosition(int drive) {
-    Serial.print(m_curve[drive].pos());
+    Serial.print(m_curve[drive].pos());// TODO: convert back to angle
     Serial.write("\r\n");
   }
-  void retargetDrive(int drive, int target) {
-    m_curve[drive].retarget(clip(target, MIN_PULSE_WIDTH, MAX_PULSE_WIDTH));
+  void retargetDrive(int drive, float target) {
+    int offset[] = {1380, 1610, 1500, 1500};
+    int value = angleToPWM(target,
+                           offset[drive],
+                           11.333333333,
+                           MIN_PULSE_WIDTH,
+                           MAX_PULSE_WIDTH);
+    m_curve[drive].retarget(value);
   }
   void stopDrives(void)
   {
