@@ -1,6 +1,5 @@
 # TODO
 
-* rename Servo.ino to MeArm.ino
 * angle2pwm (see meArm project), limits, self-collisions
 * instructions (screw terminal)
 * synchronised approach
