@@ -1,11 +1,11 @@
 #ifndef __CONTROLLER_HH
 #define __CONTROLLER_HH
 
-#define MIDDLE 0
-#define LEFT   1
-#define RIGHT  2
-#define CLAW   3
-#define DRIVES 4
+#define BASE     0
+#define ELBOW    1
+#define SHOULDER 2
+#define GRIPPER  3
+#define DRIVES   4
 
 class ControllerBase
 {
@@ -14,14 +14,14 @@ public:
   virtual ~ControllerBase() {}
   int drive(char c) {
     switch (c) {
-    case 'l':
-      return LEFT;
-    case 'r':
-      return RIGHT;
-    case 'c':
-      return CLAW;
+    case 'e':
+      return ELBOW;
+    case 's':
+      return SHOULDER;
+    case 'g':
+      return GRIPPER;
     default:
-      return MIDDLE;
+      return BASE;
     };
   }
   int clip(int value, int lower, int upper) {
@@ -32,10 +32,10 @@ public:
     case 't':
       reportTime();
       break;
-    case 'm':
-    case 'l':
-    case 'r':
-    case 'c':
+    case 'b':
+    case 'e':
+    case 's':
+    case 'g':
       if (m_number > 0) {
         retargetDrive(drive(c), m_number);
         m_number = 0;

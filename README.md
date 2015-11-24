@@ -34,11 +34,11 @@ screen /dev/ttyUSB0 9600
 Examples of servo commands are:
 
 * **t**: get time
-* **m**: get middle servo position
-* **l**: get left servo position
-* **r**: get right servo position
-* **c**: get claw servo position
-* **1500m**: set middle servo to center position
+* **b**: get base servo position
+* **e**: get elbow servo position
+* **s**: get shoulder servo position
+* **g**: get gripper servo position
+* **1500b**: set base servo to center position
 
 You can exit the *screen* terminal using Ctrl-A \\.
 

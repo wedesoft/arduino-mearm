@@ -148,9 +148,9 @@ TEST_F(ControllerTest, CheckTime) {
   m_controller.parseChar('t');
 }
 
-TEST_F(ControllerTest, ReportMiddle) {
-  EXPECT_CALL(m_controller, reportPosition(MIDDLE));
-  m_controller.parseChar('m');
+TEST_F(ControllerTest, ReportBase) {
+  EXPECT_CALL(m_controller, reportPosition(BASE));
+  m_controller.parseChar('b');
 }
 
 TEST_F(ControllerTest, ClipAcceptsValues) {
@@ -165,52 +165,52 @@ TEST_F(ControllerTest, ClipUpperBound) {
   EXPECT_EQ(200, m_controller.clip(500, 50, 200));
 }
 
-TEST_F(ControllerTest, RetargetMiddle) {
-  EXPECT_CALL(m_controller, retargetDrive(MIDDLE, 567));
+TEST_F(ControllerTest, RetargetBase) {
+  EXPECT_CALL(m_controller, retargetDrive(BASE, 567));
   m_controller.parseChar('5');
   m_controller.parseChar('6');
   m_controller.parseChar('7');
-  m_controller.parseChar('m');
+  m_controller.parseChar('b');
 }
 
-TEST_F(ControllerTest, AbortRetargetMiddle) {
-  EXPECT_CALL(m_controller, reportPosition(MIDDLE));
+TEST_F(ControllerTest, AbortRetargetBase) {
+  EXPECT_CALL(m_controller, reportPosition(BASE));
   m_controller.parseChar('5');
   m_controller.parseChar('x');
-  m_controller.parseChar('m');
+  m_controller.parseChar('b');
 }
 
-TEST_F(ControllerTest, RetargetMiddleOnce) {
-  EXPECT_CALL(m_controller, retargetDrive(MIDDLE, 567)).Times(1);
-  EXPECT_CALL(m_controller, reportPosition(MIDDLE));
+TEST_F(ControllerTest, RetargetBaseOnce) {
+  EXPECT_CALL(m_controller, retargetDrive(BASE, 567)).Times(1);
+  EXPECT_CALL(m_controller, reportPosition(BASE));
   m_controller.parseChar('5');
   m_controller.parseChar('6');
   m_controller.parseChar('7');
-  m_controller.parseChar('m');
-  m_controller.parseChar('m');
+  m_controller.parseChar('b');
+  m_controller.parseChar('b');
 }
 
-TEST_F(ControllerTest, ReportLeft) {
-  EXPECT_CALL(m_controller, reportPosition(LEFT));
-  m_controller.parseChar('l');
+TEST_F(ControllerTest, ReportElbow) {
+  EXPECT_CALL(m_controller, reportPosition(ELBOW));
+  m_controller.parseChar('e');
 }
 
-TEST_F(ControllerTest, RetargetLeft) {
-  EXPECT_CALL(m_controller, retargetDrive(LEFT, 789));
+TEST_F(ControllerTest, RetargetElbow) {
+  EXPECT_CALL(m_controller, retargetDrive(ELBOW, 789));
   m_controller.parseChar('7');
   m_controller.parseChar('8');
   m_controller.parseChar('9');
-  m_controller.parseChar('l');
+  m_controller.parseChar('e');
 }
 
-TEST_F(ControllerTest, ReportRight) {
-  EXPECT_CALL(m_controller, reportPosition(RIGHT));
-  m_controller.parseChar('r');
+TEST_F(ControllerTest, ReportShoulder) {
+  EXPECT_CALL(m_controller, reportPosition(SHOULDER));
+  m_controller.parseChar('s');
 }
 
-TEST_F(ControllerTest, ReportClaw) {
-  EXPECT_CALL(m_controller, reportPosition(CLAW));
-  m_controller.parseChar('c');
+TEST_F(ControllerTest, ReportGripper) {
+  EXPECT_CALL(m_controller, reportPosition(GRIPPER));
+  m_controller.parseChar('g');
 }
 
 TEST_F(ControllerTest, AbortPathForOtherKey) {
