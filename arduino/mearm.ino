@@ -2,8 +2,12 @@
 #include "../controller.hh"
 #include "../curve.hh"
 
+// BASE, SHOULDER, ELBOW, GRIPPER
+const int SERVOPIN[] = {11, 9, 10, 6};
+const int OFFSET[] = {1380, 1500, 1620, 1500};
+const int MIN[] = {544, 544, 544, 544};// must not be below 544
+const int MAX[] = {2400, 2400, 2400, 2400};// must not be above 2400
 const int RESOLUTION = 11.333333333;
-const int OFFSET[] = {1380, 1610, 1500, 1500};
 
 class ServoCurve: public Curve
 {
@@ -16,9 +20,8 @@ class Controller: public ControllerBase
 public:
   Controller(void) {}
   void setup(void) {
-    int servoPin[] = {11, 10, 9, 6};
     for (int drive=0; drive<DRIVES; drive++)
-      m_servo[drive].attach(servoPin[drive]);
+      m_servo[drive].attach(SERVOPIN[drive]);
   }
   float angleToPWMDrive(float angle, int drive) {
     return angleToPWM(angle, OFFSET[drive], RESOLUTION, MIN_PULSE_WIDTH, MAX_PULSE_WIDTH);
@@ -35,6 +38,11 @@ public:
   }
   void reportPosition(int drive) {
     Serial.print(m_curve[drive].pos());
+    Serial.write("\r\n");
+  }
+  void reportPWM(int drive) {
+    float pwm = angleToPWMDrive(m_curve[drive].pos(), drive);
+    Serial.print(round(pwm));
     Serial.write("\r\n");
   }
   void retargetDrive(int drive, float target) {

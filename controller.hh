@@ -2,8 +2,8 @@
 #define __CONTROLLER_HH
 
 const int BASE     = 0;
-const int ELBOW    = 1;
-const int SHOULDER = 2;
+const int SHOULDER = 1;
+const int ELBOW    = 2;
 const int GRIPPER  = 3;
 const int DRIVES   = 4;
 
@@ -15,10 +15,13 @@ public:
   int drive(char c) {
     switch (c) {
     case 'e':
+    case 'E':
       return ELBOW;
     case 's':
+    case 'S':
       return SHOULDER;
     case 'g':
+    case 'G':
       return GRIPPER;
     default:
       return BASE;
@@ -63,6 +66,13 @@ public:
       } else
         reportPosition(drive(c));
       break;
+    case 'B':
+    case 'E':
+    case 'S':
+    case 'G':
+      reportPWM(drive(c));
+      resetNumber();
+      break;
     default:
       if (c >= '0' && c <= '9') {
         m_number = 10 * m_number + (c - '0');
@@ -76,6 +86,7 @@ public:
   }
   virtual void reportTime(void) = 0;
   virtual void reportPosition(int) = 0;
+  virtual void reportPWM(int) = 0;
   virtual void retargetDrive(int, float) = 0;
   virtual void stopDrives(void) = 0;
 protected:

@@ -132,6 +132,7 @@ class MockController: public ControllerBase
 public:
   MOCK_METHOD0(reportTime, void());
   MOCK_METHOD1(reportPosition, void(int));
+  MOCK_METHOD1(reportPWM, void(int));
   MOCK_METHOD2(retargetDrive, void(int,float));
   MOCK_METHOD0(stopDrives, void());
 };
@@ -150,6 +151,19 @@ TEST_F(ControllerTest, CheckTime) {
 
 TEST_F(ControllerTest, ReportBase) {
   EXPECT_CALL(m_controller, reportPosition(BASE));
+  m_controller.parseChar('b');
+}
+
+TEST_F(ControllerTest, ReportBasePWM) {
+  EXPECT_CALL(m_controller, reportPWM(BASE));
+  m_controller.parseChar('B');
+}
+
+TEST_F(ControllerTest, ReportPWMClearsNumber) {
+  EXPECT_CALL(m_controller, reportPosition(BASE));
+  EXPECT_CALL(m_controller, reportPWM(BASE));
+  m_controller.parseChar('0');
+  m_controller.parseChar('B');
   m_controller.parseChar('b');
 }
 
@@ -247,6 +261,7 @@ TEST_F(ControllerTest, IgnoreInvalidFloat) {
 }
 
 TEST_F(ControllerTest, AbortRetargetBase) {
+  EXPECT_CALL(m_controller, stopDrives());
   EXPECT_CALL(m_controller, reportPosition(BASE));
   m_controller.parseChar('5');
   m_controller.parseChar('x');
@@ -254,6 +269,7 @@ TEST_F(ControllerTest, AbortRetargetBase) {
 }
 
 TEST_F(ControllerTest, CorrectTarget) {
+  EXPECT_CALL(m_controller, stopDrives());
   EXPECT_CALL(m_controller, retargetDrive(BASE, 3));
   m_controller.parseChar('5');
   m_controller.parseChar('x');
@@ -275,11 +291,15 @@ TEST_F(ControllerTest, ReportElbow) {
   m_controller.parseChar('e');
 }
 
+TEST_F(ControllerTest, ReportElbowPWM) {
+  EXPECT_CALL(m_controller, reportPWM(ELBOW));
+  m_controller.parseChar('E');
+}
+
 TEST_F(ControllerTest, RetargetElbow) {
-  EXPECT_CALL(m_controller, retargetDrive(ELBOW, 789));
-  m_controller.parseChar('7');
-  m_controller.parseChar('8');
-  m_controller.parseChar('9');
+  EXPECT_CALL(m_controller, retargetDrive(ELBOW, 10));
+  m_controller.parseChar('1');
+  m_controller.parseChar('0');
   m_controller.parseChar('e');
 }
 
@@ -288,9 +308,19 @@ TEST_F(ControllerTest, ReportShoulder) {
   m_controller.parseChar('s');
 }
 
+TEST_F(ControllerTest, ReportShoulderPWM) {
+  EXPECT_CALL(m_controller, reportPWM(SHOULDER));
+  m_controller.parseChar('S');
+}
+
 TEST_F(ControllerTest, ReportGripper) {
   EXPECT_CALL(m_controller, reportPosition(GRIPPER));
   m_controller.parseChar('g');
+}
+
+TEST_F(ControllerTest, ReportGripperPWM) {
+  EXPECT_CALL(m_controller, reportPWM(GRIPPER));
+  m_controller.parseChar('G');
 }
 
 TEST_F(ControllerTest, AbortPathForOtherKey) {
