@@ -4,10 +4,11 @@
 
 // BASE, SHOULDER, ELBOW, GRIPPER
 const int SERVOPIN[] = {11, 9, 10, 6};
-const int OFFSET[] = {1380, 1500, 1620, 1500};
+const int OFFSET[] = {1380, 1500, 1589, 1500};
 const int MIN[] = {544, 544, 544, 544};// must not be below 544
-const int MAX[] = {2400, 2400, 2400, 2400};// must not be above 2400
-const int RESOLUTION = 11.333333333;
+const int MAX[] = {2400, 2400, 1950, 2400};// must not be above 2400
+const float RESOLUTION[] = {11.12222, 11.12222, 9.8888, 11.12222};
+
 
 class ServoCurve: public Curve
 {
@@ -24,7 +25,7 @@ public:
       m_servo[drive].attach(SERVOPIN[drive]);
   }
   float angleToPWMDrive(float angle, int drive) {
-    return angleToPWM(angle, OFFSET[drive], RESOLUTION, MIN_PULSE_WIDTH, MAX_PULSE_WIDTH);
+    return angleToPWM(angle, OFFSET[drive], RESOLUTION[drive], MIN[drive], MAX[drive]);
   }
   void update(int dt) {
     for (int drive=0; drive<DRIVES; drive++) {
@@ -47,7 +48,7 @@ public:
   }
   void retargetDrive(int drive, float target) {
     float pwm = angleToPWMDrive(target, drive);
-    float angle = pwmToAngle(pwm, OFFSET[drive], RESOLUTION);
+    float angle = pwmToAngle(pwm, OFFSET[drive], RESOLUTION[drive]);
     m_curve[drive].retarget(angle);
   }
   void stopDrives(void)
