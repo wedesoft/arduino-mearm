@@ -4,10 +4,10 @@
 
 // BASE, SHOULDER, ELBOW, GRIPPER
 const int SERVOPIN[] = {11, 9, 10, 6};
-const int OFFSET[] = {1380, 1500, 1589, 1500};
+const int OFFSET[] = {1380, 1500, 1589, 1327};
 const int MIN[] = {544, 544, 544, 544};// must not be below 544
-const int MAX[] = {2400, 2400, 1950, 2400};// must not be above 2400
-const float RESOLUTION[] = {11.12222, 11.12222, 9.8888, 11.12222};
+const int MAX[] = {2400, 2400, 1950, 2022};// must not be above 2400
+const float RESOLUTION[] = {11.12222, 11.12222, 9.8888, 15.44444};
 
 
 class ServoCurve: public Curve
