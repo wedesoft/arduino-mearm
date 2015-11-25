@@ -30,7 +30,7 @@ public:
     };
   };
   void reportTime(void) {
-    Serial.print(millis());
+    Serial.print(millis() * 0.001);
     Serial.write("\r\n");
   }
   void reportPosition(int drive) {
