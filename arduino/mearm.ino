@@ -8,7 +8,7 @@ const int OFFSET[] = {1380, 1610, 1500, 1500};
 class ServoCurve: public Curve
 {
 public:
-  ServoCurve(void): Curve(DEFAULT_PULSE_WIDTH, 0.00015) {}
+  ServoCurve(void): Curve(0, 0.00015) {}
 };
 
 class Controller: public ControllerBase
