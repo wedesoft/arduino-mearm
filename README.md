@@ -37,10 +37,10 @@ Examples of servo commands are:
 
 * **t**: get time
 * **b**: get base servo position
-* **e**: get elbow servo position
 * **s**: get shoulder servo position
+* **e**: get elbow servo position
 * **g**: get gripper servo position
-* **1500b**: set base servo to center position
+* **-2.5b**: set base servo to -2.5 degrees angle
 
 You can exit the *screen* terminal using Ctrl-A \\.
 

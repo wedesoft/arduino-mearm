@@ -1,11 +1,11 @@
 #ifndef __CONTROLLER_HH
 #define __CONTROLLER_HH
 
-#define BASE     0
-#define ELBOW    1
-#define SHOULDER 2
-#define GRIPPER  3
-#define DRIVES   4
+const int BASE     = 0;
+const int ELBOW    = 1;
+const int SHOULDER = 2;
+const int GRIPPER  = 3;
+const int DRIVES   = 4;
 
 class ControllerBase
 {
@@ -24,11 +24,14 @@ public:
       return BASE;
     };
   }
-  int clip(int value, int lower, int upper) {
+  float clip(float value, float lower, float upper) {
     return value < lower ? lower : value > upper ? upper : value;
   }
-  int angleToPWM(float angle, float offset, float resolution, int lower, int upper) {
-    return clip(round(offset + angle * resolution), lower, upper);
+  float angleToPWM(float angle, float offset, float resolution, int lower, int upper) {
+    return clip(offset + angle * resolution, lower, upper);
+  }
+  float pwmToAngle(int pwm, float offset, float resolution) {
+    return (pwm - offset) / resolution;
   }
   void resetNumber(void) {
     m_number = 0;

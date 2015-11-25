@@ -173,16 +173,20 @@ TEST_F(ControllerTest, ConvertAngleToPWM) {
   EXPECT_EQ(1740, m_controller.angleToPWM(20, 1500, 12, 544, 2400));
 }
 
-TEST_F(ControllerTest, PWMRounding) {
-  EXPECT_EQ(1701, m_controller.angleToPWM(20.06, 1500, 10, 544, 2400));
-}
-
 TEST_F(ControllerTest, CheckPWMLowerBound) {
   EXPECT_EQ(544, m_controller.angleToPWM(-90, 1500, 12, 544, 2400));
 }
 
 TEST_F(ControllerTest, CheckPWMUpperBound) {
   EXPECT_EQ(2400, m_controller.angleToPWM(90, 1500, 12, 544, 2400));
+}
+
+TEST_F(ControllerTest, ConvertCenterPWMToAngle) {
+  EXPECT_EQ(0, m_controller.pwmToAngle(1500, 1500, 12));
+}
+
+TEST_F(ControllerTest, ConvertPWMToAngle) {
+  EXPECT_EQ(20, m_controller.pwmToAngle(1740, 1500, 12));
 }
 
 TEST_F(ControllerTest, RetargetBaseInteger) {

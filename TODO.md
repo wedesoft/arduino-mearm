@@ -1,6 +1,6 @@
 # TODO
 
-* report angle positions, report servo hardware positions
+* set/get servo hardware positions
 * limits, self-collisions
 * instructions (screw terminal)
 * synchronised approach
