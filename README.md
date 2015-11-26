@@ -73,6 +73,7 @@ You can exit the *screen* terminal using Ctrl-A \\.
 
 * [MeArm][1]
 * [Arduino][2]
+* [Instructions for MeArm with Arduino][13]
 * [Google Test][4]
 * [Turnigy TG9e servo][5]
 * [Control the position of a RC servo motor with your Arduino][6]
@@ -81,6 +82,7 @@ You can exit the *screen* terminal using Ctrl-A \\.
 * [MeArm control using potentiometers][10]
 * [MeArm inverse kinematics project][9]
 * [Robot arm Arduino project for beginners][11]
+* [MeArm 0.4 assembly][12]
 
 [1]: http://mearm.com/
 [2]: https://www.arduino.cc/
@@ -93,3 +95,5 @@ You can exit the *screen* terminal using Ctrl-A \\.
 [9]: https://github.com/yorkhackspace/meArm
 [10]: https://github.com/phenoptix/MeArm
 [11]: http://lifehacker.com/build-a-kickass-robot-arm-the-perfect-arduino-project-1700643747
+[12]: http://www.mathias-wilhelm.de/arduino/projects/phenoptix-mearm/
+[13]: http://mearm.com/pages/instructions
