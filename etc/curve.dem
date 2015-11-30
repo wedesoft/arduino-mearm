@@ -1,2 +1,8 @@
-solve(1/2*a*t^2+v*t+x+(v+a*t)^2/(2*a)-d,t);
-solve(-1/2*a*t^2+v*t+x-(v-a*t)^2/(2*a)-d,t);
+p(x,c1,c2,c3,c4) := x+c1*x*(1-x)**2+c2*x**2*(1-x)+c3*x**2*(x-1)**3+c4*x**3*(x-1)**2;
+v(x,c1,c2,c3,c4) := diff(p(x,c1,c2,c3,c4),x);
+a(x,c1,c2,c3,c4) := diff(v(x,c1,c2,c3,c4),x);
+solve(subst([x=0,c2= 0,c3=0,c4=0],v(x,c1,c2,c3,c4)),c1);
+solve(subst([x=1,c1=-1,c3=0,c4=0],v(x,c1,c2,c3,c4)),c2);
+solve(subst([x=0,c1=-1,c2=1,c4=0],a(x,c1,c2,c3,c4)),c3);
+solve(subst([x=1,c1=-1,c2=1,c3=3],a(x,c1,c2,c3,c4)),c4);
+plot2d([p(x,-1,1,3,3), v(x,-1,1,3,3), a(x,-1,1,3,3)], [x,0,1]);
