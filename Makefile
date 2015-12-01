@@ -10,10 +10,13 @@ check: test-suite
 upload:
 	cd arduino && make upload && cd ..
 
+repl:
+	cd arduino && make repl && cd ..
+
 test-suite: test-suite.o gtest-all.o gmock-all.o
 	$(CXX) -o $@ test-suite.o gtest-all.o gmock-all.o -lpthread
 
-test-suite.o: test-suite.cc curve.hh controller.hh
+test-suite.o: test-suite.cc curve.hh controller.hh calibration.hh
 	$(CXX) -c -I$(GMOCK)/include -I$(GTEST)/include -o $@ $<
 
 gtest-all.o: $(GTEST)/src/gtest-all.cc

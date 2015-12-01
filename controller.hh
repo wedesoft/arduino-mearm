@@ -1,11 +1,7 @@
 #ifndef __CONTROLLER_HH
 #define __CONTROLLER_HH
 
-const int BASE     = 0;
-const int SHOULDER = 1;
-const int ELBOW    = 2;
-const int GRIPPER  = 3;
-const int DRIVES   = 4;
+#include "calibration.hh"
 
 class ControllerBase
 {
@@ -35,6 +31,17 @@ public:
   }
   float pwmToAngle(int pwm, float offset, float resolution) {
     return (pwm - offset) / resolution;
+  }
+  float limitArm(int drive, float target, float shoulderTarget, float elbowTarget)
+  {
+    switch (drive) {
+    case ELBOW:
+      return clip(target, -45.0 - shoulderTarget, 45.0 - shoulderTarget);
+    case SHOULDER:
+      return clip(target, -45.0 - elbowTarget, 45.0 - elbowTarget);
+    default:
+      return target;
+    };
   }
   void resetNumber(void) {
     m_number = 0;

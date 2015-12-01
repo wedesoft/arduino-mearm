@@ -12,6 +12,7 @@ protected:
 
 TEST_F(StationaryTest, StartWithGivenValue) {
   EXPECT_EQ(0, m_curve.pos());
+  EXPECT_EQ(0, m_curve.target());
 }
 
 TEST_F(StationaryTest, StayConstantOverTime) {
@@ -29,6 +30,10 @@ public:
 protected:
   Curve m_curve;
 };
+
+TEST_F(MovingForwardTest, RememberTarget) {
+  EXPECT_EQ(140, m_curve.target());
+}
 
 TEST_F(MovingForwardTest, AdvanceWithTime) {
   m_curve.update(1);
@@ -326,6 +331,31 @@ TEST_F(ControllerTest, ReportGripperPWM) {
 TEST_F(ControllerTest, AbortPathForOtherKey) {
   EXPECT_CALL(m_controller, stopDrives());
   m_controller.parseChar('x');
+}
+
+TEST_F(ControllerTest, UseBase) {
+  EXPECT_EQ(-90, m_controller.limitArm(BASE, -90, 0, 0));
+  EXPECT_EQ( 90, m_controller.limitArm(BASE,  90, 0, 0));
+}
+
+TEST_F(ControllerTest, RestrictElbow) {
+  EXPECT_EQ( 45, m_controller.limitArm(ELBOW,  70, 0, 0));
+  EXPECT_EQ(-45, m_controller.limitArm(ELBOW, -70, 0, 0));
+}
+
+TEST_F(ControllerTest, RestrictElbowRelativeToShoulder) {
+  EXPECT_EQ( 35, m_controller.limitArm(ELBOW, 70, 10, 0));
+  EXPECT_EQ(-55, m_controller.limitArm(ELBOW,-70, 10, 0));
+}
+
+TEST_F(ControllerTest, RestrictShoulder) {
+  EXPECT_EQ( 45, m_controller.limitArm(SHOULDER, 70, 0, 0));
+  EXPECT_EQ(-45, m_controller.limitArm(SHOULDER,-70, 0, 0));
+}
+
+TEST_F(ControllerTest, RestrictShoulderRelativeToElbow) {
+  EXPECT_EQ( 55, m_controller.limitArm(SHOULDER, 70, 0, -10));
+  EXPECT_EQ(-35, m_controller.limitArm(SHOULDER,-70, 0, -10));
 }
 
 int main(int argc, char **argv) {

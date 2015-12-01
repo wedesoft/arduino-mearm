@@ -1,14 +1,7 @@
 #include <Servo.h>
+#include "../calibration.hh"
 #include "../controller.hh"
 #include "../curve.hh"
-
-// BASE, SHOULDER, ELBOW, GRIPPER
-const int SERVOPIN[] = {11, 9, 10, 6};
-const int OFFSET[] = {1380, 1357, 1589, 1327};
-const int MIN[] = {544, 856, 544, 544};// must not be below 544
-const int MAX[] = {2400, 2246, 1786, 2022};// must not be above 2400
-const float RESOLUTION[] = {11.12222, 11.12222, 9.8888, 15.44444};
-
 
 class ServoCurve: public Curve
 {
@@ -26,6 +19,9 @@ public:
   }
   float angleToPWMDrive(float angle, int drive) {
     return angleToPWM(angle, OFFSET[drive], RESOLUTION[drive], MIN[drive], MAX[drive]);
+  }
+  float limitArmDrive(int drive, float target) {
+    return limitArm(drive, target, m_curve[SHOULDER].target(), m_curve[ELBOW].target());
   }
   void update(int dt) {
     for (int drive=0; drive<DRIVES; drive++) {
@@ -47,7 +43,7 @@ public:
     Serial.write("\r\n");
   }
   void retargetDrive(int drive, float target) {
-    float pwm = angleToPWMDrive(target, drive);
+    float pwm = angleToPWMDrive(limitArmDrive(drive, target), drive);
     float angle = pwmToAngle(pwm, OFFSET[drive], RESOLUTION[drive]);
     m_curve[drive].retarget(angle);
   }

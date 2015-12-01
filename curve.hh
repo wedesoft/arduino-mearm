@@ -9,6 +9,7 @@ public:
   Curve(float pos, float bound):
     m_pos(pos), m_speed(0), m_acceleration(0), m_target(0), m_bound(bound), m_state(halt) {}
   float pos(void) { return m_pos; }
+  float target(void) { return m_target; }
   void retarget(float target) {
     m_target = target;
     m_acceleration = (target >= stopValue() ? 1 : -1) * m_bound;
