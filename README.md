@@ -1,6 +1,6 @@
 # arduino-mearm
 
-Responsive servo steering of the Phenoptix [MeArm][1] robot using the [Arduino][2] microcontroller board.
+Responsive and smooth servo steering of the Phenoptix [MeArm][1] robot using the [Arduino][2] microcontroller board.
 
 [![MeArm servo steering](http://img.youtube.com/vi/ZGc0j4WMrsY/0.jpg)](http://www.youtube.com/watch?v=ZGc0j4WMrsY)
 
@@ -56,6 +56,7 @@ Examples of servo commands are:
 * **S**: get shoulder servo position
 * **E**: get elbow servo position
 * **G**: get gripper servo position
+* **x**: stop all servos
 
 You can exit the *screen* terminal using Ctrl-A \\.
 
