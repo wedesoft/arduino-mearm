@@ -11,12 +11,6 @@ public:
     for (int drive=0; drive<DRIVES; drive++)
       m_servo[drive].attach(SERVOPIN[drive]);
   }
-  void update(int dt) {
-    for (int drive=0; drive<DRIVES; drive++) {
-      float pwm = angleToPWM(drive, m_curve[drive].update(dt));
-      m_servo[drive].writeMicroseconds(round(pwm));
-    };
-  };
   int offset(int drive) { return OFFSET[drive]; }
   float resolution(int drive) { return RESOLUTION[drive]; }
   int lower(int drive) { return MIN[drive]; }
@@ -32,6 +26,9 @@ public:
   void reportPWM(float pwm) {
     Serial.print(round(pwm));
     Serial.write("\r\n");
+  }
+  void writePWM(int drive, int pwm) {
+    m_servo[drive].writeMicroseconds(pwm);
   }
   void stopDrives(void)
   {

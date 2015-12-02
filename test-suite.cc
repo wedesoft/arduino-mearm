@@ -146,6 +146,7 @@ public:
   MOCK_METHOD0(reportTime, void());
   MOCK_METHOD1(reportAngle, void(float));
   MOCK_METHOD1(reportPWM, void(float));
+  MOCK_METHOD2(writePWM, void(int,int));
   MOCK_METHOD0(stopDrives, void());
 };
 
@@ -397,6 +398,24 @@ TEST_F(ControllerTest, RestrictShoulder) {
 TEST_F(ControllerTest, RestrictShoulderRelativeToElbow) {
   EXPECT_EQ( 25, m_controller.limitArm(SHOULDER, 70));
   EXPECT_EQ(-65, m_controller.limitArm(SHOULDER,-70));
+}
+
+TEST_F(ControllerTest, UpdateInformsServos) {
+  m_controller.curve(BASE).retarget(0);
+  EXPECT_CALL(m_controller, writePWM(BASE,2040));
+  EXPECT_CALL(m_controller, writePWM(SHOULDER,1380));
+  EXPECT_CALL(m_controller, writePWM(ELBOW,1740));
+  EXPECT_CALL(m_controller, writePWM(GRIPPER,1860));
+  m_controller.update(0);
+}
+
+TEST_F(ControllerTest, UpdateAppliesTargets) {
+  m_controller.curve(BASE).retarget(0);
+  EXPECT_CALL(m_controller, writePWM(BASE,1500));
+  EXPECT_CALL(m_controller, writePWM(SHOULDER,1380));
+  EXPECT_CALL(m_controller, writePWM(ELBOW,1740));
+  EXPECT_CALL(m_controller, writePWM(GRIPPER,1860));
+  m_controller.update(2000);
 }
 
 int main(int argc, char **argv) {

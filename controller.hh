@@ -119,6 +119,10 @@ public:
   void targetAngle(int drive, float angle) {
     targetPWM(drive, angleToPWM(drive, angle));
   }
+  void update(int dt) {
+    for (int drive=0; drive<DRIVES; drive++)
+      writePWM(drive, round(angleToPWM(drive, m_curve[drive].update(dt))));
+  }
   virtual int offset(int drive) = 0;
   virtual float resolution(int drive) = 0;
   virtual int lower(int drive) = 0;
@@ -126,6 +130,7 @@ public:
   virtual void reportTime(void) = 0;
   virtual void reportAngle(float) = 0;
   virtual void reportPWM(float) = 0;
+  virtual void writePWM(int, int) = 0;
   virtual void stopDrives(void) = 0;
 protected:
   float m_number;
