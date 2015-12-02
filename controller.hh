@@ -68,7 +68,7 @@ public:
     case 'g':
       if (m_sign != 0) {
         if (m_fraction == 0) m_fraction = 1;
-        retargetDrive(drive(c), m_number * m_fraction * m_sign);
+        targetAngle(drive(c), m_number * m_fraction * m_sign);
         resetNumber();
       } else
         reportPosition(drive(c));
@@ -94,7 +94,7 @@ public:
   virtual void reportTime(void) = 0;
   virtual void reportPosition(int) = 0;
   virtual void reportPWM(int) = 0;
-  virtual void retargetDrive(int, float) = 0;
+  virtual void targetAngle(int, float) = 0;
   virtual void stopDrives(void) = 0;
 protected:
   float m_number;

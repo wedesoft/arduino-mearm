@@ -42,7 +42,7 @@ public:
     Serial.print(round(pwm));
     Serial.write("\r\n");
   }
-  void retargetDrive(int drive, float target) {
+  void targetAngle(int drive, float target) {
     float pwm = angleToPWMDrive(limitArmDrive(drive, target), drive);
     float angle = pwmToAngle(pwm, OFFSET[drive], RESOLUTION[drive]);
     m_curve[drive].retarget(angle);

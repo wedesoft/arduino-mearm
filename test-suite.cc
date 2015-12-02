@@ -138,7 +138,7 @@ public:
   MOCK_METHOD0(reportTime, void());
   MOCK_METHOD1(reportPosition, void(int));
   MOCK_METHOD1(reportPWM, void(int));
-  MOCK_METHOD2(retargetDrive, void(int,float));
+  MOCK_METHOD2(targetAngle, void(int,float));
   MOCK_METHOD0(stopDrives, void());
 };
 
@@ -209,14 +209,14 @@ TEST_F(ControllerTest, ConvertPWMToAngle) {
 }
 
 TEST_F(ControllerTest, RetargetBaseInteger) {
-  EXPECT_CALL(m_controller, retargetDrive(BASE, 12));
+  EXPECT_CALL(m_controller, targetAngle(BASE, 12));
   m_controller.parseChar('1');
   m_controller.parseChar('2');
   m_controller.parseChar('b');
 }
 
 TEST_F(ControllerTest, RetargetBaseFloat) {
-  EXPECT_CALL(m_controller, retargetDrive(BASE, 12.5));
+  EXPECT_CALL(m_controller, targetAngle(BASE, 12.5));
   m_controller.parseChar('1');
   m_controller.parseChar('2');
   m_controller.parseChar('.');
@@ -225,7 +225,7 @@ TEST_F(ControllerTest, RetargetBaseFloat) {
 }
 
 TEST_F(ControllerTest, RetargetNegativeNumber) {
-  EXPECT_CALL(m_controller, retargetDrive(BASE, -1.5));
+  EXPECT_CALL(m_controller, targetAngle(BASE, -1.5));
   m_controller.parseChar('-');
   m_controller.parseChar('1');
   m_controller.parseChar('.');
@@ -234,7 +234,7 @@ TEST_F(ControllerTest, RetargetNegativeNumber) {
 }
 
 TEST_F(ControllerTest, DoubleMinus) {
-  EXPECT_CALL(m_controller, retargetDrive(BASE, 1));
+  EXPECT_CALL(m_controller, targetAngle(BASE, 1));
   m_controller.parseChar('-');
   m_controller.parseChar('-');
   m_controller.parseChar('1');
@@ -242,13 +242,13 @@ TEST_F(ControllerTest, DoubleMinus) {
 }
 
 TEST_F(ControllerTest, RetargetZero) {
-  EXPECT_CALL(m_controller, retargetDrive(BASE, 0));
+  EXPECT_CALL(m_controller, targetAngle(BASE, 0));
   m_controller.parseChar('0');
   m_controller.parseChar('b');
 }
 
 TEST_F(ControllerTest, TargetTwice) {
-  EXPECT_CALL(m_controller, retargetDrive(BASE, 3)).Times(2);
+  EXPECT_CALL(m_controller, targetAngle(BASE, 3)).Times(2);
   m_controller.parseChar('3');
   m_controller.parseChar('b');
   m_controller.parseChar('3');
@@ -256,7 +256,7 @@ TEST_F(ControllerTest, TargetTwice) {
 }
 
 TEST_F(ControllerTest, IgnoreInvalidFloat) {
-  EXPECT_CALL(m_controller, retargetDrive(BASE, 5));
+  EXPECT_CALL(m_controller, targetAngle(BASE, 5));
   m_controller.parseChar('3');
   m_controller.parseChar('.');
   m_controller.parseChar('4');
@@ -275,7 +275,7 @@ TEST_F(ControllerTest, AbortRetargetBase) {
 
 TEST_F(ControllerTest, CorrectTarget) {
   EXPECT_CALL(m_controller, stopDrives());
-  EXPECT_CALL(m_controller, retargetDrive(BASE, 3));
+  EXPECT_CALL(m_controller, targetAngle(BASE, 3));
   m_controller.parseChar('5');
   m_controller.parseChar('x');
   m_controller.parseChar('3');
@@ -283,7 +283,7 @@ TEST_F(ControllerTest, CorrectTarget) {
 }
 
 TEST_F(ControllerTest, RetargetBaseOnce) {
-  EXPECT_CALL(m_controller, retargetDrive(BASE, 30)).Times(1);
+  EXPECT_CALL(m_controller, targetAngle(BASE, 30)).Times(1);
   EXPECT_CALL(m_controller, reportPosition(BASE));
   m_controller.parseChar('3');
   m_controller.parseChar('0');
@@ -302,7 +302,7 @@ TEST_F(ControllerTest, ReportElbowPWM) {
 }
 
 TEST_F(ControllerTest, RetargetElbow) {
-  EXPECT_CALL(m_controller, retargetDrive(ELBOW, 10));
+  EXPECT_CALL(m_controller, targetAngle(ELBOW, 10));
   m_controller.parseChar('1');
   m_controller.parseChar('0');
   m_controller.parseChar('e');
