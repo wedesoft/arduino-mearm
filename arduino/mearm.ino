@@ -41,11 +41,11 @@ public:
   }
   void targetAngle(int drive, float target) {
     float pwm = clipDrive(drive, angleToPWM(drive, target));
-    float angle = limitArmDrive(drive, pwmToAngle(pwm, OFFSET[drive], RESOLUTION[drive]));
+    float angle = limitArmDrive(drive, pwmToAngle(drive, pwm));
     m_curve[drive].retarget(angle);
   }
   void targetPWM(int drive, float pwm) {
-    float angle = limitArmDrive(drive, pwmToAngle(clipDrive(drive, pwm), OFFSET[drive], RESOLUTION[drive]));
+    float angle = limitArmDrive(drive, pwmToAngle(drive, clipDrive(drive, pwm)));
     m_curve[drive].retarget(angle);
   }
   void stopDrives(void)

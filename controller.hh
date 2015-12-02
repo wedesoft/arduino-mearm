@@ -37,8 +37,8 @@ public:
   float angleToPWM(int drive, float angle) {
     return offset(drive) + angle * resolution(drive);
   }
-  float pwmToAngle(float pwm, float offset, float resolution) {
-    return (pwm - offset) / resolution;
+  float pwmToAngle(int drive, float pwm) {
+    return (pwm - offset(drive)) / resolution(drive);
   }
   float limitArm(int drive, float target, float shoulderTarget, float elbowTarget)
   {

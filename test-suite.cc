@@ -197,11 +197,11 @@ TEST_F(ControllerTest, ConvertAngleToPWM) {
 }
 
 TEST_F(ControllerTest, ConvertCenterPWMToAngle) {
-  EXPECT_EQ(0, m_controller.pwmToAngle(1500, 1500, 12));
+  EXPECT_EQ(0, m_controller.pwmToAngle(BASE, 1500));
 }
 
 TEST_F(ControllerTest, ConvertPWMToAngle) {
-  EXPECT_EQ(20, m_controller.pwmToAngle(1740, 1500, 12));
+  EXPECT_EQ(20, m_controller.pwmToAngle(BASE, 1740));
 }
 
 TEST_F(ControllerTest, TargetBaseAngle) {
