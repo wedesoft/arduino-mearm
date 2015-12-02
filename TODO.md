@@ -1,5 +1,6 @@
 # TODO
 
+* move clipping code into tested section
 * set servo hardware positions
 * self-collisions
 * instructions (screw terminal)

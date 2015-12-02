@@ -26,10 +26,10 @@ public:
   float clip(float value, float lower, float upper) {
     return value < lower ? lower : value > upper ? upper : value;
   }
-  float angleToPWM(float angle, float offset, float resolution, int lower, int upper) {
-    return clip(offset + angle * resolution, lower, upper);
+  float angleToPWM(float angle, float offset, float resolution) {
+    return offset + angle * resolution;
   }
-  float pwmToAngle(int pwm, float offset, float resolution) {
+  float pwmToAngle(float pwm, float offset, float resolution) {
     return (pwm - offset) / resolution;
   }
   float limitArm(int drive, float target, float shoulderTarget, float elbowTarget)
@@ -71,14 +71,18 @@ public:
         targetAngle(drive(c), m_number * m_fraction * m_sign);
         resetNumber();
       } else
-        reportPosition(drive(c));
+        reportAngle(drive(c));
       break;
     case 'B':
     case 'E':
     case 'S':
     case 'G':
-      reportPWM(drive(c));
-      resetNumber();
+      if (m_sign != 0) {
+        if (m_fraction == 0) m_fraction = 1;
+        targetPWM(drive(c), m_number * m_fraction * m_sign);
+        resetNumber();
+      } else
+        reportPWM(drive(c));
       break;
     default:
       if (c >= '0' && c <= '9') {
@@ -92,9 +96,10 @@ public:
     };
   }
   virtual void reportTime(void) = 0;
-  virtual void reportPosition(int) = 0;
+  virtual void reportAngle(int) = 0;
   virtual void reportPWM(int) = 0;
   virtual void targetAngle(int, float) = 0;
+  virtual void targetPWM(int, float) = 0;
   virtual void stopDrives(void) = 0;
 protected:
   float m_number;

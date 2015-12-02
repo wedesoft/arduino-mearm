@@ -136,9 +136,10 @@ class MockController: public ControllerBase
 {
 public:
   MOCK_METHOD0(reportTime, void());
-  MOCK_METHOD1(reportPosition, void(int));
+  MOCK_METHOD1(reportAngle, void(int));
   MOCK_METHOD1(reportPWM, void(int));
   MOCK_METHOD2(targetAngle, void(int,float));
+  MOCK_METHOD2(targetPWM, void(int,float));
   MOCK_METHOD0(stopDrives, void());
 };
 
@@ -155,21 +156,13 @@ TEST_F(ControllerTest, CheckTime) {
 }
 
 TEST_F(ControllerTest, ReportBase) {
-  EXPECT_CALL(m_controller, reportPosition(BASE));
+  EXPECT_CALL(m_controller, reportAngle(BASE));
   m_controller.parseChar('b');
 }
 
 TEST_F(ControllerTest, ReportBasePWM) {
   EXPECT_CALL(m_controller, reportPWM(BASE));
   m_controller.parseChar('B');
-}
-
-TEST_F(ControllerTest, ReportPWMClearsNumber) {
-  EXPECT_CALL(m_controller, reportPosition(BASE));
-  EXPECT_CALL(m_controller, reportPWM(BASE));
-  m_controller.parseChar('0');
-  m_controller.parseChar('B');
-  m_controller.parseChar('b');
 }
 
 TEST_F(ControllerTest, ClipAcceptsValues) {
@@ -185,19 +178,11 @@ TEST_F(ControllerTest, ClipUpperBound) {
 }
 
 TEST_F(ControllerTest, ConvertZeroAngleToPWM) {
-  EXPECT_EQ(1500, m_controller.angleToPWM(0, 1500, 12, 544, 2400));
+  EXPECT_EQ(1500, m_controller.angleToPWM(0, 1500, 12));
 }
 
 TEST_F(ControllerTest, ConvertAngleToPWM) {
-  EXPECT_EQ(1740, m_controller.angleToPWM(20, 1500, 12, 544, 2400));
-}
-
-TEST_F(ControllerTest, CheckPWMLowerBound) {
-  EXPECT_EQ(544, m_controller.angleToPWM(-90, 1500, 12, 544, 2400));
-}
-
-TEST_F(ControllerTest, CheckPWMUpperBound) {
-  EXPECT_EQ(2400, m_controller.angleToPWM(90, 1500, 12, 544, 2400));
+  EXPECT_EQ(1740, m_controller.angleToPWM(20, 1500, 12));
 }
 
 TEST_F(ControllerTest, ConvertCenterPWMToAngle) {
@@ -208,11 +193,20 @@ TEST_F(ControllerTest, ConvertPWMToAngle) {
   EXPECT_EQ(20, m_controller.pwmToAngle(1740, 1500, 12));
 }
 
-TEST_F(ControllerTest, RetargetBaseInteger) {
+TEST_F(ControllerTest, TargetBaseAngle) {
   EXPECT_CALL(m_controller, targetAngle(BASE, 12));
   m_controller.parseChar('1');
   m_controller.parseChar('2');
   m_controller.parseChar('b');
+}
+
+TEST_F(ControllerTest, TargetBasePWM) {
+  EXPECT_CALL(m_controller, targetPWM(BASE, 1400));
+  m_controller.parseChar('1');
+  m_controller.parseChar('4');
+  m_controller.parseChar('0');
+  m_controller.parseChar('0');
+  m_controller.parseChar('B');
 }
 
 TEST_F(ControllerTest, RetargetBaseFloat) {
@@ -222,6 +216,17 @@ TEST_F(ControllerTest, RetargetBaseFloat) {
   m_controller.parseChar('.');
   m_controller.parseChar('5');
   m_controller.parseChar('b');
+}
+
+TEST_F(ControllerTest, TargetBasePWMFloat) {
+  EXPECT_CALL(m_controller, targetPWM(BASE, 1400.5));
+  m_controller.parseChar('1');
+  m_controller.parseChar('4');
+  m_controller.parseChar('0');
+  m_controller.parseChar('0');
+  m_controller.parseChar('.');
+  m_controller.parseChar('5');
+  m_controller.parseChar('B');
 }
 
 TEST_F(ControllerTest, RetargetNegativeNumber) {
@@ -267,7 +272,7 @@ TEST_F(ControllerTest, IgnoreInvalidFloat) {
 
 TEST_F(ControllerTest, AbortRetargetBase) {
   EXPECT_CALL(m_controller, stopDrives());
-  EXPECT_CALL(m_controller, reportPosition(BASE));
+  EXPECT_CALL(m_controller, reportAngle(BASE));
   m_controller.parseChar('5');
   m_controller.parseChar('x');
   m_controller.parseChar('b');
@@ -284,7 +289,7 @@ TEST_F(ControllerTest, CorrectTarget) {
 
 TEST_F(ControllerTest, RetargetBaseOnce) {
   EXPECT_CALL(m_controller, targetAngle(BASE, 30)).Times(1);
-  EXPECT_CALL(m_controller, reportPosition(BASE));
+  EXPECT_CALL(m_controller, reportAngle(BASE));
   m_controller.parseChar('3');
   m_controller.parseChar('0');
   m_controller.parseChar('b');
@@ -292,7 +297,7 @@ TEST_F(ControllerTest, RetargetBaseOnce) {
 }
 
 TEST_F(ControllerTest, ReportElbow) {
-  EXPECT_CALL(m_controller, reportPosition(ELBOW));
+  EXPECT_CALL(m_controller, reportAngle(ELBOW));
   m_controller.parseChar('e');
 }
 
@@ -309,7 +314,7 @@ TEST_F(ControllerTest, RetargetElbow) {
 }
 
 TEST_F(ControllerTest, ReportShoulder) {
-  EXPECT_CALL(m_controller, reportPosition(SHOULDER));
+  EXPECT_CALL(m_controller, reportAngle(SHOULDER));
   m_controller.parseChar('s');
 }
 
@@ -319,7 +324,7 @@ TEST_F(ControllerTest, ReportShoulderPWM) {
 }
 
 TEST_F(ControllerTest, ReportGripper) {
-  EXPECT_CALL(m_controller, reportPosition(GRIPPER));
+  EXPECT_CALL(m_controller, reportAngle(GRIPPER));
   m_controller.parseChar('g');
 }
 

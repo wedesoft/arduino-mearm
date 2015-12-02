@@ -18,10 +18,13 @@ public:
       m_servo[drive].attach(SERVOPIN[drive]);
   }
   float angleToPWMDrive(float angle, int drive) {
-    return angleToPWM(angle, OFFSET[drive], RESOLUTION[drive], MIN[drive], MAX[drive]);
+    return angleToPWM(angle, OFFSET[drive], RESOLUTION[drive]);
   }
   float limitArmDrive(int drive, float target) {
     return limitArm(drive, target, m_curve[SHOULDER].target(), m_curve[ELBOW].target());
+  }
+  float clipDrive(int drive, float value) {
+    return clip(value, MIN[drive], MAX[drive]);
   }
   void update(int dt) {
     for (int drive=0; drive<DRIVES; drive++) {
@@ -33,7 +36,7 @@ public:
     Serial.print(millis() * 0.001);
     Serial.write("\r\n");
   }
-  void reportPosition(int drive) {
+  void reportAngle(int drive) {
     Serial.print(m_curve[drive].pos());
     Serial.write("\r\n");
   }
@@ -43,8 +46,12 @@ public:
     Serial.write("\r\n");
   }
   void targetAngle(int drive, float target) {
-    float pwm = angleToPWMDrive(limitArmDrive(drive, target), drive);
-    float angle = pwmToAngle(pwm, OFFSET[drive], RESOLUTION[drive]);
+    float pwm = clipDrive(drive, angleToPWMDrive(target, drive));
+    float angle = limitArmDrive(drive, pwmToAngle(pwm, OFFSET[drive], RESOLUTION[drive]));
+    m_curve[drive].retarget(angle);
+  }
+  void targetPWM(int drive, float pwm) {
+    float angle = limitArmDrive(drive, pwmToAngle(clipDrive(drive, pwm), OFFSET[drive], RESOLUTION[drive]));
     m_curve[drive].retarget(angle);
   }
   void stopDrives(void)
