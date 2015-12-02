@@ -1,12 +1,7 @@
 #ifndef __CALIBRATION_HH
 #define __CALIBRATION_HH
 
-const int BASE     = 0;
-const int SHOULDER = 1;
-const int ELBOW    = 2;
-const int GRIPPER  = 3;
-const int DRIVES   = 4;
-
+// BASE, SHOULDER, ELBOW, GRIPPER (see in controller.hh)
 const int SERVOPIN[] = {11, 9, 10, 6};
 const int OFFSET[] = {1500, 1500, 1500, 1500};// normally around 1500
 

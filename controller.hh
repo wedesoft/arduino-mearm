@@ -4,6 +4,12 @@
 #include "calibration.hh"
 #include "curve.hh"
 
+const int BASE     = 0;
+const int SHOULDER = 1;
+const int ELBOW    = 2;
+const int GRIPPER  = 3;
+const int DRIVES   = 4;
+
 class ControllerBase
 {
 public:
@@ -107,7 +113,7 @@ protected:
   float m_number;
   float m_fraction;
   char m_sign;
-  Curve m_curve[4];
+  Curve m_curve[DRIVES];
 };
 
 #endif

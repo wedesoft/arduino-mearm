@@ -56,7 +56,7 @@ public:
       m_curve[drive].stop();
   }
 protected:
-  Servo m_servo[4];
+  Servo m_servo[DRIVES];
 };
 
 unsigned long t0;
