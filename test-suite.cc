@@ -408,7 +408,7 @@ TEST_F(ControllerTest, UpdateAppliesTargets) {
   EXPECT_CALL(m_controller, writePWM(SHOULDER,1380));
   EXPECT_CALL(m_controller, writePWM(ELBOW,1740));
   EXPECT_CALL(m_controller, writePWM(GRIPPER,1860));
-  m_controller.update(2000);
+  m_controller.update(4000);
 }
 
 TEST_F(ControllerTest, StopDrives) {

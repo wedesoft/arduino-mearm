@@ -3,12 +3,8 @@
 GTEST=/usr/src/gtest
 GMOCK=/usr/src/gmock
 CXX = g++
-CP = cp
 
-all: calibration.hh all-recursive
-
-calibration.hh: calibration.hh.default
-	$(CP) $< $@
+all: all-recursive
 
 check: test-suite
 	./test-suite
