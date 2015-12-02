@@ -141,6 +141,8 @@ class MockController: public ControllerBase
 public:
   int offset(int drive) { return 1500; }
   float resolution(int drive) { return 12.0; }
+  int lower(int drive) { return 544; }
+  int upper(int drive) { return 2400; }
   MOCK_METHOD0(reportTime, void());
   MOCK_METHOD1(reportAngle, void(float));
   MOCK_METHOD1(reportPWM, void(float));
@@ -177,15 +179,15 @@ TEST_F(ControllerTest, ReportBasePWM) {
 }
 
 TEST_F(ControllerTest, ClipAcceptsValues) {
-  EXPECT_EQ(100, m_controller.clip(100, 50, 200));
+  EXPECT_EQ(1500, m_controller.clip(BASE, 1500));
 }
 
 TEST_F(ControllerTest, ClipLowerBound) {
-  EXPECT_EQ(50, m_controller.clip(20, 50, 200));
+  EXPECT_EQ(544, m_controller.clip(BASE, 500));
 }
 
 TEST_F(ControllerTest, ClipUpperBound) {
-  EXPECT_EQ(200, m_controller.clip(500, 50, 200));
+  EXPECT_EQ(2400, m_controller.clip(BASE, 2500));
 }
 
 TEST_F(ControllerTest, ConvertZeroAngleToPWM) {

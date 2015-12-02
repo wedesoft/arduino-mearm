@@ -31,8 +31,11 @@ public:
       return BASE;
     };
   }
-  float clip(float value, float lower, float upper) {
+  float limit(float value, float lower, float upper) {
     return value < lower ? lower : value > upper ? upper : value;
+  }
+  float clip(int drive, float value) {
+    return limit(value, lower(drive), upper(drive));
   }
   float angleToPWM(int drive, float angle) {
     return offset(drive) + angle * resolution(drive);
@@ -44,9 +47,9 @@ public:
   {
     switch (drive) {
     case ELBOW:
-      return clip(target, -45.0 - shoulderTarget, 45.0 - shoulderTarget);
+      return limit(target, -45.0 - shoulderTarget, 45.0 - shoulderTarget);
     case SHOULDER:
-      return clip(target, -45.0 - elbowTarget, 45.0 - elbowTarget);
+      return limit(target, -45.0 - elbowTarget, 45.0 - elbowTarget);
     default:
       return target;
     };
@@ -105,6 +108,8 @@ public:
   }
   virtual int offset(int drive) = 0;
   virtual float resolution(int drive) = 0;
+  virtual int lower(int drive) = 0;
+  virtual int upper(int drive) = 0;
   virtual void reportTime(void) = 0;
   virtual void reportAngle(float) = 0;
   virtual void reportPWM(float) = 0;
