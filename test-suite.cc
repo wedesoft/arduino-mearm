@@ -139,9 +139,11 @@ TEST_F(MovingBackwardTest, AdvanceWithTime) {
 class MockController: public ControllerBase
 {
 public:
+  int offset(int drive) { return 1500; }
+  float resolution(int drive) { return 12.0; }
   MOCK_METHOD0(reportTime, void());
   MOCK_METHOD1(reportAngle, void(float));
-  MOCK_METHOD1(reportPWM, void(int));
+  MOCK_METHOD1(reportPWM, void(float));
   MOCK_METHOD2(targetAngle, void(int,float));
   MOCK_METHOD2(targetPWM, void(int,float));
   MOCK_METHOD0(stopDrives, void());
@@ -170,7 +172,7 @@ TEST_F(ControllerTest, ReportBase) {
 }
 
 TEST_F(ControllerTest, ReportBasePWM) {
-  EXPECT_CALL(m_controller, reportPWM(BASE));
+  EXPECT_CALL(m_controller, reportPWM(2040.0));
   m_controller.parseChar('B');
 }
 
@@ -187,11 +189,11 @@ TEST_F(ControllerTest, ClipUpperBound) {
 }
 
 TEST_F(ControllerTest, ConvertZeroAngleToPWM) {
-  EXPECT_EQ(1500, m_controller.angleToPWM(0, 1500, 12));
+  EXPECT_EQ(1500, m_controller.angleToPWM(SHOULDER, 0));
 }
 
 TEST_F(ControllerTest, ConvertAngleToPWM) {
-  EXPECT_EQ(1740, m_controller.angleToPWM(20, 1500, 12));
+  EXPECT_EQ(1740, m_controller.angleToPWM(SHOULDER, 20));
 }
 
 TEST_F(ControllerTest, ConvertCenterPWMToAngle) {
@@ -311,7 +313,7 @@ TEST_F(ControllerTest, ReportElbow) {
 }
 
 TEST_F(ControllerTest, ReportElbowPWM) {
-  EXPECT_CALL(m_controller, reportPWM(ELBOW));
+  EXPECT_CALL(m_controller, reportPWM(1740.0));
   m_controller.parseChar('E');
 }
 
@@ -328,7 +330,7 @@ TEST_F(ControllerTest, ReportShoulder) {
 }
 
 TEST_F(ControllerTest, ReportShoulderPWM) {
-  EXPECT_CALL(m_controller, reportPWM(SHOULDER));
+  EXPECT_CALL(m_controller, reportPWM(1380.0));
   m_controller.parseChar('S');
 }
 
@@ -338,7 +340,7 @@ TEST_F(ControllerTest, ReportGripper) {
 }
 
 TEST_F(ControllerTest, ReportGripperPWM) {
-  EXPECT_CALL(m_controller, reportPWM(GRIPPER));
+  EXPECT_CALL(m_controller, reportPWM(1860.0));
   m_controller.parseChar('G');
 }
 

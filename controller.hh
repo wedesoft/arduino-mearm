@@ -34,8 +34,8 @@ public:
   float clip(float value, float lower, float upper) {
     return value < lower ? lower : value > upper ? upper : value;
   }
-  float angleToPWM(float angle, float offset, float resolution) {
-    return offset + angle * resolution;
+  float angleToPWM(int drive, float angle) {
+    return offset(drive) + angle * resolution(drive);
   }
   float pwmToAngle(float pwm, float offset, float resolution) {
     return (pwm - offset) / resolution;
@@ -90,7 +90,7 @@ public:
         targetPWM(drive(c), m_number * m_fraction * m_sign);
         resetNumber();
       } else
-        reportPWM(drive(c));
+        reportPWM(angleToPWM(drive(c), m_curve[drive(c)].pos()));
       break;
     default:
       if (c >= '0' && c <= '9') {
@@ -103,9 +103,11 @@ public:
       };
     };
   }
+  virtual int offset(int drive) = 0;
+  virtual float resolution(int drive) = 0;
   virtual void reportTime(void) = 0;
   virtual void reportAngle(float) = 0;
-  virtual void reportPWM(int) = 0;
+  virtual void reportPWM(float) = 0;
   virtual void targetAngle(int, float) = 0;
   virtual void targetPWM(int, float) = 0;
   virtual void stopDrives(void) = 0;
