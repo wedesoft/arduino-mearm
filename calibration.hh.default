@@ -1,0 +1,21 @@
+#ifndef __CALIBRATION_HH
+#define __CALIBRATION_HH
+
+const int BASE     = 0;
+const int SHOULDER = 1;
+const int ELBOW    = 2;
+const int GRIPPER  = 3;
+const int DRIVES   = 4;
+
+const int SERVOPIN[] = {11, 9, 10, 6};
+const int OFFSET[] = {1500, 1500, 1500, 1500};// normally around 1500
+
+#warning "Adjust these values for your robot to avoid self-collisions!"
+#warning "Control your robot carefully until you have inserted appropriate boundaries here!"
+const int MIN[] = {544, 544, 544, 544};// must not be below 544
+const int MAX[] = {2400, 2400, 2400, 2400};// must not be above 2400
+
+const float RESOLUTION[] = {11.12222, 11.12222, 11.12222, 11.12222};
+const float BOUND = 0.00015;
+
+#endif

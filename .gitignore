@@ -1,4 +1,5 @@
 test-suite
+calibration.hh
 build-*
 *.o
 .*.swp

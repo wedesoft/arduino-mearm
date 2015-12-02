@@ -1,8 +1,14 @@
+.SUFFIXES: .default
+
 GTEST=/usr/src/gtest
 GMOCK=/usr/src/gmock
 CXX = g++
+CP = cp
 
-all: all-recursive
+all: calibration.hh all-recursive
+
+calibration.hh: calibration.hh.default
+	$(CP) $< $@
 
 check: test-suite
 	./test-suite
