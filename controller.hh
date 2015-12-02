@@ -2,12 +2,14 @@
 #define __CONTROLLER_HH
 
 #include "calibration.hh"
+#include "curve.hh"
 
 class ControllerBase
 {
 public:
   ControllerBase(void): m_number(0), m_fraction(0), m_sign(0) {}
   virtual ~ControllerBase() {}
+  Curve &curve(int drive) { return m_curve[drive]; }
   int drive(char c) {
     switch (c) {
     case 'e':
@@ -71,7 +73,7 @@ public:
         targetAngle(drive(c), m_number * m_fraction * m_sign);
         resetNumber();
       } else
-        reportAngle(drive(c));
+        reportAngle(m_curve[drive(c)].pos());
       break;
     case 'B':
     case 'E':
@@ -96,7 +98,7 @@ public:
     };
   }
   virtual void reportTime(void) = 0;
-  virtual void reportAngle(int) = 0;
+  virtual void reportAngle(float) = 0;
   virtual void reportPWM(int) = 0;
   virtual void targetAngle(int, float) = 0;
   virtual void targetPWM(int, float) = 0;
@@ -105,6 +107,7 @@ protected:
   float m_number;
   float m_fraction;
   char m_sign;
+  Curve m_curve[4];
 };
 
 #endif

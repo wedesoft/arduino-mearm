@@ -32,8 +32,8 @@ public:
     Serial.print(millis() * 0.001);
     Serial.write("\r\n");
   }
-  void reportAngle(int drive) {
-    Serial.print(m_curve[drive].pos());
+  void reportAngle(float angle) {
+    Serial.print(angle);
     Serial.write("\r\n");
   }
   void reportPWM(int drive) {
@@ -56,7 +56,6 @@ public:
       m_curve[drive].stop();
   }
 protected:
-  Curve m_curve[4];
   Servo m_servo[4];
 };
 

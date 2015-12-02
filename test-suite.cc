@@ -140,7 +140,7 @@ class MockController: public ControllerBase
 {
 public:
   MOCK_METHOD0(reportTime, void());
-  MOCK_METHOD1(reportAngle, void(int));
+  MOCK_METHOD1(reportAngle, void(float));
   MOCK_METHOD1(reportPWM, void(int));
   MOCK_METHOD2(targetAngle, void(int,float));
   MOCK_METHOD2(targetPWM, void(int,float));
@@ -149,7 +149,12 @@ public:
 
 class ControllerTest: public ::testing::Test {
 public:
-  ControllerTest(void) {}
+  ControllerTest(void) {
+    m_controller.curve(BASE).setPos(45);
+    m_controller.curve(SHOULDER).setPos(-10);
+    m_controller.curve(ELBOW).setPos(20);
+    m_controller.curve(GRIPPER).setPos(30);
+  }
 protected:
   MockController m_controller;
 };
@@ -160,7 +165,7 @@ TEST_F(ControllerTest, CheckTime) {
 }
 
 TEST_F(ControllerTest, ReportBase) {
-  EXPECT_CALL(m_controller, reportAngle(BASE));
+  EXPECT_CALL(m_controller, reportAngle(45));
   m_controller.parseChar('b');
 }
 
@@ -276,7 +281,7 @@ TEST_F(ControllerTest, IgnoreInvalidFloat) {
 
 TEST_F(ControllerTest, AbortRetargetBase) {
   EXPECT_CALL(m_controller, stopDrives());
-  EXPECT_CALL(m_controller, reportAngle(BASE));
+  EXPECT_CALL(m_controller, reportAngle(45));
   m_controller.parseChar('5');
   m_controller.parseChar('x');
   m_controller.parseChar('b');
@@ -293,7 +298,7 @@ TEST_F(ControllerTest, CorrectTarget) {
 
 TEST_F(ControllerTest, RetargetBaseOnce) {
   EXPECT_CALL(m_controller, targetAngle(BASE, 30)).Times(1);
-  EXPECT_CALL(m_controller, reportAngle(BASE));
+  EXPECT_CALL(m_controller, reportAngle(45));
   m_controller.parseChar('3');
   m_controller.parseChar('0');
   m_controller.parseChar('b');
@@ -301,7 +306,7 @@ TEST_F(ControllerTest, RetargetBaseOnce) {
 }
 
 TEST_F(ControllerTest, ReportElbow) {
-  EXPECT_CALL(m_controller, reportAngle(ELBOW));
+  EXPECT_CALL(m_controller, reportAngle(20));
   m_controller.parseChar('e');
 }
 
@@ -318,7 +323,7 @@ TEST_F(ControllerTest, RetargetElbow) {
 }
 
 TEST_F(ControllerTest, ReportShoulder) {
-  EXPECT_CALL(m_controller, reportAngle(SHOULDER));
+  EXPECT_CALL(m_controller, reportAngle(-10));
   m_controller.parseChar('s');
 }
 
@@ -328,7 +333,7 @@ TEST_F(ControllerTest, ReportShoulderPWM) {
 }
 
 TEST_F(ControllerTest, ReportGripper) {
-  EXPECT_CALL(m_controller, reportAngle(GRIPPER));
+  EXPECT_CALL(m_controller, reportAngle(30));
   m_controller.parseChar('g');
 }
 
