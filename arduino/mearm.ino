@@ -6,7 +6,7 @@
 class ServoCurve: public Curve
 {
 public:
-  ServoCurve(void): Curve(0, 0.00015) {}
+  ServoCurve(void): Curve(0.00015) {}
 };
 
 class Controller: public ControllerBase

@@ -6,8 +6,9 @@
 class Curve
 {
 public:
-  Curve(float pos, float bound):
-    m_pos(pos), m_speed(0), m_acceleration(0), m_target(0), m_bound(bound), m_state(halt) {}
+  Curve(float bound):
+    m_pos(0), m_speed(0), m_acceleration(0), m_target(0), m_bound(bound), m_state(halt) {}
+  void setPos(float pos) { m_pos = pos; }
   float pos(void) { return m_pos; }
   float target(void) { return m_target; }
   void retarget(float target) {

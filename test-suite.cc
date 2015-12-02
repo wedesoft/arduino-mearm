@@ -5,7 +5,7 @@
 
 class StationaryTest: public ::testing::Test {
 public:
-  StationaryTest(void): m_curve(0, 10) {}
+  StationaryTest(void): m_curve(10) {}
 protected:
   Curve m_curve;
 };
@@ -23,8 +23,9 @@ TEST_F(StationaryTest, StayConstantOverTime) {
 class MovingForwardTest: public ::testing::Test {
 public:
   MovingForwardTest(void):
-    m_curve(100, 10)
+    m_curve(10)
   {
+    m_curve.setPos(100);
     m_curve.retarget(140);
   }
 protected:
@@ -47,14 +48,14 @@ TEST_F(MovingForwardTest, AccelerateOverTime) {
 }
 
 TEST_F(MovingForwardTest, UseSpecifiedAcceleration) {
-  Curve curve(0, 20);
+  Curve curve(20);
   curve.retarget(200);
   curve.update(1);
   EXPECT_EQ(10, curve.pos());
 }
 
 TEST_F(MovingForwardTest, UpdateReturnsPosition) {
-  Curve curve(0, 20);
+  Curve curve(20);
   curve.retarget(200);
   EXPECT_EQ(10, curve.update(1));
   EXPECT_EQ(40, curve.update(1));
@@ -111,8 +112,9 @@ TEST_F(MovingForwardTest, AbortMotion) {
 class MovingBackwardTest: public ::testing::Test {
 public:
   MovingBackwardTest(void):
-    m_curve(100, 10)
+    m_curve(10)
   {
+    m_curve.setPos(100);
     m_curve.retarget(60);
   }
 protected:
