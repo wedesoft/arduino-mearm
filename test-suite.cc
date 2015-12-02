@@ -147,7 +147,6 @@ public:
   MOCK_METHOD1(reportAngle, void(float));
   MOCK_METHOD1(reportPWM, void(float));
   MOCK_METHOD2(targetAngle, void(int,float));
-  MOCK_METHOD2(targetPWM, void(int,float));
   MOCK_METHOD0(stopDrives, void());
 };
 
@@ -214,12 +213,12 @@ TEST_F(ControllerTest, TargetBaseAngle) {
 }
 
 TEST_F(ControllerTest, TargetBasePWM) {
-  EXPECT_CALL(m_controller, targetPWM(BASE, 1400));
   m_controller.parseChar('1');
-  m_controller.parseChar('4');
-  m_controller.parseChar('0');
+  m_controller.parseChar('3');
+  m_controller.parseChar('2');
   m_controller.parseChar('0');
   m_controller.parseChar('B');
+  EXPECT_EQ(-15.0, m_controller.curve(BASE).target());
 }
 
 TEST_F(ControllerTest, RetargetBaseFloat) {
@@ -232,14 +231,29 @@ TEST_F(ControllerTest, RetargetBaseFloat) {
 }
 
 TEST_F(ControllerTest, TargetBasePWMFloat) {
-  EXPECT_CALL(m_controller, targetPWM(BASE, 1400.5));
   m_controller.parseChar('1');
-  m_controller.parseChar('4');
+  m_controller.parseChar('5');
   m_controller.parseChar('0');
-  m_controller.parseChar('0');
+  m_controller.parseChar('1');
   m_controller.parseChar('.');
   m_controller.parseChar('5');
   m_controller.parseChar('B');
+  EXPECT_EQ(0.125, m_controller.curve(BASE).target());
+}
+
+TEST_F(ControllerTest, TargetBasePWMLowerLimit) {
+  m_controller.parseChar('0');
+  m_controller.parseChar('B');
+  EXPECT_LT(-80, m_controller.curve(BASE).target());
+}
+
+TEST_F(ControllerTest, TargetShoulderPWMLimitAgainstElbow) {
+  m_controller.parseChar('2');
+  m_controller.parseChar('4');
+  m_controller.parseChar('0');
+  m_controller.parseChar('0');
+  m_controller.parseChar('S');
+  EXPECT_GE(35, m_controller.curve(SHOULDER).target());
 }
 
 TEST_F(ControllerTest, RetargetNegativeNumber) {

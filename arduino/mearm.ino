@@ -39,13 +39,7 @@ public:
     Serial.write("\r\n");
   }
   void targetAngle(int drive, float target) {
-    float pwm = clip(drive, angleToPWM(drive, target));
-    float angle = limitArmDrive(drive, pwmToAngle(drive, pwm));
-    m_curve[drive].retarget(angle);
-  }
-  void targetPWM(int drive, float pwm) {
-    float angle = limitArmDrive(drive, pwmToAngle(drive, clip(drive, pwm)));
-    m_curve[drive].retarget(angle);
+    targetPWM(drive, angleToPWM(drive, target));
   }
   void stopDrives(void)
   {
