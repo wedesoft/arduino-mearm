@@ -8,10 +8,8 @@ class Controller: public ControllerBase
 public:
   Controller(void) {}
   void setup(void) {
-    for (int drive=0; drive<DRIVES; drive++) {
-      m_curve[drive].setBound(BOUND);
+    for (int drive=0; drive<DRIVES; drive++)
       m_servo[drive].attach(SERVOPIN[drive]);
-    };
   }
   void update(int dt) {
     for (int drive=0; drive<DRIVES; drive++) {

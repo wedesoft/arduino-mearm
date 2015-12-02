@@ -13,7 +13,10 @@ const int DRIVES   = 4;
 class ControllerBase
 {
 public:
-  ControllerBase(void): m_number(0), m_fraction(0), m_sign(0) {}
+  ControllerBase(void): m_number(0), m_fraction(0), m_sign(0) {
+    for (int drive=0; drive<DRIVES; drive++)
+      m_curve[drive].setBound(BOUND);
+  }
   virtual ~ControllerBase() {}
   Curve &curve(int drive) { return m_curve[drive]; }
   int drive(char c) {
