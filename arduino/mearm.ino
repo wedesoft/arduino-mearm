@@ -33,9 +33,6 @@ public:
     Serial.print(round(pwm));
     Serial.write("\r\n");
   }
-  void targetAngle(int drive, float target) {
-    targetPWM(drive, angleToPWM(drive, target));
-  }
   void stopDrives(void)
   {
     for (int drive=0; drive<DRIVES; drive++)

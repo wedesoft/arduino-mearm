@@ -116,6 +116,9 @@ public:
     float angle = limitArm(drive, pwmToAngle(drive, clip(drive, pwm)));
     m_curve[drive].retarget(angle);
   }
+  void targetAngle(int drive, float angle) {
+    targetPWM(drive, angleToPWM(drive, angle));
+  }
   virtual int offset(int drive) = 0;
   virtual float resolution(int drive) = 0;
   virtual int lower(int drive) = 0;
@@ -123,7 +126,6 @@ public:
   virtual void reportTime(void) = 0;
   virtual void reportAngle(float) = 0;
   virtual void reportPWM(float) = 0;
-  virtual void targetAngle(int, float) = 0;
   virtual void stopDrives(void) = 0;
 protected:
   float m_number;

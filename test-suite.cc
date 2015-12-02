@@ -146,7 +146,6 @@ public:
   MOCK_METHOD0(reportTime, void());
   MOCK_METHOD1(reportAngle, void(float));
   MOCK_METHOD1(reportPWM, void(float));
-  MOCK_METHOD2(targetAngle, void(int,float));
   MOCK_METHOD0(stopDrives, void());
 };
 
@@ -206,10 +205,10 @@ TEST_F(ControllerTest, ConvertPWMToAngle) {
 }
 
 TEST_F(ControllerTest, TargetBaseAngle) {
-  EXPECT_CALL(m_controller, targetAngle(BASE, 12));
   m_controller.parseChar('1');
   m_controller.parseChar('2');
   m_controller.parseChar('b');
+  EXPECT_EQ(12, m_controller.curve(BASE).target());
 }
 
 TEST_F(ControllerTest, TargetBasePWM) {
@@ -222,12 +221,12 @@ TEST_F(ControllerTest, TargetBasePWM) {
 }
 
 TEST_F(ControllerTest, RetargetBaseFloat) {
-  EXPECT_CALL(m_controller, targetAngle(BASE, 12.5));
   m_controller.parseChar('1');
   m_controller.parseChar('2');
   m_controller.parseChar('.');
   m_controller.parseChar('5');
   m_controller.parseChar('b');
+  EXPECT_EQ(12.5, m_controller.curve(BASE).target());
 }
 
 TEST_F(ControllerTest, TargetBasePWMFloat) {
@@ -257,44 +256,44 @@ TEST_F(ControllerTest, TargetShoulderPWMLimitAgainstElbow) {
 }
 
 TEST_F(ControllerTest, RetargetNegativeNumber) {
-  EXPECT_CALL(m_controller, targetAngle(BASE, -1.5));
   m_controller.parseChar('-');
   m_controller.parseChar('1');
   m_controller.parseChar('.');
   m_controller.parseChar('5');
   m_controller.parseChar('b');
+  EXPECT_EQ(-1.5, m_controller.curve(BASE).target());
 }
 
 TEST_F(ControllerTest, DoubleMinus) {
-  EXPECT_CALL(m_controller, targetAngle(BASE, 1));
   m_controller.parseChar('-');
   m_controller.parseChar('-');
   m_controller.parseChar('1');
   m_controller.parseChar('b');
+  EXPECT_EQ(1, m_controller.curve(BASE).target());
 }
 
 TEST_F(ControllerTest, RetargetZero) {
-  EXPECT_CALL(m_controller, targetAngle(BASE, 0));
   m_controller.parseChar('0');
   m_controller.parseChar('b');
+  EXPECT_EQ(0, m_controller.curve(BASE).target());
 }
 
 TEST_F(ControllerTest, TargetTwice) {
-  EXPECT_CALL(m_controller, targetAngle(BASE, 3)).Times(2);
   m_controller.parseChar('3');
   m_controller.parseChar('b');
   m_controller.parseChar('3');
   m_controller.parseChar('b');
+  EXPECT_EQ(3, m_controller.curve(BASE).target());
 }
 
 TEST_F(ControllerTest, IgnoreInvalidFloat) {
-  EXPECT_CALL(m_controller, targetAngle(BASE, 5));
   m_controller.parseChar('3');
   m_controller.parseChar('.');
   m_controller.parseChar('4');
   m_controller.parseChar('.');
   m_controller.parseChar('5');
   m_controller.parseChar('b');
+  EXPECT_EQ(5, m_controller.curve(BASE).target());
 }
 
 TEST_F(ControllerTest, AbortRetargetBase) {
@@ -307,20 +306,20 @@ TEST_F(ControllerTest, AbortRetargetBase) {
 
 TEST_F(ControllerTest, CorrectTarget) {
   EXPECT_CALL(m_controller, stopDrives());
-  EXPECT_CALL(m_controller, targetAngle(BASE, 3));
   m_controller.parseChar('5');
   m_controller.parseChar('x');
   m_controller.parseChar('3');
   m_controller.parseChar('b');
+  EXPECT_EQ(3, m_controller.curve(BASE).target());
 }
 
 TEST_F(ControllerTest, RetargetBaseOnce) {
-  EXPECT_CALL(m_controller, targetAngle(BASE, 30)).Times(1);
   EXPECT_CALL(m_controller, reportAngle(45));
   m_controller.parseChar('3');
   m_controller.parseChar('0');
   m_controller.parseChar('b');
   m_controller.parseChar('b');
+  EXPECT_EQ(30, m_controller.curve(BASE).target());
 }
 
 TEST_F(ControllerTest, ReportElbow) {
@@ -334,10 +333,10 @@ TEST_F(ControllerTest, ReportElbowPWM) {
 }
 
 TEST_F(ControllerTest, RetargetElbow) {
-  EXPECT_CALL(m_controller, targetAngle(ELBOW, 10));
   m_controller.parseChar('1');
   m_controller.parseChar('0');
   m_controller.parseChar('e');
+  EXPECT_EQ(10, m_controller.curve(ELBOW).target());
 }
 
 TEST_F(ControllerTest, ReportShoulder) {
@@ -380,6 +379,13 @@ TEST_F(ControllerTest, RestrictElbowRelativeToShoulder) {
 
   EXPECT_EQ( 55, m_controller.limitArm(ELBOW, 70));
   EXPECT_EQ(-35, m_controller.limitArm(ELBOW,-70));
+}
+
+TEST_F(ControllerTest, UseElbowRestriction) {
+  m_controller.parseChar('7');
+  m_controller.parseChar('0');
+  m_controller.parseChar('e');
+  EXPECT_EQ(55, m_controller.curve(ELBOW).target());
 }
 
 TEST_F(ControllerTest, RestrictShoulder) {
