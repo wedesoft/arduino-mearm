@@ -3,19 +3,15 @@
 #include "../controller.hh"
 #include "../curve.hh"
 
-class ServoCurve: public Curve
-{
-public:
-  ServoCurve(void): Curve(0.00015) {}
-};
-
 class Controller: public ControllerBase
 {
 public:
   Controller(void) {}
   void setup(void) {
-    for (int drive=0; drive<DRIVES; drive++)
+    for (int drive=0; drive<DRIVES; drive++) {
+      m_curve[drive].setBound(BOUND);
       m_servo[drive].attach(SERVOPIN[drive]);
+    };
   }
   float angleToPWMDrive(float angle, int drive) {
     return angleToPWM(angle, OFFSET[drive], RESOLUTION[drive]);
@@ -60,7 +56,7 @@ public:
       m_curve[drive].stop();
   }
 protected:
-  ServoCurve m_curve[4];
+  Curve m_curve[4];
   Servo m_servo[4];
 };
 
