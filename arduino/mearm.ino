@@ -13,9 +13,6 @@ public:
       m_servo[drive].attach(SERVOPIN[drive]);
     };
   }
-  float limitArmDrive(int drive, float target) {
-    return limitArm(drive, target, m_curve[SHOULDER].target(), m_curve[ELBOW].target());
-  }
   void update(int dt) {
     for (int drive=0; drive<DRIVES; drive++) {
       float pwm = angleToPWM(drive, m_curve[drive].update(dt));

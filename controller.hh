@@ -43,13 +43,16 @@ public:
   float pwmToAngle(int drive, float pwm) {
     return (pwm - offset(drive)) / resolution(drive);
   }
-  float limitArm(int drive, float target, float shoulderTarget, float elbowTarget)
+  float limitArm(int drive, float target)
   {
+    float other;
     switch (drive) {
     case ELBOW:
-      return limit(target, -45.0 - shoulderTarget, 45.0 - shoulderTarget);
+      other = m_curve[SHOULDER].target();
+      return limit(target, -45.0 - other, 45.0 - other);
     case SHOULDER:
-      return limit(target, -45.0 - elbowTarget, 45.0 - elbowTarget);
+      other = m_curve[ELBOW].target();
+      return limit(target, -45.0 - other, 45.0 - other);
     default:
       return target;
     };
@@ -107,8 +110,7 @@ public:
     };
   }
   void targetPWM(int drive, float pwm) {
-    float angle = limitArm(drive, pwmToAngle(drive, clip(drive, pwm)),
-                           m_curve[SHOULDER].target(), m_curve[ELBOW].target());
+    float angle = limitArm(drive, pwmToAngle(drive, clip(drive, pwm)));
     m_curve[drive].retarget(angle);
   }
   virtual int offset(int drive) = 0;

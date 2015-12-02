@@ -366,28 +366,31 @@ TEST_F(ControllerTest, AbortPathForOtherKey) {
 }
 
 TEST_F(ControllerTest, UseBase) {
-  EXPECT_EQ(-90, m_controller.limitArm(BASE, -90, 0, 0));
-  EXPECT_EQ( 90, m_controller.limitArm(BASE,  90, 0, 0));
+  EXPECT_EQ(-90, m_controller.limitArm(BASE, -90));
+  EXPECT_EQ( 90, m_controller.limitArm(BASE,  90));
 }
 
 TEST_F(ControllerTest, RestrictElbow) {
-  EXPECT_EQ( 45, m_controller.limitArm(ELBOW,  70, 0, 0));
-  EXPECT_EQ(-45, m_controller.limitArm(ELBOW, -70, 0, 0));
+  m_controller.curve(SHOULDER).setPos(0);
+  EXPECT_EQ( 45, m_controller.limitArm(ELBOW,  70));
+  EXPECT_EQ(-45, m_controller.limitArm(ELBOW, -70));
 }
 
 TEST_F(ControllerTest, RestrictElbowRelativeToShoulder) {
-  EXPECT_EQ( 35, m_controller.limitArm(ELBOW, 70, 10, 0));
-  EXPECT_EQ(-55, m_controller.limitArm(ELBOW,-70, 10, 0));
+
+  EXPECT_EQ( 55, m_controller.limitArm(ELBOW, 70));
+  EXPECT_EQ(-35, m_controller.limitArm(ELBOW,-70));
 }
 
 TEST_F(ControllerTest, RestrictShoulder) {
-  EXPECT_EQ( 45, m_controller.limitArm(SHOULDER, 70, 0, 0));
-  EXPECT_EQ(-45, m_controller.limitArm(SHOULDER,-70, 0, 0));
+  m_controller.curve(ELBOW).setPos(0);
+  EXPECT_EQ( 45, m_controller.limitArm(SHOULDER, 70));
+  EXPECT_EQ(-45, m_controller.limitArm(SHOULDER,-70));
 }
 
 TEST_F(ControllerTest, RestrictShoulderRelativeToElbow) {
-  EXPECT_EQ( 55, m_controller.limitArm(SHOULDER, 70, 0, -10));
-  EXPECT_EQ(-35, m_controller.limitArm(SHOULDER,-70, 0, -10));
+  EXPECT_EQ( 25, m_controller.limitArm(SHOULDER, 70));
+  EXPECT_EQ(-65, m_controller.limitArm(SHOULDER,-70));
 }
 
 int main(int argc, char **argv) {
