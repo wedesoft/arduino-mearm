@@ -123,6 +123,10 @@ public:
     for (int drive=0; drive<DRIVES; drive++)
       writePWM(drive, round(angleToPWM(drive, m_curve[drive].update(dt))));
   }
+  void stopDrives(void) {
+    for (int drive=0; drive<DRIVES; drive++)
+      m_curve[drive].stop();
+  }
   virtual int offset(int drive) = 0;
   virtual float resolution(int drive) = 0;
   virtual int lower(int drive) = 0;
@@ -131,7 +135,6 @@ public:
   virtual void reportAngle(float) = 0;
   virtual void reportPWM(float) = 0;
   virtual void writePWM(int, int) = 0;
-  virtual void stopDrives(void) = 0;
 protected:
   float m_number;
   float m_fraction;

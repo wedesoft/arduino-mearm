@@ -30,11 +30,6 @@ public:
   void writePWM(int drive, int pwm) {
     m_servo[drive].writeMicroseconds(pwm);
   }
-  void stopDrives(void)
-  {
-    for (int drive=0; drive<DRIVES; drive++)
-      m_curve[drive].stop();
-  }
 protected:
   Servo m_servo[DRIVES];
 };

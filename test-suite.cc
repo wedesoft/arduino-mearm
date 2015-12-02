@@ -147,7 +147,6 @@ public:
   MOCK_METHOD1(reportAngle, void(float));
   MOCK_METHOD1(reportPWM, void(float));
   MOCK_METHOD2(writePWM, void(int,int));
-  MOCK_METHOD0(stopDrives, void());
 };
 
 class ControllerTest: public ::testing::Test {
@@ -298,15 +297,14 @@ TEST_F(ControllerTest, IgnoreInvalidFloat) {
 }
 
 TEST_F(ControllerTest, AbortRetargetBase) {
-  EXPECT_CALL(m_controller, stopDrives());
   EXPECT_CALL(m_controller, reportAngle(45));
   m_controller.parseChar('5');
   m_controller.parseChar('x');
   m_controller.parseChar('b');
+  EXPECT_EQ(45, m_controller.curve(BASE).target());
 }
 
 TEST_F(ControllerTest, CorrectTarget) {
-  EXPECT_CALL(m_controller, stopDrives());
   m_controller.parseChar('5');
   m_controller.parseChar('x');
   m_controller.parseChar('3');
@@ -360,11 +358,6 @@ TEST_F(ControllerTest, ReportGripperPWM) {
   m_controller.parseChar('G');
 }
 
-TEST_F(ControllerTest, AbortPathForOtherKey) {
-  EXPECT_CALL(m_controller, stopDrives());
-  m_controller.parseChar('x');
-}
-
 TEST_F(ControllerTest, UseBase) {
   EXPECT_EQ(-90, m_controller.limitArm(BASE, -90));
   EXPECT_EQ( 90, m_controller.limitArm(BASE,  90));
@@ -415,6 +408,19 @@ TEST_F(ControllerTest, UpdateAppliesTargets) {
   EXPECT_CALL(m_controller, writePWM(SHOULDER,1380));
   EXPECT_CALL(m_controller, writePWM(ELBOW,1740));
   EXPECT_CALL(m_controller, writePWM(GRIPPER,1860));
+  m_controller.update(2000);
+}
+
+TEST_F(ControllerTest, StopDrives) {
+  m_controller.curve(BASE).retarget(0);
+  m_controller.curve(SHOULDER).retarget(0);
+  m_controller.curve(ELBOW).retarget(0);
+  m_controller.curve(GRIPPER).retarget(0);
+  EXPECT_CALL(m_controller, writePWM(BASE,2040));
+  EXPECT_CALL(m_controller, writePWM(SHOULDER,1380));
+  EXPECT_CALL(m_controller, writePWM(ELBOW,1740));
+  EXPECT_CALL(m_controller, writePWM(GRIPPER,1860));
+  m_controller.parseChar('x');
   m_controller.update(2000);
 }
 
