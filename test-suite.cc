@@ -421,8 +421,30 @@ TEST_F(ControllerTest, StopDrives) {
   EXPECT_CALL(m_controller, writePWM(ELBOW,1740));
   EXPECT_CALL(m_controller, writePWM(GRIPPER,1860));
   m_controller.parseChar('x');
-  m_controller.update(2000);
+  m_controller.update(4000);
 }
+
+TEST_F(ControllerTest, ApproachTeachPoint) {
+  m_controller.parseChar('@');
+  m_controller.parseChar('b');
+  EXPECT_CALL(m_controller, writePWM(BASE,1500));
+  EXPECT_CALL(m_controller, writePWM(SHOULDER,1500));
+  EXPECT_CALL(m_controller, writePWM(ELBOW,1500));
+  EXPECT_CALL(m_controller, writePWM(GRIPPER,1500));
+  m_controller.update(4000);
+}
+
+TEST_F(ControllerTest, FinishTeachPointSelection) {
+  m_controller.parseChar('@');
+  m_controller.parseChar('b');
+  EXPECT_CALL(m_controller, reportAngle(45));
+  m_controller.parseChar('b');
+}
+
+// @@
+// @<esc>
+// mb
+// mbb
 
 int main(int argc, char **argv) {
   ::testing::InitGoogleTest(&argc, argv);
