@@ -90,23 +90,22 @@ public:
       case 'e':
       case 's':
       case 'g':
-        if (m_sign != 0) {
-          if (m_fraction == 0) m_fraction = 1;
-          targetAngle(drive(c), m_number * m_fraction * m_sign);
-          resetNumber();
-        } else
-          reportAngle(m_curve[drive(c)].pos());
-        break;
       case 'B':
       case 'E':
       case 'S':
       case 'G':
         if (m_sign != 0) {
           if (m_fraction == 0) m_fraction = 1;
-          targetPWM(drive(c), m_number * m_fraction * m_sign);
+          if (isupper(c))
+            targetPWM(drive(c), m_number * m_fraction * m_sign);
+          else
+            targetAngle(drive(c), m_number * m_fraction * m_sign);
           resetNumber();
         } else
-          reportPWM(angleToPWM(drive(c), m_curve[drive(c)].pos()));
+          if (isupper(c))
+            reportPWM(angleToPWM(drive(c), m_curve[drive(c)].pos()));
+          else
+            reportAngle(m_curve[drive(c)].pos());
         break;
       case '@':
         m_loadPos = true;
