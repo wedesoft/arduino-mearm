@@ -51,11 +51,18 @@ Examples of servo commands are:
 * **s**: get shoulder servo angle
 * **e**: get elbow servo angle
 * **g**: get gripper servo angle
-* **-2.5b**: set base servo angle to -2.5 degrees
-* **B**: get base servo position
-* **S**: get shoulder servo position
-* **E**: get elbow servo position
-* **G**: get gripper servo position
+* **B**: get base servo pulse width
+* **S**: get shoulder servo pulse width
+* **E**: get elbow servo pulse width
+* **G**: get gripper servo pulse width
+* **45b**: set base servo angle to 45 degrees
+* **-12.5**: set shoulder servo angle to -12.5 degrees
+* **10e**: set elbow servo angle to 10 degrees
+* **30g**: set gripper servo angle to 30 degrees
+* **2400**: set base servo pulse width to 2400
+* **1500S**: set shoulder servo pulse width to 1500
+* **1500E**: set elbow servo pulse width to 1500
+* **544G**: set gripper servo pulse width to 544
 * **x**: stop all servos
 
 You can exit the *screen* terminal using Ctrl-A \\.
