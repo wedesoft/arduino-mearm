@@ -13,7 +13,8 @@ const int DRIVES   = 4;
 class ControllerBase
 {
 public:
-  ControllerBase(void): m_number(0), m_fraction(0), m_sign(0), m_loadPos(false) {
+  ControllerBase(void): m_number(0), m_fraction(0), m_sign(0), m_load(false), m_save(false) {
+    memset(m_teach, sizeof(m_teach), 0);
     for (int drive=0; drive<DRIVES; drive++)
       m_curve[drive].setBound(BOUND);
   }
@@ -66,12 +67,22 @@ public:
     m_sign = 0;
   };
   void parseChar(char c) {
-    if (m_loadPos) {
-      targetAngle(BASE, 0);
-      targetAngle(SHOULDER, 0);
-      targetAngle(ELBOW, 0);
-      targetAngle(GRIPPER, 0);
-      m_loadPos = false;
+    if (m_load) {
+      if (c >= 'a' && c <= 'z') {
+        for (int i=0; i<DRIVES; i++)
+          targetAngle(i, m_teach[c - 'a'][i]);
+      } else
+        stopDrives();
+      resetNumber();
+      m_load = false;
+    } else if (m_save) {
+      if (c >= 'a' && c <= 'z') {
+        for (int i=0; i<DRIVES; i++)
+          m_teach[c - 'a'][i] = m_curve[i].target();
+      } else
+        stopDrives();
+      resetNumber();
+      m_save = false;
     } else {
       switch (c) {
       case 't':
@@ -107,18 +118,29 @@ public:
           else
             reportAngle(m_curve[drive(c)].pos());
         break;
+      case '0':
+      case '1':
+      case '2':
+      case '3':
+      case '4':
+      case '5':
+      case '6':
+      case '7':
+      case '8':
+      case '9':
+        m_number = 10 * m_number + (c - '0');
+        m_fraction *= 0.1;
+        if (m_sign == 0) m_sign = 1;
+        break;
       case '@':
-        m_loadPos = true;
+        m_load = true;
+        break;
+      case 'm':
+        m_save = true;
         break;
       default:
-        if (c >= '0' && c <= '9') {
-          m_number = 10 * m_number + (c - '0');
-          m_fraction *= 0.1;
-          if (m_sign == 0) m_sign = 1;
-        } else {
-          resetNumber();
-          stopDrives();
-        };
+        resetNumber();
+        stopDrives();
       };
     };
   }
@@ -149,7 +171,9 @@ protected:
   float m_number;
   float m_fraction;
   char m_sign;
-  bool m_loadPos;
+  bool m_load;
+  bool m_save;
+  float m_teach[26][DRIVES];
   Curve m_curve[DRIVES];
 };
 

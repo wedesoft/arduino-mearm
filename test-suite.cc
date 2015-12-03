@@ -152,10 +152,10 @@ public:
 class ControllerTest: public ::testing::Test {
 public:
   ControllerTest(void) {
-    m_controller.curve(BASE).stop(45);
+    m_controller.curve(BASE    ).stop(45);
     m_controller.curve(SHOULDER).stop(-10);
-    m_controller.curve(ELBOW).stop(20);
-    m_controller.curve(GRIPPER).stop(30);
+    m_controller.curve(ELBOW   ).stop(20);
+    m_controller.curve(GRIPPER ).stop(30);
   }
 protected:
   MockController m_controller;
@@ -395,19 +395,19 @@ TEST_F(ControllerTest, RestrictShoulderRelativeToElbow) {
 
 TEST_F(ControllerTest, UpdateInformsServos) {
   m_controller.curve(BASE).retarget(0);
-  EXPECT_CALL(m_controller, writePWM(BASE,2040));
+  EXPECT_CALL(m_controller, writePWM(BASE    ,2040));
   EXPECT_CALL(m_controller, writePWM(SHOULDER,1380));
-  EXPECT_CALL(m_controller, writePWM(ELBOW,1740));
-  EXPECT_CALL(m_controller, writePWM(GRIPPER,1860));
+  EXPECT_CALL(m_controller, writePWM(ELBOW   ,1740));
+  EXPECT_CALL(m_controller, writePWM(GRIPPER ,1860));
   m_controller.update(0);
 }
 
 TEST_F(ControllerTest, UpdateAppliesTargets) {
   m_controller.curve(BASE).retarget(0);
-  EXPECT_CALL(m_controller, writePWM(BASE,1500));
+  EXPECT_CALL(m_controller, writePWM(BASE    ,1500));
   EXPECT_CALL(m_controller, writePWM(SHOULDER,1380));
-  EXPECT_CALL(m_controller, writePWM(ELBOW,1740));
-  EXPECT_CALL(m_controller, writePWM(GRIPPER,1860));
+  EXPECT_CALL(m_controller, writePWM(ELBOW   ,1740));
+  EXPECT_CALL(m_controller, writePWM(GRIPPER ,1860));
   m_controller.update(4000);
 }
 
@@ -416,10 +416,10 @@ TEST_F(ControllerTest, StopDrives) {
   m_controller.curve(SHOULDER).retarget(0);
   m_controller.curve(ELBOW).retarget(0);
   m_controller.curve(GRIPPER).retarget(0);
-  EXPECT_CALL(m_controller, writePWM(BASE,2040));
+  EXPECT_CALL(m_controller, writePWM(BASE    ,2040));
   EXPECT_CALL(m_controller, writePWM(SHOULDER,1380));
-  EXPECT_CALL(m_controller, writePWM(ELBOW,1740));
-  EXPECT_CALL(m_controller, writePWM(GRIPPER,1860));
+  EXPECT_CALL(m_controller, writePWM(ELBOW   ,1740));
+  EXPECT_CALL(m_controller, writePWM(GRIPPER ,1860));
   m_controller.parseChar('x');
   m_controller.update(4000);
 }
@@ -427,10 +427,10 @@ TEST_F(ControllerTest, StopDrives) {
 TEST_F(ControllerTest, ApproachTeachPoint) {
   m_controller.parseChar('@');
   m_controller.parseChar('b');
-  EXPECT_CALL(m_controller, writePWM(BASE,1500));
+  EXPECT_CALL(m_controller, writePWM(BASE    ,1500));
   EXPECT_CALL(m_controller, writePWM(SHOULDER,1500));
-  EXPECT_CALL(m_controller, writePWM(ELBOW,1500));
-  EXPECT_CALL(m_controller, writePWM(GRIPPER,1500));
+  EXPECT_CALL(m_controller, writePWM(ELBOW   ,1500));
+  EXPECT_CALL(m_controller, writePWM(GRIPPER ,1500));
   m_controller.update(4000);
 }
 
@@ -441,10 +441,70 @@ TEST_F(ControllerTest, FinishTeachPointSelection) {
   m_controller.parseChar('b');
 }
 
-// @@
-// @<esc>
-// mb
-// mbb
+TEST_F(ControllerTest, OnlyAlphabeticTeachPoints) {
+  m_controller.parseChar('@');
+  m_controller.parseChar('@');
+  EXPECT_EQ(45, m_controller.curve(BASE).target());
+}
+
+TEST_F(ControllerTest, WrongTeachPointKeyStopsDrives) {
+  m_controller.curve(BASE).retarget(0);
+  m_controller.parseChar('@');
+  m_controller.parseChar('@');
+  EXPECT_EQ(45, m_controller.curve(BASE).target());
+}
+
+TEST_F(ControllerTest, TeachPointSavingClearsNumber) {
+  m_controller.parseChar('0');
+  m_controller.parseChar('@');
+  m_controller.parseChar('b');
+  EXPECT_CALL(m_controller, reportAngle(45));
+  m_controller.parseChar('b');
+}
+
+TEST_F(ControllerTest, SaveTeachPoint) {
+  m_controller.parseChar('m');
+  m_controller.parseChar('b');
+  m_controller.parseChar('@');
+  m_controller.parseChar('b');
+  EXPECT_EQ( 45, m_controller.curve(BASE    ).target());
+  EXPECT_EQ(-10, m_controller.curve(SHOULDER).target());
+  EXPECT_EQ( 20, m_controller.curve(ELBOW   ).target());
+  EXPECT_EQ( 30, m_controller.curve(GRIPPER ).target());
+}
+
+TEST_F(ControllerTest, FinishTeachPointSaving) {
+  m_controller.parseChar('m');
+  m_controller.parseChar('b');
+  EXPECT_CALL(m_controller, reportAngle(45));
+  m_controller.parseChar('b');
+}
+
+TEST_F(ControllerTest, TeachPointLoadingClearsNumber) {
+  m_controller.parseChar('0');
+  m_controller.parseChar('m');
+  m_controller.parseChar('b');
+  EXPECT_CALL(m_controller, reportAngle(45));
+  m_controller.parseChar('b');
+}
+
+TEST_F(ControllerTest, WrongTeachPointSelectionStopsDrives) {
+  m_controller.curve(BASE).retarget(0);
+  m_controller.parseChar('m');
+  m_controller.parseChar('@');
+  EXPECT_EQ(45, m_controller.curve(BASE).target());
+}
+
+TEST_F(ControllerTest, SaveSecondTeachPoint) {
+  m_controller.parseChar('m');
+  m_controller.parseChar('b');
+  m_controller.parseChar('@');
+  m_controller.parseChar('a');
+  EXPECT_EQ(0, m_controller.curve(BASE    ).target());
+  EXPECT_EQ(0, m_controller.curve(SHOULDER).target());
+  EXPECT_EQ(0, m_controller.curve(ELBOW   ).target());
+  EXPECT_EQ(0, m_controller.curve(GRIPPER ).target());
+}
 
 int main(int argc, char **argv) {
   ::testing::InitGoogleTest(&argc, argv);
