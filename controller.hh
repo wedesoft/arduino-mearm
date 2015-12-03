@@ -125,7 +125,7 @@ public:
   }
   void stopDrives(void) {
     for (int drive=0; drive<DRIVES; drive++)
-      m_curve[drive].stop();
+      m_curve[drive].stop(m_curve[drive].pos());
   }
   virtual int offset(int drive) = 0;
   virtual float resolution(int drive) = 0;

@@ -1,9 +1,6 @@
 # TODO
 
-* move clipping code into tested section
-* set servo hardware positions
-* self-collisions
-* instructions (screw terminal)
+* compute time for curve given acceleration
 * synchronised approach (point-to-point)
-* reduce acceleration
+* instructions (screw terminal)
 * document collisions: self parallelogram, inversion, elbow at base, shoulder lever at right plate, gripper

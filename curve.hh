@@ -8,7 +8,6 @@ class Curve
 public:
   Curve(void): m_pos(0), m_speed(0), m_acceleration(0), m_target(0), m_bound(1), m_state(halt) {}
   float pos(void) { return m_pos; }
-  void setPos(float pos) { m_pos = pos; stop(); }
   void setBound(float bound) { m_bound = bound; }
   float target(void) { return m_target; }
   void retarget(float target) {
@@ -51,8 +50,9 @@ public:
     char sign = m_acceleration >= 0 ? 1 : -1;
     return (sqrt(2 * m_speed * m_speed + 4 * m_acceleration * (m_target - m_pos)) - 2 * sign * m_speed) / (2 * m_bound);
   }
-  void stop(void) {
-    m_target = m_pos;
+  void stop(float pos) {
+    m_pos = pos;
+    m_target = pos;
     finish();
   }
   void finish(void) {

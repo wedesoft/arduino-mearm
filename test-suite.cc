@@ -25,7 +25,7 @@ public:
   MovingForwardTest(void)
   {
     m_curve.setBound(10);
-    m_curve.setPos(100);
+    m_curve.stop(100);
     m_curve.retarget(140);
   }
 protected:
@@ -106,7 +106,7 @@ TEST_F(MovingForwardTest, ContinueIfIdentical) {
 
 TEST_F(MovingForwardTest, AbortMotion) {
   m_curve.update(2);
-  m_curve.stop();
+  m_curve.stop(m_curve.pos());
   m_curve.update(2);
   EXPECT_EQ(120, m_curve.pos());
 }
@@ -116,7 +116,7 @@ public:
   MovingBackwardTest(void)
   {
     m_curve.setBound(10);
-    m_curve.setPos(100);
+    m_curve.stop(100);
     m_curve.retarget(60);
   }
 protected:
@@ -152,10 +152,10 @@ public:
 class ControllerTest: public ::testing::Test {
 public:
   ControllerTest(void) {
-    m_controller.curve(BASE).setPos(45);
-    m_controller.curve(SHOULDER).setPos(-10);
-    m_controller.curve(ELBOW).setPos(20);
-    m_controller.curve(GRIPPER).setPos(30);
+    m_controller.curve(BASE).stop(45);
+    m_controller.curve(SHOULDER).stop(-10);
+    m_controller.curve(ELBOW).stop(20);
+    m_controller.curve(GRIPPER).stop(30);
   }
 protected:
   MockController m_controller;
@@ -364,7 +364,7 @@ TEST_F(ControllerTest, UseBase) {
 }
 
 TEST_F(ControllerTest, RestrictElbow) {
-  m_controller.curve(SHOULDER).setPos(0);
+  m_controller.curve(SHOULDER).stop(0);
   EXPECT_EQ( 45, m_controller.limitArm(ELBOW,  70));
   EXPECT_EQ(-45, m_controller.limitArm(ELBOW, -70));
 }
@@ -383,7 +383,7 @@ TEST_F(ControllerTest, UseElbowRestriction) {
 }
 
 TEST_F(ControllerTest, RestrictShoulder) {
-  m_controller.curve(ELBOW).setPos(0);
+  m_controller.curve(ELBOW).stop(0);
   EXPECT_EQ( 45, m_controller.limitArm(SHOULDER, 70));
   EXPECT_EQ(-45, m_controller.limitArm(SHOULDER,-70));
 }
