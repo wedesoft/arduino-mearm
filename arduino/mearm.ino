@@ -16,7 +16,7 @@ public:
   int lower(int drive) { return MIN[drive]; }
   int upper(int drive) { return MAX[drive]; }
   void reportTime(void) {
-    Serial.print(millis() * 0.001);
+    Serial.print(millis());
     Serial.write("\r\n");
   }
   void reportAngle(float angle) {

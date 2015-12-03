@@ -1,6 +1,7 @@
 # TODO
 
 * teach points
+* use table for commands in README
 * splines
 * synchronised approach
 * instructions (screw terminal)
