@@ -69,9 +69,9 @@ Examples of servo commands are:
 
 You can exit the *screen* terminal using Ctrl-A \\.
 
-**Warning: code currently does not prevent self-collisions of the robot which can damage the servo!**
+**Warning: self-collisions of the robot can damage the servos!**
 
-**Warning: closing the gripper too far on an object might damage the servo!**
+**Warning: closing the gripper too far on an object can damage the servo!**
 
 ## file structure
 
