@@ -1,6 +1,7 @@
 # TODO
 
-* teach points
+* display configuration
+* display joint name
 * 5-3b
 * use table for commands in README
 * splines
