@@ -93,6 +93,7 @@ You can exit the *screen* terminal using Ctrl-A \\.
 * [MeArm inverse kinematics project][9]
 * [Robot arm Arduino project for beginners][11]
 * [MeArm 0.4 assembly][12]
+* [Arduino Servo issues][13]
 
 [1]: http://mearm.com/
 [2]: https://www.arduino.cc/
@@ -107,3 +108,4 @@ You can exit the *screen* terminal using Ctrl-A \\.
 [11]: http://lifehacker.com/build-a-kickass-robot-arm-the-perfect-arduino-project-1700643747
 [12]: http://www.mathias-wilhelm.de/arduino/projects/phenoptix-mearm/
 [13]: http://mearm.com/pages/instructions
+[14]: http://www.double-oops.org/mini-blog/debuggingarduinoservoissues
