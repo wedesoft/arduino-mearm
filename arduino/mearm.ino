@@ -48,6 +48,8 @@ void loop() {
   int dt = millis() - t0;
   if (Serial.available())
     controller.parseChar(Serial.read());
-  controller.update(dt);
-  t0 += dt;
+  if (dt >= 20) {
+    controller.update(dt);
+    t0 += dt;
+  };
 }
