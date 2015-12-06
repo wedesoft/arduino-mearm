@@ -1,0 +1,9 @@
+dependencies:
+  pre:
+    - sudo apt-get update
+    - sudo apt-get install arduino-mk google-mock screen
+
+test:
+  override:
+    - make
+    - make check
