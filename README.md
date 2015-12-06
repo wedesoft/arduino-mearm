@@ -14,6 +14,12 @@ Install the Arduino Makefile, the *screen* serial terminal, and the Google test 
 sudo aptitude install arduino-mk screen google-mock
 ```
 
+Create the initial calibration file:
+
+```
+cp calibration.hh.default calibration.hh
+```
+
 Then build the Arduino program using *make*:
 
 ```
