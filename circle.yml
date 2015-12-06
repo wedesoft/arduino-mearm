@@ -5,5 +5,5 @@ dependencies:
 
 test:
   override:
-    - make
+    - env PATH=/usr/share/arduino:$PATH make
     - make check
