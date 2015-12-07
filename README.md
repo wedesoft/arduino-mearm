@@ -11,7 +11,7 @@ Note, you might have to [uninstall *brltty* if it conflicts with the Arduino tty
 Install the Arduino Makefile, the *screen* serial terminal, and the Google test library as follows:
 
 ```
-sudo aptitude install arduino-mk arduino-core screen google-mock libgtest-dev
+sudo aptitude install arduino-mk screen google-mock
 ```
 
 Create the initial calibration file:

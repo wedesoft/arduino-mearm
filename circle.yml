@@ -1,7 +1,7 @@
 dependencies:
   pre:
     - sudo apt-get update
-    - sudo apt-get install arduino-mk arduino-core
+    - sudo apt-get install arduino-mk
     - wget -c https://github.com/google/googletest/archive/release-1.7.0.tar.gz -O googletest-release-1.7.0.tar.gz
     - tar xzf googletest-release-1.7.0.tar.gz
     - wget -c https://github.com/google/googlemock/archive/release-1.7.0.tar.gz -O googlemock-release-1.7.0.tar.gz
