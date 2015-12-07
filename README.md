@@ -1,4 +1,4 @@
-# arduino-mearm
+# arduino-mearm [![FreeBSD](https://img.shields.io/badge/license-FreeBSD-red.png)](https://opensource.org/licenses/BSD-2-Clause) [![](https://img.shields.io/circleci/project/wedesoft/arduino-mearm/master.png)](https://circleci.com/gh/wedesoft/arduino-mearm)
 
 Responsive and smooth servo steering of the Phenoptix [MeArm][1] robot using the [Arduino][2] microcontroller board.
 
