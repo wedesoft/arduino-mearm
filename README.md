@@ -101,6 +101,7 @@ You can exit the *screen* terminal using Ctrl-A \\.
 * [MeArm 0.4 assembly][12]
 * [Arduino Servo issues][13]
 * [MeArm gripper servo stops working after a while][15]
+* [Compiling Arduino sketches using Makefile][16]
 
 [1]: http://mearm.com/
 [2]: https://www.arduino.cc/
@@ -117,3 +118,4 @@ You can exit the *screen* terminal using Ctrl-A \\.
 [13]: http://mearm.com/pages/instructions
 [14]: http://www.double-oops.org/mini-blog/debuggingarduinoservoissues
 [15]: http://forum.arduino.cc/index.php?topic=365050.0
+[16]: http://hardwarefun.com/tutorials/compiling-arduino-sketches-using-makefile
