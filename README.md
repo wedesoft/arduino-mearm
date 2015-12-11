@@ -100,6 +100,7 @@ You can exit the *screen* terminal using Ctrl-A \\.
 * [Robot arm Arduino project for beginners][11]
 * [MeArm 0.4 assembly][12]
 * [Arduino Servo issues][13]
+* [MeArm gripper servo stops working after a while][15]
 
 [1]: http://mearm.com/
 [2]: https://www.arduino.cc/
@@ -115,3 +116,4 @@ You can exit the *screen* terminal using Ctrl-A \\.
 [12]: http://www.mathias-wilhelm.de/arduino/projects/phenoptix-mearm/
 [13]: http://mearm.com/pages/instructions
 [14]: http://www.double-oops.org/mini-blog/debuggingarduinoservoissues
+[15]: http://forum.arduino.cc/index.php?topic=365050.0
