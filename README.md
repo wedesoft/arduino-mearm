@@ -88,7 +88,7 @@ You can exit the *screen* terminal using Ctrl-A \\.
 # External Links
 
 * [MeArm][1]
-* [Arduino][2]
+* [Arduino][2] (also see [forum][17])
 * [Instructions for MeArm with Arduino][13]
 * [Google Test][4]
 * [Turnigy TG9e servo][5]
@@ -118,3 +118,4 @@ You can exit the *screen* terminal using Ctrl-A \\.
 [14]: http://www.double-oops.org/mini-blog/debuggingarduinoservoissues
 [15]: http://forum.arduino.cc/index.php?topic=365050.0
 [16]: http://hardwarefun.com/tutorials/compiling-arduino-sketches-using-makefile
+[17]: http://forum.arduino.cc/
