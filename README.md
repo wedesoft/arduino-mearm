@@ -100,7 +100,6 @@ You can exit the *screen* terminal using Ctrl-A \\.
 * [Robot arm Arduino project for beginners][11]
 * [MeArm 0.4 assembly][12]
 * [Arduino Servo issues][13]
-* [MeArm gripper servo stops working after a while][15]
 * [Compiling Arduino sketches using Makefile][16]
 
 [1]: http://mearm.com/
