@@ -40,7 +40,7 @@ Controller controller;
 
 void setup() {
   controller.setup();
-  Serial.begin(9600);
+  Serial.begin(115200);
   t0 = millis();
 }
 

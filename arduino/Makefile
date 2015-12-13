@@ -11,4 +11,4 @@ include $(ARDMK_DIR)/Arduino.mk
 $(OBJDIR)/mearm.o: ../curve.hh ../controller.hh ../calibration.hh
 
 repl:
-	$(SCREEN) $(ARDUINO_PORT) 9600
+	$(SCREEN) $(ARDUINO_PORT) 115200

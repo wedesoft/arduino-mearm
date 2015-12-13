@@ -47,7 +47,7 @@ make upload
 ## control robot
 
 ```
-screen /dev/ttyUSB0 9600
+screen /dev/ttyUSB0 115200
 ```
 
 Examples of servo commands are:
