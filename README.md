@@ -101,6 +101,7 @@ You can exit the *screen* terminal using Ctrl-A \\.
 * [MeArm 0.4 assembly][12]
 * [Arduino Servo issues][13]
 * [Compiling Arduino sketches using Makefile][16]
+* [Arduino - The Documentary][18]
 
 [1]: http://mearm.com/
 [2]: https://www.arduino.cc/
@@ -119,3 +120,4 @@ You can exit the *screen* terminal using Ctrl-A \\.
 [15]: http://forum.arduino.cc/index.php?topic=365050.0
 [16]: http://hardwarefun.com/tutorials/compiling-arduino-sketches-using-makefile
 [17]: http://forum.arduino.cc/
+[18]: https://vimeo.com/18539129
