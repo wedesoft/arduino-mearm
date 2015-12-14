@@ -34,6 +34,13 @@ TEST(ProfileTest, Accelerates)
   EXPECT_GT(0.2, Profile(1).value(t / 4));
 }
 
+TEST(ProfileTest, StartAndEndStationary)
+{
+  float t = Profile(123).duration();
+  EXPECT_FLOAT_EQ(  0, Profile(123).value(   -1));
+  EXPECT_FLOAT_EQ(123, Profile(123).value(t + 1));
+}
+
 class StationaryTest: public ::testing::Test {
 public:
   StationaryTest(void) { m_curve.setBound(10); }
