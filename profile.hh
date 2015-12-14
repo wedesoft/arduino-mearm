@@ -6,8 +6,7 @@
 class Profile
 {
 public:
-  Profile(float distance, float maxJerk=0.01): m_distance(distance) {
-    m_duration = cbrtf(60 * distance / maxJerk);
+  Profile(float distance, float duration): m_distance(distance), m_duration(duration) {
     m_c5 =   6 * distance / powf(m_duration, 5);
     m_c4 = -15 * distance / powf(m_duration, 4);
     m_c3 =  10 * distance / powf(m_duration, 3);
@@ -22,9 +21,9 @@ public:
     else
       retval = 0;
     return retval;
-  };
-  float duration(void) {
-    return m_duration;
+  }
+  static float timeRequired(float distance, float maxJerk) {
+    return cbrtf(60 * distance / maxJerk);
   }
 protected:
   float m_distance;

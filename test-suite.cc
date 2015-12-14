@@ -6,39 +6,39 @@
 
 TEST(ProfileTest, StartWithZero)
 {
-  EXPECT_EQ(0, Profile(1).value(0));
+  EXPECT_EQ(0, Profile(1, 10).value(0));
 }
 
 TEST(ProfileTest, EndWithDistance)
 {
-  float t1 = Profile(1).duration();
-  EXPECT_NEAR(1, Profile(1).value(t1), 0.001);
-  float t2 = Profile(2).duration();
-  EXPECT_NEAR(2, Profile(2).value(t2), 0.001);
+  EXPECT_NEAR(1, Profile(1, 10).value(10), 0.001);
+  EXPECT_NEAR(2, Profile(2, 10).value(10), 0.001);
 }
 
 TEST(ProfileTest, PassesMiddle)
 {
-  float t = Profile(1).duration();
-  EXPECT_NEAR(0.5, Profile(1).value(t / 2), 0.001);
+  EXPECT_NEAR(0.5, Profile(1, 10).value(5), 0.001);
 }
 
 TEST(ProfileTest, DistanceCubicWithDuration)
 {
-  EXPECT_NEAR(2 * Profile(1).duration(), Profile(8).duration(), 0.001);
+  EXPECT_NEAR(2 * Profile::timeRequired(1, 0.01), Profile::timeRequired(8, 0.01), 0.001);
+}
+
+TEST(ProfileTest, DistanceInverseCubicWithMaxJerk)
+{
+  EXPECT_NEAR(2 * Profile::timeRequired(1, 0.08), Profile::timeRequired(1, 0.01), 0.001);
 }
 
 TEST(ProfileTest, Accelerates)
 {
-  float t = Profile(1).duration();
-  EXPECT_GT(0.2, Profile(1).value(t / 4));
+  EXPECT_GT(0.2, Profile(1, 4).value(1));
 }
 
 TEST(ProfileTest, StartAndEndStationary)
 {
-  float t = Profile(123).duration();
-  EXPECT_FLOAT_EQ(  0, Profile(123).value(   -1));
-  EXPECT_FLOAT_EQ(123, Profile(123).value(t + 1));
+  EXPECT_FLOAT_EQ(  0, Profile(123, 10).value(-1));
+  EXPECT_FLOAT_EQ(123, Profile(123, 10).value(11));
 }
 
 class StationaryTest: public ::testing::Test {
