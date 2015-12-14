@@ -13,7 +13,7 @@ public:
     m_c3 =  10 * distance / powf(m_duration, 3);
   }
   float value(float time) {
-    return m_c5 * pow(time, 5) + m_c4 * pow(time, 4) + m_c3 * pow(time, 3);
+    return ((m_c5 * time + m_c4) * time + m_c3) * time * time * time;
   };
   float duration(void) {
     return m_duration;
