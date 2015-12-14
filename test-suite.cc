@@ -3,10 +3,24 @@
 #include "controller.hh"
 #include "curve.hh"
 #include "profile.hh"
+#include "path.hh"
+
+TEST(ProfileTest, DefaultProfile)
+{
+  EXPECT_EQ(0, Profile().value(-1));
+  EXPECT_EQ(0, Profile().value( 0));
+  EXPECT_EQ(0, Profile().value( 1));
+}
 
 TEST(ProfileTest, StartWithZero)
 {
   EXPECT_EQ(0, Profile(1, 10).value(0));
+}
+
+TEST(ProfileTest, EmptyOrNot)
+{
+  ASSERT_TRUE(Profile().empty());
+  ASSERT_FALSE(Profile(1, 10).empty());
 }
 
 TEST(ProfileTest, EndWithDistance)
@@ -41,137 +55,101 @@ TEST(ProfileTest, StartAndEndStationary)
   EXPECT_FLOAT_EQ(123, Profile(123, 10).value(11));
 }
 
-class StationaryTest: public ::testing::Test {
-public:
-  StationaryTest(void) { m_curve.setBound(10); }
+class PathTest: public ::testing::Test {
 protected:
-  Curve m_curve;
+  Path m_path;
 };
 
-TEST_F(StationaryTest, StartWithGivenValue) {
-  EXPECT_EQ(0, m_curve.pos());
-  EXPECT_EQ(0, m_curve.target());
+TEST_F(PathTest, StartWithZero)
+{
+  EXPECT_EQ(0, m_path.pos());
 }
 
-TEST_F(StationaryTest, StayConstantOverTime) {
-  m_curve.update(5);
-  EXPECT_EQ(0, m_curve.pos());
+TEST_F(PathTest, StayConstantOverTime)
+{
+  m_path.update(5);
+  EXPECT_EQ(0, m_path.pos());
 }
 
-class MovingForwardTest: public ::testing::Test {
-public:
-  MovingForwardTest(void)
-  {
-    m_curve.setBound(10);
-    m_curve.stop(100);
-    m_curve.retarget(140);
-  }
-protected:
-  Curve m_curve;
-};
-
-TEST_F(MovingForwardTest, RememberTarget) {
-  EXPECT_EQ(140, m_curve.target());
+TEST_F(PathTest, StopSetsValue)
+{
+  m_path.stop(100);
+  EXPECT_EQ(100, m_path.pos());
 }
 
-TEST_F(MovingForwardTest, AdvanceWithTime) {
-  m_curve.update(1);
-  EXPECT_EQ(105, m_curve.pos());
+TEST_F(PathTest, ApproachTarget)
+{
+  m_path.stop(100);
+  m_path.retarget(200, 1);
+  m_path.update(0.5);
+  EXPECT_NEAR(150, m_path.pos(), 0.001);
+  m_path.update(0.5);
+  EXPECT_NEAR(200, m_path.pos(), 0.001);
 }
 
-TEST_F(MovingForwardTest, AccelerateOverTime) {
-  m_curve.update(1);
-  m_curve.update(1);
-  EXPECT_EQ(120, m_curve.pos());
+TEST_F(PathTest, UseSpecifiedDuration)
+{
+  m_path.stop(100);
+  m_path.retarget(200, 2);
+  m_path.update(1);
+  EXPECT_NEAR(150, m_path.pos(), 0.001);
+  m_path.update(1);
+  EXPECT_NEAR(200, m_path.pos(), 0.001);
 }
 
-TEST_F(MovingForwardTest, UseSpecifiedAcceleration) {
-  Curve curve;
-  curve.setBound(20);
-  curve.retarget(200);
-  curve.update(1);
-  EXPECT_EQ(10, curve.pos());
+TEST_F(PathTest, UpdateReturnsPosition)
+{
+  m_path.stop(100);
+  m_path.retarget(200, 2);
+  EXPECT_NEAR(150, m_path.update(1), 0.001);
+  EXPECT_NEAR(200, m_path.update(1), 0.001);
 }
 
-TEST_F(MovingForwardTest, UpdateReturnsPosition) {
-  Curve curve;
-  curve.setBound(20);
-  curve.retarget(200);
-  EXPECT_EQ(10, curve.update(1));
-  EXPECT_EQ(40, curve.update(1));
+TEST_F(PathTest, AbortMotion) {
+  m_path.stop(100);
+  m_path.retarget(200, 2);
+  m_path.update(1);
+  m_path.stop(m_path.pos());
+  m_path.update(1);
+  EXPECT_NEAR(150, m_path.pos(), 0.001);
 }
 
-TEST_F(MovingForwardTest, DetermineTimeOfReversal) {
-  EXPECT_EQ(2, m_curve.reverseTime());
-  m_curve.update(1);
-  EXPECT_EQ(1, m_curve.reverseTime());
-  m_curve.update(1);
-  EXPECT_EQ(0, m_curve.reverseTime());
+TEST_F(PathTest, ModifyTarget) {
+  m_path.stop(100);
+  m_path.retarget(200, 2);
+  m_path.update(1);
+  m_path.retarget(300, 2);
+  EXPECT_NEAR(150, m_path.pos(), 0.001);
+  m_path.update(1);
+  EXPECT_NEAR(250, m_path.pos(), 0.001);
+  m_path.update(1);
+  EXPECT_NEAR(300, m_path.pos(), 0.001);
 }
 
-TEST_F(MovingForwardTest, DecelerateBeforeTarget) {
-  m_curve.update(3);
-  EXPECT_EQ(135, m_curve.pos());
+TEST_F(PathTest, IgnoreThirdTarget) {
+  m_path.retarget(1, 1);
+  m_path.retarget(2, 1);
+  m_path.retarget(4, 1);
+  m_path.update(1);
+  EXPECT_FLOAT_EQ(2, m_path.pos());
 }
 
-TEST_F(MovingForwardTest, StopAtTarget) {
-  m_curve.update(4);
-  EXPECT_EQ(140, m_curve.pos());
-  m_curve.update(1);
-  EXPECT_EQ(140, m_curve.pos());
+TEST_F(PathTest, MakeFirstProfileAvailableWhenFinished) {
+  m_path.retarget(1, 1);
+  m_path.retarget(2, 2);
+  m_path.update(1);
+  m_path.retarget(4, 1);
+  m_path.update(1);
+  EXPECT_FLOAT_EQ(4, m_path.pos());
 }
 
-TEST_F(MovingForwardTest, AccomodateReducedTarget) {
-  m_curve.update(2);
-  m_curve.retarget(120);
-  m_curve.update(0);
-  EXPECT_EQ(120, m_curve.pos());
-}
-
-TEST_F(MovingForwardTest, RampDownForReducedTarget) {
-  m_curve.update(2);
-  m_curve.retarget(120);
-  m_curve.update(2);
-  EXPECT_EQ(140, m_curve.pos());
-}
-
-TEST_F(MovingForwardTest, ContinueIfIdentical) {
-  m_curve.update(2);
-  m_curve.retarget(140);
-  m_curve.update(2);
-  EXPECT_EQ(140, m_curve.pos());
-}
-
-TEST_F(MovingForwardTest, AbortMotion) {
-  m_curve.update(2);
-  m_curve.stop(m_curve.pos());
-  m_curve.update(2);
-  EXPECT_EQ(120, m_curve.pos());
-}
-
-class MovingBackwardTest: public ::testing::Test {
-public:
-  MovingBackwardTest(void)
-  {
-    m_curve.setBound(10);
-    m_curve.stop(100);
-    m_curve.retarget(60);
-  }
-protected:
-  Curve m_curve;
-};
-
-TEST_F(MovingBackwardTest, DetermineTimeOfReversal) {
-  EXPECT_EQ(2, m_curve.reverseTime());
-  m_curve.update(1);
-  EXPECT_EQ(1, m_curve.reverseTime());
-  m_curve.update(1);
-  EXPECT_EQ(0, m_curve.reverseTime());
-}
-
-TEST_F(MovingBackwardTest, AdvanceWithTime) {
-  m_curve.update(1);
-  EXPECT_EQ(95, m_curve.pos());
+TEST_F(PathTest, MakeSecondProfileAvailableWhenFinished) {
+  m_path.retarget(1, 2);
+  m_path.retarget(2, 1);
+  m_path.update(1);
+  m_path.retarget(4, 1);
+  m_path.update(1);
+  EXPECT_FLOAT_EQ(4, m_path.pos());
 }
 
 class MockController: public ControllerBase
