@@ -45,7 +45,7 @@ void setup() {
   on = false;
   controller.setup();
   pinMode(LED, OUTPUT);
-  Serial.begin(9600);
+  Serial.begin(115200);
   t0 = millis();
 }
 

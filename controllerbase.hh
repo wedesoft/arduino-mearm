@@ -70,14 +70,14 @@ public:
   };
   void parseChar(char c) {
     if (m_load) {
-      if (c >= 'a' && c <= 'l')
+      if (c >= 'a' && c <= 't')
         targetTeachPoint(c - 'a');
       else
         stopDrives();
       resetNumber();
       m_load = false;
     } else if (m_save) {
-      if (c >= 'a' && c <= 'l')
+      if (c >= 'a' && c <= 't')
         saveTeachPoint(c - 'a');
       else
         stopDrives();
@@ -189,7 +189,7 @@ protected:
   char m_sign;
   bool m_load;
   bool m_save;
-  float m_teach[12][DRIVES];
+  float m_teach[20][DRIVES];
   Path m_curve[DRIVES];
 };
 
