@@ -1,8 +1,6 @@
 # TODO
 
-* synchronised approach
 * instructions (screw terminal)
-* compose curve from pr
 * display configuration
 * display joint name
 * 5-3b
