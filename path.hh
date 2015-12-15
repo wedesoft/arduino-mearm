@@ -42,7 +42,15 @@ public:
       return true;
     } else
       return false;
-  };
+  }
+  float timeRemaining(int index) {
+    return m_profile[index].empty() ? 0 : m_profile[index].duration() - m_time[index];
+  }
+  float timeRemaining(void) {
+    float a = timeRemaining(0);
+    float b = timeRemaining(1);
+    return a >= b ? a : b;
+  }
 protected:
   Profile m_profile[2];
   float m_time[2];

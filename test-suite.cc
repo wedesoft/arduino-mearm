@@ -43,6 +43,11 @@ TEST(ProfileTest, DistanceInverseCubicWithMaxJerk)
   EXPECT_NEAR(2 * Profile::timeRequired(1, 0.08), Profile::timeRequired(1, 0.01), 0.001);
 }
 
+TEST(ProfileTest, TestTimeRequiredPoint)
+{
+  EXPECT_NEAR(2000, Profile::timeRequired(180, 1.35e-6), 0.001);
+}
+
 TEST(ProfileTest, Accelerates)
 {
   EXPECT_GT(0.2, Profile(1, 4).value(1));
@@ -160,6 +165,19 @@ TEST_F(PathTest, QueryTarget) {
   m_path.retarget(300, 2);
   m_path.update(1);
   EXPECT_FLOAT_EQ(300, m_path.target());
+}
+
+TEST_F(PathTest, QueryTimeRequired) {
+  m_path.stop(100);
+  EXPECT_FLOAT_EQ(0, m_path.timeRemaining());
+  m_path.retarget(200, 3);
+  EXPECT_FLOAT_EQ(3, m_path.timeRemaining());
+  m_path.update(1);
+  EXPECT_FLOAT_EQ(2, m_path.timeRemaining());
+  m_path.retarget(300, 3);
+  EXPECT_FLOAT_EQ(3, m_path.timeRemaining());
+  m_path.update(4);
+  EXPECT_FLOAT_EQ(0, m_path.timeRemaining());
 }
 
 class MockController: public ControllerBase
@@ -448,6 +466,12 @@ TEST_F(ControllerTest, StopDrives) {
   EXPECT_CALL(m_controller, writePWM(GRIPPER ,1860));
   m_controller.parseChar('x');
   m_controller.update(4000);
+}
+
+TEST_F(ControllerTest, AdaptDuration) {
+  m_controller.targetAngle(BASE, -35);
+  m_controller.targetAngle(SHOULDER, 0);
+  EXPECT_NEAR(m_controller.curve(BASE).timeRemaining(), 2 * m_controller.curve(SHOULDER).timeRemaining(), 0.001);
 }
 
 TEST_F(ControllerTest, ApproachTeachPoint) {

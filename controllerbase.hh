@@ -144,7 +144,7 @@ public:
   }
   void targetPWM(int drive, float pwm) {
     float angle = limitArm(drive, pwmToAngle(drive, clip(drive, pwm)));
-    m_curve[drive].retarget(angle, 12345);
+    m_curve[drive].retarget(angle, Profile::timeRequired(fabs(angle - m_curve[drive].target()), MAXJERK));
   }
   void targetAngle(int drive, float angle) {
     targetPWM(drive, angleToPWM(drive, angle));
