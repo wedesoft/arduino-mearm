@@ -7,48 +7,50 @@ class Path
 {
 public:
   Path(void): m_offset(0) {
-    memset(&m_time, 0, sizeof(m_time));
+    m_time[0] = 0;
+    m_time[1] = 0;
   }
   float pos(void) {
     return m_offset + m_profile[0].value(m_time[0]) + m_profile[1].value(m_time[1]);
   }
-  float update(float time) {
-    update(time, 0);
-    update(time, 1);
+  float update(float dt) {
+    update(dt, m_time[0], m_profile[0]);
+    update(dt, m_time[1], m_profile[1]);
     return pos();
   }
-  void update(float time, int index) {
-    m_time[index] += time;
-    if (m_time[index] >= m_profile[index].duration()) {
-      m_offset += m_profile[index].distance();
-      m_profile[index] = Profile();
+  void update(float dt, float &time, Profile &profile) {
+    time += dt;
+    if (time >= profile.duration()) {
+      m_offset += profile.distance();
+      profile.reset();
     };
   }
   void stop(float pos) {
     m_offset = pos;
-    m_profile[0] = Profile();
-    m_profile[1] = Profile();
+    m_profile[0].reset();
+    m_profile[1].reset();
   }
   void retarget(float target, float duration) {
-    retarget(target, duration, 0) || retarget(target, duration, 1);
+    retarget(target, duration, m_time[0], m_profile[0]) || retarget(target, duration, m_time[1], m_profile[1]);
   }
   float target(void) {
     return m_offset + m_profile[0].distance() + m_profile[1].distance();
   }
-  bool retarget(float value, float duration, int index) {
-    if (m_profile[index].empty()) {
-      m_time[index] = 0;
-      m_profile[index] = Profile(value - target(), duration);
-      return true;
-    } else
+  bool retarget(float value, float duration, float &time, Profile &profile) {
+    if (!profile.empty())
       return false;
+    else {
+      time = 0;
+      profile.reset(value - target(), duration);
+      return true;
+    };
   }
-  float timeRemaining(int index) {
-    return m_profile[index].empty() ? 0 : m_profile[index].duration() - m_time[index];
+  float timeRemaining(float time, Profile &profile) {
+    return profile.empty() ? 0 : profile.duration() - time;
   }
   float timeRemaining(void) {
-    float a = timeRemaining(0);
-    float b = timeRemaining(1);
+    float a = timeRemaining(m_time[0], m_profile[0]);
+    float b = timeRemaining(m_time[1], m_profile[1]);
     return a >= b ? a : b;
   }
 protected:

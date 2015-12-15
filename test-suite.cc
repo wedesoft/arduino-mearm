@@ -498,7 +498,7 @@ TEST_F(ControllerTest, OnlyAlphabeticTeachPoints) {
 TEST_F(ControllerTest, WrongTeachPointKeyStopsDrives) {
   m_controller.targetAngle(BASE, 0);
   m_controller.parseChar('@');
-  m_controller.parseChar('@');
+  m_controller.parseChar('u');
   EXPECT_EQ(45, m_controller.curve(BASE).target());
 }
 

@@ -37,8 +37,14 @@ unsigned long t0;
 
 Controller controller;
 
+const int LED = 13;
+
+bool on;
+
 void setup() {
+  on = false;
   controller.setup();
+  pinMode(LED, OUTPUT);
   Serial.begin(115200);
   t0 = millis();
 }
@@ -48,6 +54,8 @@ void loop() {
   if (Serial.available())
     controller.parseChar(Serial.read());
   if (dt >= 20) {
+    on = !on;
+    digitalWrite(LED, on ? HIGH : LOW);
     controller.update(dt);
     t0 += dt;
   };

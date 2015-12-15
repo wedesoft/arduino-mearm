@@ -69,8 +69,8 @@ Examples of servo commands are:
 * **1500S**: set shoulder servo pulse width to 1500
 * **1500E**: set elbow servo pulse width to 1500
 * **544G**: set gripper servo pulse width to 544
-* **ma**: save teach point *a*
-* **@a**: go to teach point *a*
+* **ma**: save teach point *a* (20 teach points from *a* to *t*)
+* **@a**: go to teach point *a* (20 teach points from *a* to *t*)
 * **x**: stop all servos
 
 You can exit the *screen* terminal using Ctrl-A \\.
