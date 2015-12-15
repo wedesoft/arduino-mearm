@@ -1,6 +1,5 @@
 # TODO
 
-* m\_curve -> m\_path
 * synchronised approach
 * instructions (screw terminal)
 * compose curve from pr

@@ -66,10 +66,9 @@ public:
   };
   void parseChar(char c) {
     if (m_load) {
-      if (c >= 'a' && c <= 'z') {
-        for (int i=0; i<DRIVES; i++)
-          targetAngle(i, m_teach[c - 'a'][i]);
-      } else
+      if (c >= 'a' && c <= 'z')
+        targetTeachPoint(c - 'a');
+      else
         stopDrives();
       resetNumber();
       m_load = false;
@@ -142,12 +141,20 @@ public:
       };
     };
   }
+  float timeRequired(int drive, float angle) {
+    return Profile::timeRequired(fabs(angle - m_curve[drive].target()), MAXJERK);
+  }
   void targetPWM(int drive, float pwm) {
     float angle = limitArm(drive, pwmToAngle(drive, clip(drive, pwm)));
-    m_curve[drive].retarget(angle, Profile::timeRequired(fabs(angle - m_curve[drive].target()), MAXJERK));
+    m_curve[drive].retarget(angle, timeRequired(drive, angle));
   }
   void targetAngle(int drive, float angle) {
     targetPWM(drive, angleToPWM(drive, angle));
+  }
+  void targetTeachPoint(int index)
+  {
+    for (int i=0; i<DRIVES; i++)
+      targetAngle(i, m_teach[index][i]);
   }
   void update(int dt) {
     for (int drive=0; drive<DRIVES; drive++)
