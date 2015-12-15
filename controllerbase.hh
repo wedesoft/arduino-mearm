@@ -147,9 +147,12 @@ public:
   float timeRequired(int drive, float angle) {
     return Profile::timeRequired(fabs(angle - m_curve[drive].target()), MAXJERK);
   }
+  void targetAngleUnsafe(int drive, float angle, float time) {
+    m_curve[drive].retarget(angle, time);
+  }
   void targetPWM(int drive, float pwm) {
     float angle = limitArm(drive, pwmToAngle(drive, clip(drive, pwm)));
-    m_curve[drive].retarget(angle, timeRequired(drive, angle));
+    targetAngleUnsafe(drive, angle, timeRequired(drive, angle));
   }
   void targetAngle(int drive, float angle) {
     targetPWM(drive, angleToPWM(drive, angle));
@@ -162,7 +165,7 @@ public:
       time = time < driveTime ? driveTime : time;
     };
     for (int i=0; i<DRIVES; i++)
-      m_curve[i].retarget(m_teach[index][i], time);
+      targetAngleUnsafe(i, m_teach[index][i], time);
   }
   void update(int dt) {
     for (int drive=0; drive<DRIVES; drive++)
