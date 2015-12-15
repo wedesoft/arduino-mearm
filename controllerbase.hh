@@ -59,6 +59,10 @@ public:
       return target;
     };
   }
+  void saveTeachPoint(int index) {
+    for (int i=0; i<DRIVES; i++)
+      m_teach[index][i] = m_curve[i].target();
+  }
   void resetNumber(void) {
     m_number = 0;
     m_fraction = 0;
@@ -73,10 +77,9 @@ public:
       resetNumber();
       m_load = false;
     } else if (m_save) {
-      if (c >= 'a' && c <= 'z') {
-        for (int i=0; i<DRIVES; i++)
-          m_teach[c - 'a'][i] = m_curve[i].target();
-      } else
+      if (c >= 'a' && c <= 'z')
+        saveTeachPoint(c - 'a');
+      else
         stopDrives();
       resetNumber();
       m_save = false;
@@ -153,8 +156,13 @@ public:
   }
   void targetTeachPoint(int index)
   {
+    float time = 0;
+    for (int i=0; i<DRIVES; i++) {
+      float driveTime = timeRequired(i, m_teach[index][i]);
+      time = time < driveTime ? driveTime : time;
+    };
     for (int i=0; i<DRIVES; i++)
-      targetAngle(i, m_teach[index][i]);
+      m_curve[i].retarget(m_teach[index][i], time);
   }
   void update(int dt) {
     for (int drive=0; drive<DRIVES; drive++)

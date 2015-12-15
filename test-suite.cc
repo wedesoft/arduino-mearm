@@ -438,7 +438,7 @@ TEST_F(ControllerTest, RestrictShoulderRelativeToElbow) {
 }
 
 TEST_F(ControllerTest, UpdateInformsServos) {
-  m_controller.curve(BASE).retarget(0, 4000);
+  m_controller.targetAngle(BASE, 0);
   EXPECT_CALL(m_controller, writePWM(BASE    ,2040));
   EXPECT_CALL(m_controller, writePWM(SHOULDER,1380));
   EXPECT_CALL(m_controller, writePWM(ELBOW   ,1740));
@@ -447,25 +447,23 @@ TEST_F(ControllerTest, UpdateInformsServos) {
 }
 
 TEST_F(ControllerTest, UpdateAppliesTargets) {
-  m_controller.curve(BASE).retarget(0, 4000);
+  m_controller.targetAngle(BASE, 0);
   EXPECT_CALL(m_controller, writePWM(BASE    ,1500));
   EXPECT_CALL(m_controller, writePWM(SHOULDER,1380));
   EXPECT_CALL(m_controller, writePWM(ELBOW   ,1740));
   EXPECT_CALL(m_controller, writePWM(GRIPPER ,1860));
-  m_controller.update(4000);
+  m_controller.update(10000);
 }
 
 TEST_F(ControllerTest, StopDrives) {
-  m_controller.curve(BASE    ).retarget(0, 4000);
-  m_controller.curve(SHOULDER).retarget(0, 4000);
-  m_controller.curve(ELBOW   ).retarget(0, 4000);
-  m_controller.curve(GRIPPER ).retarget(0, 4000);
+  for (int i=0; i<DRIVES; i++)
+    m_controller.targetAngle(i, 0);
   EXPECT_CALL(m_controller, writePWM(BASE    ,2040));
   EXPECT_CALL(m_controller, writePWM(SHOULDER,1380));
   EXPECT_CALL(m_controller, writePWM(ELBOW   ,1740));
   EXPECT_CALL(m_controller, writePWM(GRIPPER ,1860));
   m_controller.parseChar('x');
-  m_controller.update(4000);
+  m_controller.update(10000);
 }
 
 TEST_F(ControllerTest, AdaptDuration) {
@@ -481,7 +479,7 @@ TEST_F(ControllerTest, ApproachTeachPoint) {
   EXPECT_CALL(m_controller, writePWM(SHOULDER,1500));
   EXPECT_CALL(m_controller, writePWM(ELBOW   ,1500));
   EXPECT_CALL(m_controller, writePWM(GRIPPER ,1500));
-  m_controller.update(40000);
+  m_controller.update(10000);
 }
 
 TEST_F(ControllerTest, FinishTeachPointSelection) {
@@ -498,7 +496,7 @@ TEST_F(ControllerTest, OnlyAlphabeticTeachPoints) {
 }
 
 TEST_F(ControllerTest, WrongTeachPointKeyStopsDrives) {
-  m_controller.curve(BASE).retarget(0, 4000);
+  m_controller.targetAngle(BASE, 0);
   m_controller.parseChar('@');
   m_controller.parseChar('@');
   EXPECT_EQ(45, m_controller.curve(BASE).target());
@@ -539,7 +537,7 @@ TEST_F(ControllerTest, TeachPointLoadingClearsNumber) {
 }
 
 TEST_F(ControllerTest, WrongTeachPointSelectionStopsDrives) {
-  m_controller.curve(BASE).retarget(0, 4000);
+  m_controller.targetAngle(BASE, 0);
   m_controller.parseChar('m');
   m_controller.parseChar('@');
   EXPECT_EQ(45, m_controller.curve(BASE).target());
@@ -554,6 +552,30 @@ TEST_F(ControllerTest, SaveSecondTeachPoint) {
   EXPECT_EQ(0, m_controller.curve(SHOULDER).target());
   EXPECT_EQ(0, m_controller.curve(ELBOW   ).target());
   EXPECT_EQ(0, m_controller.curve(GRIPPER ).target());
+}
+
+TEST_F(ControllerTest, SynchroniseProfilesWithBase) {
+  m_controller.parseChar('m');
+  m_controller.parseChar('a');
+  m_controller.curve(BASE).stop(0);
+  m_controller.targetTeachPoint(0);
+  float time = m_controller.curve(BASE).timeRemaining();
+  EXPECT_LT(0, time);
+  EXPECT_FLOAT_EQ(time, m_controller.curve(SHOULDER).timeRemaining());
+  EXPECT_FLOAT_EQ(time, m_controller.curve(ELBOW   ).timeRemaining());
+  EXPECT_FLOAT_EQ(time, m_controller.curve(GRIPPER ).timeRemaining());
+}
+
+TEST_F(ControllerTest, SynchroniseProfilesWithShoulder) {
+  m_controller.parseChar('m');
+  m_controller.parseChar('a');
+  m_controller.curve(SHOULDER).stop(0);
+  m_controller.targetTeachPoint(0);
+  float time = m_controller.curve(SHOULDER).timeRemaining();
+  EXPECT_LT(0, time);
+  EXPECT_FLOAT_EQ(time, m_controller.curve(BASE    ).timeRemaining());
+  EXPECT_FLOAT_EQ(time, m_controller.curve(ELBOW   ).timeRemaining());
+  EXPECT_FLOAT_EQ(time, m_controller.curve(GRIPPER ).timeRemaining());
 }
 
 int main(int argc, char **argv) {
