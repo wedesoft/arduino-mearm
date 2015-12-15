@@ -56,7 +56,7 @@ void loop() {
   if (dt >= 20) {
     on = !on;
     digitalWrite(LED, on ? HIGH : LOW);
-    controller.update(dt);
+    controller.update(dt * 0.001);
     t0 += dt;
   };
 }

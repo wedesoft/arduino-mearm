@@ -14,7 +14,7 @@ class ControllerBase
 {
 public:
   ControllerBase(void): m_number(0), m_fraction(0), m_sign(0), m_load(false), m_save(false) {
-    memset(m_teach, sizeof(m_teach), 0);
+    memset(m_teach, 0, sizeof(m_teach));
   }
   virtual ~ControllerBase() {}
   Path &curve(int drive) { return m_curve[drive]; }
@@ -167,7 +167,7 @@ public:
     for (int i=0; i<DRIVES; i++)
       targetAngleUnsafe(i, m_teach[index][i], time);
   }
-  void update(int dt) {
+  void update(float dt) {
     for (int drive=0; drive<DRIVES; drive++)
       writePWM(drive, round(angleToPWM(drive, m_curve[drive].update(dt))));
   }

@@ -45,7 +45,7 @@ TEST(ProfileTest, DistanceInverseCubicWithMaxJerk)
 
 TEST(ProfileTest, TestTimeRequiredPoint)
 {
-  EXPECT_NEAR(2000, Profile::timeRequired(180, 1.35e-6), 0.001);
+  EXPECT_NEAR(2, Profile::timeRequired(180, 1350), 0.001);
 }
 
 TEST(ProfileTest, Accelerates)
@@ -452,7 +452,7 @@ TEST_F(ControllerTest, UpdateAppliesTargets) {
   EXPECT_CALL(m_controller, writePWM(SHOULDER,1380));
   EXPECT_CALL(m_controller, writePWM(ELBOW   ,1740));
   EXPECT_CALL(m_controller, writePWM(GRIPPER ,1860));
-  m_controller.update(10000);
+  m_controller.update(10);
 }
 
 TEST_F(ControllerTest, StopDrives) {
@@ -463,7 +463,7 @@ TEST_F(ControllerTest, StopDrives) {
   EXPECT_CALL(m_controller, writePWM(ELBOW   ,1740));
   EXPECT_CALL(m_controller, writePWM(GRIPPER ,1860));
   m_controller.parseChar('x');
-  m_controller.update(10000);
+  m_controller.update(10);
 }
 
 TEST_F(ControllerTest, AdaptDuration) {
@@ -479,7 +479,7 @@ TEST_F(ControllerTest, ApproachTeachPoint) {
   EXPECT_CALL(m_controller, writePWM(SHOULDER,1500));
   EXPECT_CALL(m_controller, writePWM(ELBOW   ,1500));
   EXPECT_CALL(m_controller, writePWM(GRIPPER ,1500));
-  m_controller.update(10000);
+  m_controller.update(10);
 }
 
 TEST_F(ControllerTest, FinishTeachPointSelection) {
