@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
-#include "controller.hh"
+#include "controllerbase.hh"
 #include "profile.hh"
 #include "path.hh"
 
