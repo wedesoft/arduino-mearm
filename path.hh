@@ -32,11 +32,13 @@ public:
   void retarget(float target, float duration) {
     retarget(target, duration, 0) || retarget(target, duration, 1);
   }
-  bool retarget(float target, float duration, int index) {
+  float target(void) {
+    return m_offset + m_profile[0].distance() + m_profile[1].distance();
+  }
+  bool retarget(float value, float duration, int index) {
     if (m_profile[index].empty()) {
       m_time[index] = 0;
-      float current = m_offset + m_profile[0].distance() + m_profile[1].distance();
-      m_profile[index] = Profile(target - current, duration);
+      m_profile[index] = Profile(value - target(), duration);
       return true;
     } else
       return false;

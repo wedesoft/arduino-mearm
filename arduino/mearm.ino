@@ -1,7 +1,6 @@
 #include <Servo.h>
 #include "../calibration.hh"
 #include "../controller.hh"
-#include "../curve.hh"
 
 class Controller: public ControllerBase
 {

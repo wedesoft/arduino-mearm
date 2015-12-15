@@ -17,7 +17,7 @@ repl:
 test-suite: test-suite.o gtest-all.o gmock-all.o
 	$(CXX) -o $@ test-suite.o gtest-all.o gmock-all.o -lpthread
 
-test-suite.o: test-suite.cc curve.hh controller.hh calibration.hh profile.hh path.hh
+test-suite.o: test-suite.cc controller.hh calibration.hh profile.hh path.hh
 	$(CXX) -c -I$(GMOCK)/include -I$(GTEST)/include -o $@ $<
 
 gtest-all.o: $(GTEST)/src/gtest-all.cc

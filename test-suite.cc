@@ -1,7 +1,6 @@
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
 #include "controller.hh"
-#include "curve.hh"
 #include "profile.hh"
 #include "path.hh"
 
@@ -150,6 +149,17 @@ TEST_F(PathTest, MakeSecondProfileAvailableWhenFinished) {
   m_path.retarget(4, 1);
   m_path.update(1);
   EXPECT_FLOAT_EQ(4, m_path.pos());
+}
+
+TEST_F(PathTest, QueryTarget) {
+  m_path.stop(100);
+  EXPECT_FLOAT_EQ(100, m_path.target());
+  m_path.retarget(200, 2);
+  m_path.update(1);
+  EXPECT_FLOAT_EQ(200, m_path.target());
+  m_path.retarget(300, 2);
+  m_path.update(1);
+  EXPECT_FLOAT_EQ(300, m_path.target());
 }
 
 class MockController: public ControllerBase
@@ -410,7 +420,7 @@ TEST_F(ControllerTest, RestrictShoulderRelativeToElbow) {
 }
 
 TEST_F(ControllerTest, UpdateInformsServos) {
-  m_controller.curve(BASE).retarget(0);
+  m_controller.curve(BASE).retarget(0, 4000);
   EXPECT_CALL(m_controller, writePWM(BASE    ,2040));
   EXPECT_CALL(m_controller, writePWM(SHOULDER,1380));
   EXPECT_CALL(m_controller, writePWM(ELBOW   ,1740));
@@ -419,7 +429,7 @@ TEST_F(ControllerTest, UpdateInformsServos) {
 }
 
 TEST_F(ControllerTest, UpdateAppliesTargets) {
-  m_controller.curve(BASE).retarget(0);
+  m_controller.curve(BASE).retarget(0, 4000);
   EXPECT_CALL(m_controller, writePWM(BASE    ,1500));
   EXPECT_CALL(m_controller, writePWM(SHOULDER,1380));
   EXPECT_CALL(m_controller, writePWM(ELBOW   ,1740));
@@ -428,10 +438,10 @@ TEST_F(ControllerTest, UpdateAppliesTargets) {
 }
 
 TEST_F(ControllerTest, StopDrives) {
-  m_controller.curve(BASE).retarget(0);
-  m_controller.curve(SHOULDER).retarget(0);
-  m_controller.curve(ELBOW).retarget(0);
-  m_controller.curve(GRIPPER).retarget(0);
+  m_controller.curve(BASE    ).retarget(0, 4000);
+  m_controller.curve(SHOULDER).retarget(0, 4000);
+  m_controller.curve(ELBOW   ).retarget(0, 4000);
+  m_controller.curve(GRIPPER ).retarget(0, 4000);
   EXPECT_CALL(m_controller, writePWM(BASE    ,2040));
   EXPECT_CALL(m_controller, writePWM(SHOULDER,1380));
   EXPECT_CALL(m_controller, writePWM(ELBOW   ,1740));
@@ -447,7 +457,7 @@ TEST_F(ControllerTest, ApproachTeachPoint) {
   EXPECT_CALL(m_controller, writePWM(SHOULDER,1500));
   EXPECT_CALL(m_controller, writePWM(ELBOW   ,1500));
   EXPECT_CALL(m_controller, writePWM(GRIPPER ,1500));
-  m_controller.update(4000);
+  m_controller.update(40000);
 }
 
 TEST_F(ControllerTest, FinishTeachPointSelection) {
@@ -464,7 +474,7 @@ TEST_F(ControllerTest, OnlyAlphabeticTeachPoints) {
 }
 
 TEST_F(ControllerTest, WrongTeachPointKeyStopsDrives) {
-  m_controller.curve(BASE).retarget(0);
+  m_controller.curve(BASE).retarget(0, 4000);
   m_controller.parseChar('@');
   m_controller.parseChar('@');
   EXPECT_EQ(45, m_controller.curve(BASE).target());
@@ -505,7 +515,7 @@ TEST_F(ControllerTest, TeachPointLoadingClearsNumber) {
 }
 
 TEST_F(ControllerTest, WrongTeachPointSelectionStopsDrives) {
-  m_controller.curve(BASE).retarget(0);
+  m_controller.curve(BASE).retarget(0, 4000);
   m_controller.parseChar('m');
   m_controller.parseChar('@');
   EXPECT_EQ(45, m_controller.curve(BASE).target());

@@ -8,7 +8,7 @@ SCREEN = screen
 
 include $(ARDMK_DIR)/Arduino.mk
 
-$(OBJDIR)/mearm.o: ../curve.hh ../controller.hh ../calibration.hh
+$(OBJDIR)/mearm.o: ../profile.hh ../path.hh ../controller.hh ../calibration.hh
 
 repl:
 	$(SCREEN) $(ARDUINO_PORT) 115200

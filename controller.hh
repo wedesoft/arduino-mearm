@@ -2,7 +2,7 @@
 #define __CONTROLLER_HH
 
 #include "calibration.hh"
-#include "curve.hh"
+#include "path.hh"
 
 const int BASE     = 0;
 const int SHOULDER = 1;
@@ -15,11 +15,9 @@ class ControllerBase
 public:
   ControllerBase(void): m_number(0), m_fraction(0), m_sign(0), m_load(false), m_save(false) {
     memset(m_teach, sizeof(m_teach), 0);
-    for (int drive=0; drive<DRIVES; drive++)
-      m_curve[drive].setBound(BOUND);
   }
   virtual ~ControllerBase() {}
-  Curve &curve(int drive) { return m_curve[drive]; }
+  Path &curve(int drive) { return m_curve[drive]; }
   int drive(char c) {
     switch (c) {
     case 'e':
@@ -146,7 +144,7 @@ public:
   }
   void targetPWM(int drive, float pwm) {
     float angle = limitArm(drive, pwmToAngle(drive, clip(drive, pwm)));
-    m_curve[drive].retarget(angle);
+    m_curve[drive].retarget(angle, 12345);
   }
   void targetAngle(int drive, float angle) {
     targetPWM(drive, angleToPWM(drive, angle));
@@ -174,7 +172,7 @@ protected:
   bool m_load;
   bool m_save;
   float m_teach[26][DRIVES];
-  Curve m_curve[DRIVES];
+  Path m_curve[DRIVES];
 };
 
 #endif
