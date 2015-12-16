@@ -316,6 +316,15 @@ TEST_F(ControllerTest, DoubleMinus) {
   EXPECT_EQ(1, m_controller.curve(BASE).target());
 }
 
+TEST_F(ControllerTest, MinusClearsNumber) {
+  m_controller.parseChar('.');
+  m_controller.parseChar('5');
+  m_controller.parseChar('-');
+  m_controller.parseChar('3');
+  m_controller.parseChar('b');
+  EXPECT_EQ(-3, m_controller.curve(BASE).target());
+}
+
 TEST_F(ControllerTest, RetargetZero) {
   m_controller.parseChar('0');
   m_controller.parseChar('b');
@@ -473,7 +482,7 @@ TEST_F(ControllerTest, AdaptDuration) {
 }
 
 TEST_F(ControllerTest, ApproachTeachPoint) {
-  m_controller.parseChar('@');
+  m_controller.parseChar('\'');
   m_controller.parseChar('b');
   EXPECT_CALL(m_controller, writePWM(BASE    ,1500));
   EXPECT_CALL(m_controller, writePWM(SHOULDER,1500));
@@ -483,28 +492,28 @@ TEST_F(ControllerTest, ApproachTeachPoint) {
 }
 
 TEST_F(ControllerTest, FinishTeachPointSelection) {
-  m_controller.parseChar('@');
+  m_controller.parseChar('\'');
   m_controller.parseChar('b');
   EXPECT_CALL(m_controller, reportAngle(45));
   m_controller.parseChar('b');
 }
 
 TEST_F(ControllerTest, OnlyAlphabeticTeachPoints) {
-  m_controller.parseChar('@');
-  m_controller.parseChar('@');
+  m_controller.parseChar('\'');
+  m_controller.parseChar('\'');
   EXPECT_EQ(45, m_controller.curve(BASE).target());
 }
 
 TEST_F(ControllerTest, WrongTeachPointKeyStopsDrives) {
   m_controller.targetAngle(BASE, 0);
-  m_controller.parseChar('@');
-  m_controller.parseChar('@');
+  m_controller.parseChar('\'');
+  m_controller.parseChar('\'');
   EXPECT_EQ(45, m_controller.curve(BASE).target());
 }
 
 TEST_F(ControllerTest, TeachPointSavingClearsNumber) {
   m_controller.parseChar('0');
-  m_controller.parseChar('@');
+  m_controller.parseChar('\'');
   m_controller.parseChar('b');
   EXPECT_CALL(m_controller, reportAngle(45));
   m_controller.parseChar('b');
@@ -513,7 +522,7 @@ TEST_F(ControllerTest, TeachPointSavingClearsNumber) {
 TEST_F(ControllerTest, SaveTeachPoint) {
   m_controller.parseChar('m');
   m_controller.parseChar('b');
-  m_controller.parseChar('@');
+  m_controller.parseChar('\'');
   m_controller.parseChar('b');
   EXPECT_EQ( 45, m_controller.curve(BASE    ).target());
   EXPECT_EQ(-10, m_controller.curve(SHOULDER).target());
@@ -539,14 +548,14 @@ TEST_F(ControllerTest, TeachPointLoadingClearsNumber) {
 TEST_F(ControllerTest, WrongTeachPointSelectionStopsDrives) {
   m_controller.targetAngle(BASE, 0);
   m_controller.parseChar('m');
-  m_controller.parseChar('@');
+  m_controller.parseChar('\'');
   EXPECT_EQ(45, m_controller.curve(BASE).target());
 }
 
 TEST_F(ControllerTest, SaveSecondTeachPoint) {
   m_controller.parseChar('m');
   m_controller.parseChar('b');
-  m_controller.parseChar('@');
+  m_controller.parseChar('\'');
   m_controller.parseChar('a');
   EXPECT_EQ(0, m_controller.curve(BASE    ).target());
   EXPECT_EQ(0, m_controller.curve(SHOULDER).target());

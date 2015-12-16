@@ -96,6 +96,8 @@ public:
         break;
       case '-':
         m_sign = m_sign == 0 ? -1 : -m_sign;
+        m_number = 0;
+        m_fraction = 0;
         break;
       case 'b':
       case 'e':
@@ -132,7 +134,7 @@ public:
         m_fraction *= 0.1;
         if (m_sign == 0) m_sign = 1;
         break;
-      case '@':
+      case '\'':
         m_load = true;
         break;
       case 'm':

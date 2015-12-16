@@ -69,8 +69,8 @@ Examples of servo commands are:
 * **1500S**: set shoulder servo pulse width to 1500
 * **1500E**: set elbow servo pulse width to 1500
 * **544G**: set gripper servo pulse width to 544
-* **ma**: save teach point *a* (12 teach points from *a* to *l*)
-* **@a**: go to teach point *a* (12 teach points from *a* to *l*)
+* **ma**: save teach point *a* (there are 12 teach points from *a* to *l*)
+* **'a**: go to teach point *a* (there are 12 teach points from *a* to *l*)
 * **x**: stop all servos
 
 You can exit the *screen* terminal using Ctrl-A \\.
@@ -78,6 +78,9 @@ You can exit the *screen* terminal using Ctrl-A \\.
 **Warning: self-collisions of the robot can damage the servos!**
 
 **Warning: closing the gripper too far on an object can damage the servo!**
+
+Note that because of the teach points the program is short on memory (1024 bytes on Arduino Diecimila).
+Memory corruption can cause self-collisions. However one can test the program without servos being powered.
 
 ## file structure
 
