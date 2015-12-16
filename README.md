@@ -2,7 +2,7 @@
 
 Responsive and smooth servo steering of the Phenoptix [MeArm][1] robot using the [Arduino][2] microcontroller board.
 
-[![MeArm servo steering](http://img.youtube.com/vi/0XRP3wu5jbU/0.jpg)](http://www.youtube.com/watch?v=0XRP3wu5jbU)
+[![MeArm servo steering](http://img.youtube.com/vi/bwe8nBm6TN8/0.jpg)](http://www.youtube.com/watch?v=bwe8nBm6TN8)
 
 Note, you might have to [uninstall *brltty* if it conflicts with the Arduino ttyUSB0][3].
 
