@@ -6,6 +6,20 @@ Responsive and smooth servo steering of the Phenoptix [MeArm][1] robot using the
 
 Note, you might have to [uninstall *brltty* if it conflicts with the Arduino ttyUSB0][3].
 
+## part list
+
+Here is the list of parts I used.
+
+* [MeArm (just the arm)](http://mearm.com/?variant=4765780037) comes with laser cut acrylic sheet, screws, nuts, and Turnigy TG9e servos
+* [JR servo straight extension wire 150mm](http://www.amazon.co.uk/gp/product/B00P1716VO) to extend the cable to the gripper servo 
+* 12 way screw terminal
+* [Arduino Diecimila](https://www.arduino.cc/en/Main/ArduinoBoardDiecimila) with USB cable
+* [2.1 x 5.5mm DC socket](http://www.maplin.co.uk/p/21-x-55mm-dc-socket-plastic-ft96e)
+* [6V DC, 30 W power supply with 2.1 x 5.5 plug](http://uk.rs-online.com/web/p/plug-in-power-supply/7424762/), [2.5 A would be enough though](http://mearm.com/collections/mearm/products/mearm-mains-power-supply-6v-2-5a)
+* [Adafruit Proto Shield with bread board](https://www.adafruit.com/products/51)
+* insulated wire (colours red, black, and other colour)
+* a computer
+
 ## build
 
 Install the Arduino Makefile, the *screen* serial terminal, and the Google test library as follows:
@@ -94,7 +108,7 @@ Memory corruption can cause self-collisions. However one can test the program wi
 * [Arduino][2] (also see [forum][17])
 * [Instructions for MeArm with Arduino][13]
 * [Google Test][4]
-* [Turnigy TG9e servo][5]
+* [Turnigy TG9e servo][5] ([TG9e servo replacement](http://www.amazon.co.uk/gp/product/B00V3F6LYU))
 * [Control the position of a RC servo motor with your Arduino][6]
 * [Multi-tasking the Arduino][7]
 * [MeArm kinematics][8]
