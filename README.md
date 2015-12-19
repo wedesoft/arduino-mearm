@@ -85,7 +85,7 @@ Examples of servo commands are:
 * **544G**: set gripper servo pulse width to 544
 * **ma**: save teach point *a* (there are 12 teach points from *a* to *l*)
 * **'a**: go to teach point *a* (there are 12 teach points from *a* to *l*)
-* **x**: stop all servos
+* **x**: stop all servos (in fact any undefined key should do)
 
 You can exit the *screen* terminal using Ctrl-A \\.
 
