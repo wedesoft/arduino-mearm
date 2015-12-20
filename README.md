@@ -11,10 +11,10 @@ Note, you might have to [uninstall *brltty* if it conflicts with the Arduino tty
 Here is the list of parts I used.
 
 * [MeArm (just the arm)](http://mearm.com/?variant=4765780037) comes with laser cut acrylic sheet, screws, nuts, and Turnigy TG9e servos
-* [JR servo straight extension wire 150mm](http://www.amazon.co.uk/gp/product/B00P1716VO) to extend the cable to the gripper servo 
-* 12 way screw terminal
+* [JR servo straight extension wire 150mm](http://www.amazon.co.uk/gp/product/B00P1716VO) to extend the cable to the gripper servo
+* 12 way screw terminal (the servo connectors can be opened and the individual contacts can be put into the screw terminal)
 * [Arduino Diecimila](https://www.arduino.cc/en/Main/ArduinoBoardDiecimila) with USB cable
-* [2.1 x 5.5mm DC socket](http://www.maplin.co.uk/p/21-x-55mm-dc-socket-plastic-ft96e)
+* [2.1 x 5.5mm DC socket](http://www.maplin.co.uk/p/21-x-55mm-dc-socket-plastic-ft96e) (one can solder wires to it and connect them to the screw terminal)
 * [6V DC, 30 W power supply with 2.1 x 5.5 plug](http://uk.rs-online.com/web/p/plug-in-power-supply/7424762/), [2.5 A would be enough though](http://mearm.com/collections/mearm/products/mearm-mains-power-supply-6v-2-5a)
 * [Adafruit Proto Shield with bread board](https://www.adafruit.com/products/51)
 * insulated wire (colours red, black, and other colour)
