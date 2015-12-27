@@ -519,6 +519,14 @@ TEST_F(ControllerTest, TeachPointSavingClearsNumber) {
   m_controller.parseChar('b');
 }
 
+TEST_F(ControllerTest, RequestingTimeClearsNumber) {
+  m_controller.parseChar('0');
+  EXPECT_CALL(m_controller, reportTime());
+  m_controller.parseChar('t');
+  EXPECT_CALL(m_controller, reportAngle(45));
+  m_controller.parseChar('b');
+}
+
 TEST_F(ControllerTest, SaveTeachPoint) {
   m_controller.parseChar('m');
   m_controller.parseChar('b');
@@ -567,7 +575,8 @@ TEST_F(ControllerTest, SynchroniseProfilesWithBase) {
   m_controller.parseChar('m');
   m_controller.parseChar('a');
   m_controller.curve(BASE).stop(0);
-  m_controller.targetTeachPoint(0);
+  m_controller.parseChar('\'');
+  m_controller.parseChar('a');
   float time = m_controller.curve(BASE).timeRemaining();
   EXPECT_LT(0, time);
   EXPECT_FLOAT_EQ(time, m_controller.curve(SHOULDER).timeRemaining());
@@ -579,12 +588,64 @@ TEST_F(ControllerTest, SynchroniseProfilesWithShoulder) {
   m_controller.parseChar('m');
   m_controller.parseChar('a');
   m_controller.curve(SHOULDER).stop(0);
-  m_controller.targetTeachPoint(0);
+  m_controller.parseChar('\'');
+  m_controller.parseChar('a');
   float time = m_controller.curve(SHOULDER).timeRemaining();
   EXPECT_LT(0, time);
   EXPECT_FLOAT_EQ(time, m_controller.curve(BASE    ).timeRemaining());
   EXPECT_FLOAT_EQ(time, m_controller.curve(ELBOW   ).timeRemaining());
   EXPECT_FLOAT_EQ(time, m_controller.curve(GRIPPER ).timeRemaining());
+}
+
+TEST_F(ControllerTest, DISABLED_TargetConfiguration) {
+  m_controller.parseChar('2');
+  m_controller.parseChar(' ');
+  m_controller.parseChar('3');
+  m_controller.parseChar(' ');
+  m_controller.parseChar('5');
+  m_controller.parseChar(' ');
+  m_controller.parseChar('7');
+  m_controller.parseChar('c');
+  EXPECT_EQ(2, m_controller.curve(BASE    ).target());
+  EXPECT_EQ(3, m_controller.curve(SHOULDER).target());
+  EXPECT_EQ(5, m_controller.curve(ELBOW   ).target());
+  EXPECT_EQ(7, m_controller.curve(GRIPPER ).target());
+}
+
+TEST_F(ControllerTest, DISABLED_IgnoreSuperfluous) {
+  m_controller.parseChar('2');
+  m_controller.parseChar(' ');
+  m_controller.parseChar('3');
+  m_controller.parseChar(' ');
+  m_controller.parseChar('5');
+  m_controller.parseChar(' ');
+  m_controller.parseChar('7');
+  m_controller.parseChar(' ');
+  m_controller.parseChar('9');
+  m_controller.parseChar('c');
+  EXPECT_EQ(2, m_controller.curve(BASE    ).target());
+  EXPECT_EQ(3, m_controller.curve(SHOULDER).target());
+  EXPECT_EQ(5, m_controller.curve(ELBOW   ).target());
+  EXPECT_EQ(7, m_controller.curve(GRIPPER ).target());
+}
+
+TEST_F(ControllerTest, DISABLED_MultipleConfigurations) {
+  m_controller.parseChar('2');
+  m_controller.parseChar('c');
+  m_controller.parseChar('3');
+  m_controller.parseChar('c');
+  EXPECT_EQ(3, m_controller.curve(BASE    ).target());
+  EXPECT_EQ(0, m_controller.curve(SHOULDER).target());
+  EXPECT_EQ(0, m_controller.curve(ELBOW   ).target());
+  EXPECT_EQ(0, m_controller.curve(GRIPPER ).target());
+}
+
+TEST_F(ControllerTest, DISABLED_ConfigurationLimits) {
+  EXPECT_TRUE(false);
+}
+
+TEST_F(ControllerTest, DISABLED_ConfigurationLimitArm) {
+  EXPECT_TRUE(false);
 }
 
 int main(int argc, char **argv) {

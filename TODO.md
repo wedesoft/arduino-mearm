@@ -1,5 +1,6 @@
 # TODO
 
+* check limits and relative angles for configuration command
 * instructions (screw terminal)
 * display configuration
 * display joint name

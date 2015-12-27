@@ -13,8 +13,9 @@ const int DRIVES   = 4;
 class ControllerBase
 {
 public:
-  ControllerBase(void): m_number(0), m_fraction(0), m_sign(0), m_load(false), m_save(false) {
+  ControllerBase(void): m_number(0), m_fraction(0), m_sign(0), m_load(false), m_save(false), m_index(0) {
     memset(m_teach, 0, sizeof(m_teach));
+    memset(m_configuration, 0, sizeof(m_configuration));
   }
   virtual ~ControllerBase() {}
   Path &curve(int drive) { return m_curve[drive]; }
@@ -63,34 +64,48 @@ public:
     for (int i=0; i<DRIVES; i++)
       m_teach[index][i] = m_curve[i].target();
   }
+  float number(void) {
+    float fraction = (m_fraction == 0) ? 1 : m_fraction;
+    return m_number * fraction * m_sign;
+  }
   void resetNumber(void) {
     m_number = 0;
     m_fraction = 0;
     m_sign = 0;
-  };
+  }
+  float resetParser(void) {
+    resetNumber();
+    m_index = 0;
+  }
+  void takeConfigurationValue(void) {
+    if (m_index < 4)
+      m_configuration[m_index++] = number();
+    resetNumber();
+  }
   void parseChar(char c) {
     if (m_load) {
       if (c >= 'a' && c <= 'l')
-        targetTeachPoint(c - 'a');
+        targetPoint(m_teach[c - 'a']);
       else
         stopDrives();
-      resetNumber();
+      resetParser();
       m_load = false;
     } else if (m_save) {
       if (c >= 'a' && c <= 'l')
         saveTeachPoint(c - 'a');
       else
         stopDrives();
-      resetNumber();
+      resetParser();
       m_save = false;
     } else {
       switch (c) {
       case 't':
         reportTime();
+        resetParser();
         break;
       case '.':
         if (m_fraction > 0)
-          resetNumber();
+          resetParser();
         else
           m_fraction = 1;
         break;
@@ -108,17 +123,16 @@ public:
       case 'S':
       case 'G':
         if (m_sign != 0) {
-          if (m_fraction == 0) m_fraction = 1;
           if (isupper(c))
-            targetPWM(drive(c), m_number * m_fraction * m_sign);
+            targetPWM(drive(c), number());
           else
-            targetAngle(drive(c), m_number * m_fraction * m_sign);
-          resetNumber();
+            targetAngle(drive(c), number());
         } else
           if (isupper(c))
             reportPWM(angleToPWM(drive(c), m_curve[drive(c)].pos()));
           else
             reportAngle(m_curve[drive(c)].pos());
+        resetParser();
         break;
       case '0':
       case '1':
@@ -140,8 +154,15 @@ public:
       case 'm':
         m_save = true;
         break;
+      case ' ':
+        takeConfigurationValue();
+        break;
+      case 'c':
+        takeConfigurationValue();
+        //targetPoint(m_configuration);
+        resetParser();
+        break;
       default:
-        resetNumber();
         stopDrives();
       };
     };
@@ -159,21 +180,22 @@ public:
   void targetAngle(int drive, float angle) {
     targetPWM(drive, angleToPWM(drive, angle));
   }
-  void targetTeachPoint(int index)
+  void targetPoint(float point[])
   {
     float time = 0;
     for (int i=0; i<DRIVES; i++) {
-      float driveTime = timeRequired(i, m_teach[index][i]);
+      float driveTime = timeRequired(i, point[i]);
       time = time < driveTime ? driveTime : time;
     };
     for (int i=0; i<DRIVES; i++)
-      targetAngleUnsafe(i, m_teach[index][i], time);
+      targetAngleUnsafe(i, point[i], time);
   }
   void update(float dt) {
     for (int drive=0; drive<DRIVES; drive++)
       writePWM(drive, round(angleToPWM(drive, m_curve[drive].update(dt))));
   }
   void stopDrives(void) {
+    resetParser();
     for (int drive=0; drive<DRIVES; drive++)
       m_curve[drive].stop(m_curve[drive].pos());
   }
@@ -192,6 +214,8 @@ protected:
   bool m_load;
   bool m_save;
   float m_teach[12][DRIVES];
+  int m_index;
+  float m_configuration[4];
   Path m_curve[DRIVES];
 };
 
