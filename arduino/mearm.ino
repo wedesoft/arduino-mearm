@@ -49,8 +49,6 @@ void loop() {
     char c = Serial.read();
     controller.parseChar(c);
   };
-  if (dt >= 20) {
-    controller.update(dt * 0.001);
-    t0 += dt;
-  };
+  controller.update(dt * 0.001);
+  t0 += dt;
 }
