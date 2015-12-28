@@ -20,15 +20,12 @@ public:
   virtual ~ControllerBase() {}
   Path &curve(int drive) { return m_curve[drive]; }
   int drive(char c) {
-    switch (c) {
+    switch (tolower(c)) {
     case 'e':
-    case 'E':
       return ELBOW;
     case 's':
-    case 'S':
       return SHOULDER;
     case 'g':
-    case 'G':
       return GRIPPER;
     default:
       return BASE;
@@ -37,7 +34,7 @@ public:
   float limit(float value, float lower, float upper) {
     return value < lower ? lower : value > upper ? upper : value;
   }
-  float clip(int drive, float value) {
+  float clipPWM(int drive, float value) {
     return limit(value, lower(drive), upper(drive));
   }
   float angleToPWM(int drive, float angle) {
@@ -78,8 +75,10 @@ public:
     m_index = 0;
   }
   void takeConfigurationValue(void) {
-    if (m_index < 4)
-      m_configuration[m_index++] = number();
+    if (m_index < 4) {
+      m_configuration[m_index] = filterAngle(m_index,number());
+      m_index++;
+    };
     resetNumber();
   }
   void parseChar(char c) {
@@ -159,7 +158,7 @@ public:
         break;
       case 'c':
         takeConfigurationValue();
-        //targetPoint(m_configuration);
+        targetPoint(m_configuration);
         resetParser();
         break;
       default:
@@ -173,12 +172,19 @@ public:
   void targetAngleUnsafe(int drive, float angle, float time) {
     m_curve[drive].retarget(angle, time);
   }
+  float pwmToFilteredAngle(int drive, float pwm) {
+    return limitArm(drive, pwmToAngle(drive, clipPWM(drive, pwm)));
+  }
+  float filterAngle(int drive, float angle) {
+    return pwmToFilteredAngle(drive, angleToPWM(drive, angle));
+  }
   void targetPWM(int drive, float pwm) {
-    float angle = limitArm(drive, pwmToAngle(drive, clip(drive, pwm)));
+    float angle = pwmToFilteredAngle(drive, pwm);
     targetAngleUnsafe(drive, angle, timeRequired(drive, angle));
   }
-  void targetAngle(int drive, float angle) {
-    targetPWM(drive, angleToPWM(drive, angle));
+  void targetAngle(int drive, float value) {
+    float angle = filterAngle(drive, value);
+    targetAngleUnsafe(drive, angle, timeRequired(drive, angle));
   }
   void targetPoint(float point[])
   {

@@ -221,15 +221,15 @@ TEST_F(ControllerTest, ReportBasePWM) {
 }
 
 TEST_F(ControllerTest, ClipAcceptsValues) {
-  EXPECT_EQ(1500, m_controller.clip(BASE, 1500));
+  EXPECT_EQ(1500, m_controller.clipPWM(BASE, 1500));
 }
 
 TEST_F(ControllerTest, ClipLowerBound) {
-  EXPECT_EQ(544, m_controller.clip(BASE, 500));
+  EXPECT_EQ(544, m_controller.clipPWM(BASE, 500));
 }
 
 TEST_F(ControllerTest, ClipUpperBound) {
-  EXPECT_EQ(2400, m_controller.clip(BASE, 2500));
+  EXPECT_EQ(2400, m_controller.clipPWM(BASE, 2500));
 }
 
 TEST_F(ControllerTest, ConvertZeroAngleToPWM) {
@@ -597,7 +597,7 @@ TEST_F(ControllerTest, SynchroniseProfilesWithShoulder) {
   EXPECT_FLOAT_EQ(time, m_controller.curve(GRIPPER ).timeRemaining());
 }
 
-TEST_F(ControllerTest, DISABLED_TargetConfiguration) {
+TEST_F(ControllerTest, TargetConfiguration) {
   m_controller.parseChar('2');
   m_controller.parseChar(' ');
   m_controller.parseChar('3');
@@ -612,7 +612,7 @@ TEST_F(ControllerTest, DISABLED_TargetConfiguration) {
   EXPECT_EQ(7, m_controller.curve(GRIPPER ).target());
 }
 
-TEST_F(ControllerTest, DISABLED_IgnoreSuperfluous) {
+TEST_F(ControllerTest, IgnoreSuperfluous) {
   m_controller.parseChar('2');
   m_controller.parseChar(' ');
   m_controller.parseChar('3');
@@ -629,7 +629,7 @@ TEST_F(ControllerTest, DISABLED_IgnoreSuperfluous) {
   EXPECT_EQ(7, m_controller.curve(GRIPPER ).target());
 }
 
-TEST_F(ControllerTest, DISABLED_MultipleConfigurations) {
+TEST_F(ControllerTest, MultipleConfigurations) {
   m_controller.parseChar('2');
   m_controller.parseChar('c');
   m_controller.parseChar('3');
@@ -640,12 +640,24 @@ TEST_F(ControllerTest, DISABLED_MultipleConfigurations) {
   EXPECT_EQ(0, m_controller.curve(GRIPPER ).target());
 }
 
-TEST_F(ControllerTest, DISABLED_ConfigurationLimits) {
-  EXPECT_TRUE(false);
+TEST_F(ControllerTest, ConfigurationBoundValues) {
+  m_controller.parseChar('-');
+  m_controller.parseChar('9');
+  m_controller.parseChar('9');
+  m_controller.parseChar('c');
+  EXPECT_LT(-80, m_controller.curve(BASE).target());
 }
 
-TEST_F(ControllerTest, DISABLED_ConfigurationLimitArm) {
-  EXPECT_TRUE(false);
+TEST_F(ControllerTest, DISABLED_ConfigurationLimitElbow) {
+  m_controller.parseChar('0');
+  m_controller.parseChar(' ');
+  m_controller.parseChar('0');
+  m_controller.parseChar(' ');
+  m_controller.parseChar('-');
+  m_controller.parseChar('7');
+  m_controller.parseChar('0');
+  m_controller.parseChar('c');
+  EXPECT_EQ(-45, m_controller.curve(ELBOW).target());
 }
 
 int main(int argc, char **argv) {
