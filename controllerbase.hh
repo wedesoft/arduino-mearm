@@ -49,19 +49,23 @@ public:
   float clipAngle(int drive, float value) {
     return pwmToAngle(drive, clipPWM(drive, angleToPWM(drive, value)));
   }
+  float limitJoint(float value, float other) {
+    return limit(value, -45 - other, 45 - other);
+  }
   float limitArmAngle(int drive, float value)
   {
-    float other;
     switch (drive) {
     case ELBOW:
-      other = target(SHOULDER);
-      return limit(value, -45.0 - other, 45.0 - other);
+      return limitJoint(value, target(SHOULDER));
     case SHOULDER:
-      other = target(ELBOW);
-      return limit(value, -45.0 - other, 45.0 - other);
+      return limitJoint(value, target(ELBOW));
     default:
       return value;
     };
+  }
+  float limitElbowAngle(int drive, float value, float shoulder)
+  {
+    return drive == ELBOW ? limitJoint(value, shoulder) : value;
   }
   void saveTeachPoint(int index) {
     for (int i=0; i<DRIVES; i++)
@@ -69,7 +73,8 @@ public:
   }
   void takeConfigurationValue(void) {
     if (m_index < 4) {
-      m_configuration[m_index] = clipAngle(m_index,number());
+      float angle = limitElbowAngle(m_index, clipAngle(m_index, number()), m_configuration[SHOULDER]);
+      m_configuration[m_index] = angle;
       m_index++;
     };
     resetNumber();
@@ -116,7 +121,7 @@ public:
     m_fraction = 0;
     m_sign = 0;
   }
-  float resetParser(void) {
+  void resetParser(void) {
     resetNumber();
     m_index = 0;
   }

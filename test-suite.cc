@@ -556,9 +556,11 @@ TEST_F(ControllerTest, ConfigurationBoundValues) {
   EXPECT_LT(-80, m_controller.curve(BASE).target());
 }
 
-TEST_F(ControllerTest, DISABLED_ConfigurationLimitElbow) {
-  send("0 0 -70c");
-  EXPECT_EQ(-45, m_controller.curve(ELBOW).target());
+TEST_F(ControllerTest, ConfigurationLimitElbow) {
+  send("0 5 -70c");
+  EXPECT_EQ(  0, m_controller.curve(BASE    ).target());
+  EXPECT_EQ(  5, m_controller.curve(SHOULDER).target());
+  EXPECT_EQ(-50, m_controller.curve(ELBOW   ).target());
 }
 
 int main(int argc, char **argv) {
