@@ -105,6 +105,19 @@ Memory corruption can cause self-collisions. However one can test the program wi
 * *arduino*: software to upload onto Arduino board
 * *etc*: prototype software, math, and simulations
 
+## calibration
+
+You can edit the *calibration.hh* file and update the software on the Arduino.
+It is possible to specify the zero position and the resolution of each servo.
+Furthermore the limits for each servo can be adjusted in order to avoid self-collisions.
+The elbow and shoulder angles are limited against each other.
+
+The zero configuration should look as follows:
+* base aligned with platform
+* shoulder pointing upward
+* elbow horizontal
+* gripper tongs at -45 and +45 degree
+
 # External Links
 
 * [MeArm][1]
