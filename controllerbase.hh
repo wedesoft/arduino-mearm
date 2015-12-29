@@ -31,11 +31,11 @@ public:
       return BASE;
     };
   }
+  float target(int drive) {
+    return m_curve[drive].target();
+  }
   float limit(float value, float lower, float upper) {
     return value < lower ? lower : value > upper ? upper : value;
-  }
-  float clipPWM(int drive, float value) {
-    return limit(value, lower(drive), upper(drive));
   }
   float angleToPWM(int drive, float angle) {
     return offset(drive) + angle * resolution(drive);
@@ -43,23 +43,69 @@ public:
   float pwmToAngle(int drive, float pwm) {
     return (pwm - offset(drive)) / resolution(drive);
   }
-  float limitArm(int drive, float target)
+  float clipPWM(int drive, float value) {
+    return limit(value, lower(drive), upper(drive));
+  }
+  float clipAngle(int drive, float value) {
+    return pwmToAngle(drive, clipPWM(drive, angleToPWM(drive, value)));
+  }
+  float limitArmAngle(int drive, float value)
   {
     float other;
     switch (drive) {
     case ELBOW:
-      other = m_curve[SHOULDER].target();
-      return limit(target, -45.0 - other, 45.0 - other);
+      other = target(SHOULDER);
+      return limit(value, -45.0 - other, 45.0 - other);
     case SHOULDER:
-      other = m_curve[ELBOW].target();
-      return limit(target, -45.0 - other, 45.0 - other);
+      other = target(ELBOW);
+      return limit(value, -45.0 - other, 45.0 - other);
     default:
-      return target;
+      return value;
     };
   }
   void saveTeachPoint(int index) {
     for (int i=0; i<DRIVES; i++)
-      m_teach[index][i] = m_curve[i].target();
+      m_teach[index][i] = target(i);
+  }
+  void takeConfigurationValue(void) {
+    if (m_index < 4) {
+      m_configuration[m_index] = clipAngle(m_index,number());
+      m_index++;
+    };
+    resetNumber();
+  }
+  float timeRequired(int drive, float angle) {
+    return Profile::timeRequired(fabs(angle - target(drive)), MAXJERK);
+  }
+  void targetAngleUnsafe(int drive, float angle, float time) {
+    m_curve[drive].retarget(angle, time);
+  }
+  void targetPWM(int drive, float pwm) {
+    float angle = limitArmAngle(drive, pwmToAngle(drive, clipPWM(drive, pwm)));
+    targetAngleUnsafe(drive, angle, timeRequired(drive, angle));
+  }
+  void targetAngle(int drive, float value) {
+    float angle = limitArmAngle(drive, clipAngle(drive, value));
+    targetAngleUnsafe(drive, angle, timeRequired(drive, angle));
+  }
+  void targetPoint(float point[])
+  {
+    float time = 0;
+    for (int i=0; i<DRIVES; i++) {
+      float driveTime = timeRequired(i, point[i]);
+      time = time < driveTime ? driveTime : time;
+    };
+    for (int i=0; i<DRIVES; i++)
+      targetAngleUnsafe(i, point[i], time);
+  }
+  void update(float dt) {
+    for (int drive=0; drive<DRIVES; drive++)
+      writePWM(drive, round(angleToPWM(drive, m_curve[drive].update(dt))));
+  }
+  void stopDrives(void) {
+    resetParser();
+    for (int drive=0; drive<DRIVES; drive++)
+      m_curve[drive].stop(m_curve[drive].pos());
   }
   float number(void) {
     float fraction = (m_fraction == 0) ? 1 : m_fraction;
@@ -73,13 +119,6 @@ public:
   float resetParser(void) {
     resetNumber();
     m_index = 0;
-  }
-  void takeConfigurationValue(void) {
-    if (m_index < 4) {
-      m_configuration[m_index] = filterAngle(m_index,number());
-      m_index++;
-    };
-    resetNumber();
   }
   void parseChar(char c) {
     if (m_load) {
@@ -165,45 +204,6 @@ public:
         stopDrives();
       };
     };
-  }
-  float timeRequired(int drive, float angle) {
-    return Profile::timeRequired(fabs(angle - m_curve[drive].target()), MAXJERK);
-  }
-  void targetAngleUnsafe(int drive, float angle, float time) {
-    m_curve[drive].retarget(angle, time);
-  }
-  float pwmToFilteredAngle(int drive, float pwm) {
-    return limitArm(drive, pwmToAngle(drive, clipPWM(drive, pwm)));
-  }
-  float filterAngle(int drive, float angle) {
-    return pwmToFilteredAngle(drive, angleToPWM(drive, angle));
-  }
-  void targetPWM(int drive, float pwm) {
-    float angle = pwmToFilteredAngle(drive, pwm);
-    targetAngleUnsafe(drive, angle, timeRequired(drive, angle));
-  }
-  void targetAngle(int drive, float value) {
-    float angle = filterAngle(drive, value);
-    targetAngleUnsafe(drive, angle, timeRequired(drive, angle));
-  }
-  void targetPoint(float point[])
-  {
-    float time = 0;
-    for (int i=0; i<DRIVES; i++) {
-      float driveTime = timeRequired(i, point[i]);
-      time = time < driveTime ? driveTime : time;
-    };
-    for (int i=0; i<DRIVES; i++)
-      targetAngleUnsafe(i, point[i], time);
-  }
-  void update(float dt) {
-    for (int drive=0; drive<DRIVES; drive++)
-      writePWM(drive, round(angleToPWM(drive, m_curve[drive].update(dt))));
-  }
-  void stopDrives(void) {
-    resetParser();
-    for (int drive=0; drive<DRIVES; drive++)
-      m_curve[drive].stop(m_curve[drive].pos());
   }
   virtual int offset(int drive) = 0;
   virtual float resolution(int drive) = 0;
