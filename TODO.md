@@ -1,6 +1,6 @@
 # TODO
 
-* check limits and relative angles for configuration command
+* get number available curves, time of arrival
 * instructions (screw terminal)
 * display configuration
 * display joint name
