@@ -123,6 +123,7 @@ public:
   }
   void resetParser(void) {
     resetNumber();
+    memset(m_configuration, 0, sizeof(m_configuration));
     m_index = 0;
   }
   void parseChar(char c) {

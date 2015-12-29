@@ -563,6 +563,14 @@ TEST_F(ControllerTest, ConfigurationLimitElbow) {
   EXPECT_EQ(-50, m_controller.curve(ELBOW   ).target());
 }
 
+TEST_F(ControllerTest, ClearConfiguration) {
+  send("2 3c4c");
+  EXPECT_EQ(4, m_controller.curve(BASE    ).target());
+  EXPECT_EQ(0, m_controller.curve(SHOULDER).target());
+  EXPECT_EQ(0, m_controller.curve(ELBOW   ).target());
+  EXPECT_EQ(0, m_controller.curve(GRIPPER ).target());
+}
+
 int main(int argc, char **argv) {
   ::testing::InitGoogleTest(&argc, argv);
   return RUN_ALL_TESTS();
