@@ -85,7 +85,8 @@ Examples of servo commands are:
 * **1500S**: set shoulder servo pulse width to 1500
 * **1500E**: set elbow servo pulse width to 1500
 * **544G**: set gripper servo pulse width to 544
-* **1 2 3 4c**: set base, shoulder, elbow, and gripper to 1, 2, 3, and 4 degrees respectively
+* **1 2 3 4c**: set configuration (base, shoulder, elbow, and gripper) to 1, 2, 3, and 4 degrees
+* **1 2 3 4t**: time required to reach the specified configuration
 * **ma**: save teach point *a* (there are 12 teach points from *a* to *l*)
 * **'a**: go to teach point *a* (there are 12 teach points from *a* to *l*)
 * **x**: stop all servos (in fact any undefined key should do)
