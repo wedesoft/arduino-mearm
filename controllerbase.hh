@@ -82,6 +82,14 @@ public:
   float timeRequired(int drive, float angle) {
     return Profile::timeRequired(fabs(angle - target(drive)), MAXJERK);
   }
+  float timeRequired(float point[]) {
+    float retval = 0;
+    for (int i=0; i<DRIVES; i++) {
+      float driveTime = timeRequired(i, point[i]);
+      retval = retval < driveTime ? driveTime : retval;
+    };
+    return retval;
+  }
   void targetAngleUnsafe(int drive, float angle, float time) {
     m_curve[drive].retarget(angle, time);
   }
@@ -95,11 +103,7 @@ public:
   }
   void targetPoint(float point[])
   {
-    float time = 0;
-    for (int i=0; i<DRIVES; i++) {
-      float driveTime = timeRequired(i, point[i]);
-      time = time < driveTime ? driveTime : time;
-    };
+    float time = timeRequired(point);
     for (int i=0; i<DRIVES; i++)
       targetAngleUnsafe(i, point[i], time);
   }
@@ -144,7 +148,12 @@ public:
     } else {
       switch (c) {
       case 't':
-        reportTime();
+        if (m_sign == 0)
+          reportTime();
+        else {
+          takeConfigurationValue();
+          reportRequired(timeRequired(m_configuration));
+        };
         resetParser();
         break;
       case '.':
@@ -216,6 +225,7 @@ public:
   virtual int lower(int drive) = 0;
   virtual int upper(int drive) = 0;
   virtual void reportTime(void) = 0;
+  virtual void reportRequired(float time) = 0;
   virtual void reportAngle(float) = 0;
   virtual void reportPWM(float) = 0;
   virtual void writePWM(int, int) = 0;

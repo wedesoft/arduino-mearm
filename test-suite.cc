@@ -188,6 +188,7 @@ public:
   int lower(int drive) { return 544; }
   int upper(int drive) { return 2400; }
   MOCK_METHOD0(reportTime, void());
+  MOCK_METHOD1(reportRequired, void(float));
   MOCK_METHOD1(reportAngle, void(float));
   MOCK_METHOD1(reportPWM, void(float));
   MOCK_METHOD2(writePWM, void(int,int));
@@ -464,13 +465,6 @@ TEST_F(ControllerTest, TeachPointLoadingClearsNumber) {
   send("b");
 }
 
-TEST_F(ControllerTest, RequestingTimeClearsNumber) {
-  EXPECT_CALL(m_controller, reportTime());
-  send("0t");
-  EXPECT_CALL(m_controller, reportAngle(45));
-  send("b");
-}
-
 TEST_F(ControllerTest, SaveTeachPoint) {
   send("mb'b");
   EXPECT_EQ( 45, m_controller.curve(BASE    ).target());
@@ -569,6 +563,22 @@ TEST_F(ControllerTest, ClearConfiguration) {
   EXPECT_EQ(0, m_controller.curve(SHOULDER).target());
   EXPECT_EQ(0, m_controller.curve(ELBOW   ).target());
   EXPECT_EQ(0, m_controller.curve(GRIPPER ).target());
+}
+
+TEST_F(ControllerTest, ZeroTimeRequired) {
+  EXPECT_CALL(m_controller, reportRequired(0));
+  send("45 -10 20 30t");
+}
+
+TEST_F(ControllerTest, NonZeroTimeRequired) {
+  EXPECT_CALL(m_controller, reportRequired(::testing::Gt(0)));
+  send("50 -10 20 30t");
+}
+
+TEST_F(ControllerTest, ReportingTimeRequiredClearsNumber) {
+  EXPECT_CALL(m_controller, reportRequired(0));
+  send("45 -10 20 30t0c");
+  EXPECT_EQ(0, m_controller.curve(BASE    ).target());
 }
 
 int main(int argc, char **argv) {

@@ -18,6 +18,10 @@ public:
     Serial.print(millis());
     Serial.write("\r\n");
   }
+  void reportRequired(float time) {
+    Serial.print(time);
+    Serial.write("\r\n");
+  }
   void reportAngle(float angle) {
     Serial.print(angle);
     Serial.write("\r\n");

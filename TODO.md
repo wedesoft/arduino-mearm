@@ -1,6 +1,6 @@
 # TODO
 
-* get number available curves, time of arrival
+* get number available curves
 * instructions (screw terminal)
 * display configuration
 * display joint name
