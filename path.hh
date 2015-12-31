@@ -30,6 +30,9 @@ public:
     m_profile[0].reset();
     m_profile[1].reset();
   }
+  bool ready(void) {
+    return m_profile[0].empty() || m_profile[1].empty();
+  }
   void retarget(float target, float duration) {
     retarget(target, duration, m_time[0], m_profile[0]) || retarget(target, duration, m_time[1], m_profile[1]);
   }

@@ -68,6 +68,7 @@ screen /dev/ttyUSB0 115200
 
 Examples of servo commands are:
 
+* **r**: check whether drives are ready to receive more commands (1=ready, 0=busy)
 * **t**: get time
 * **b**: get base servo angle
 * **s**: get shoulder servo angle

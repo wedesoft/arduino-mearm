@@ -130,6 +130,12 @@ public:
     memset(m_configuration, 0, sizeof(m_configuration));
     m_index = 0;
   }
+  bool drivesReady(void) {
+    bool retval = true;
+    for (int i=0; i<DRIVES; i++)
+      retval = retval && m_curve[i].ready();
+    return retval;
+  }
   void parseChar(char c) {
     if (m_load) {
       if (c >= 'a' && c <= 'l')
@@ -147,6 +153,10 @@ public:
       m_save = false;
     } else {
       switch (c) {
+      case 'r':
+        reportReady(drivesReady());
+        resetParser();
+        break;
       case 't':
         if (m_sign == 0)
           reportTime();
@@ -224,6 +234,7 @@ public:
   virtual float resolution(int drive) = 0;
   virtual int lower(int drive) = 0;
   virtual int upper(int drive) = 0;
+  virtual void reportReady(bool ready) = 0;
   virtual void reportTime(void) = 0;
   virtual void reportRequired(float time) = 0;
   virtual void reportAngle(float) = 0;

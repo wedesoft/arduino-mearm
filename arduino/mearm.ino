@@ -14,6 +14,10 @@ public:
   float resolution(int drive) { return RESOLUTION[drive]; }
   int lower(int drive) { return MIN[drive]; }
   int upper(int drive) { return MAX[drive]; }
+  void reportReady(bool ready) {
+    Serial.print(ready ? 1 : 0);
+    Serial.write("\r\n");
+  }
   void reportTime(void) {
     Serial.print(millis());
     Serial.write("\r\n");

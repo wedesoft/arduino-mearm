@@ -180,6 +180,16 @@ TEST_F(PathTest, QueryTimeRequired) {
   EXPECT_FLOAT_EQ(0, m_path.timeRemaining());
 }
 
+TEST_F(PathTest, ReadyCheck) {
+  EXPECT_TRUE(m_path.ready());
+  m_path.retarget(100, 1);
+  EXPECT_TRUE(m_path.ready());
+  m_path.retarget(200, 3);
+  EXPECT_FALSE(m_path.ready());
+  m_path.update(2);
+  EXPECT_TRUE(m_path.ready());
+}
+
 class MockController: public ControllerBase
 {
 public:
@@ -187,6 +197,7 @@ public:
   float resolution(int drive) { return 12.0; }
   int lower(int drive) { return 544; }
   int upper(int drive) { return 2400; }
+  MOCK_METHOD1(reportReady, void(bool));
   MOCK_METHOD0(reportTime, void());
   MOCK_METHOD1(reportRequired, void(float));
   MOCK_METHOD1(reportAngle, void(float));
@@ -579,6 +590,27 @@ TEST_F(ControllerTest, ReportingTimeRequiredClearsNumber) {
   EXPECT_CALL(m_controller, reportRequired(0));
   send("45 -10 20 30t0c");
   EXPECT_EQ(0, m_controller.curve(BASE    ).target());
+}
+
+TEST_F(ControllerTest, DrivesReady) {
+  EXPECT_CALL(m_controller, reportReady(true));
+  send("r");
+}
+
+TEST_F(ControllerTest, ReportingReadyStateClearsNumber) {
+  EXPECT_CALL(m_controller, reportReady(true));
+  EXPECT_CALL(m_controller, reportAngle(45));
+  send("0rb");
+}
+
+TEST_F(ControllerTest, BaseDriveNotReady) {
+  EXPECT_CALL(m_controller, reportReady(false));
+  send("0b10br");
+}
+
+TEST_F(ControllerTest, ShoulderDriveNotReady) {
+  EXPECT_CALL(m_controller, reportReady(false));
+  send("0s10sr");
 }
 
 int main(int argc, char **argv) {
