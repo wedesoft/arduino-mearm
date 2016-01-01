@@ -4,7 +4,7 @@ Responsive and smooth servo steering of the Phenoptix [MeArm][1] robot using the
 
 [![MeArm servo steering](http://img.youtube.com/vi/bwe8nBm6TN8/0.jpg)](http://www.youtube.com/watch?v=bwe8nBm6TN8)
 
-[![Polynomials for smooth motion profiles](etc/polynomial.png)](etc/polynomial.png)
+[![Polynomials for smooth motion profiles](etc/maxima/polynomial.png)](etc/polynomial.png)
 
 Note, you might have to [uninstall *brltty* if it conflicts with the Arduino ttyUSB0][3].
 
