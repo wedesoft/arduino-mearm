@@ -24,10 +24,10 @@ Here is the list of parts I used.
 
 ## build
 
-Install the Arduino Makefile, the *screen* serial terminal, and the Google test library as follows:
+Install the dependencies as follows:
 
 ```
-sudo aptitude install arduino-mk screen google-mock
+sudo aptitude install arduino-mk screen google-mock ruby-rspec ruby-serialport ruby-qt4
 ```
 
 Create the initial calibration file:
@@ -61,6 +61,8 @@ make upload
 **Warning: disconnect the servos from the power source while uploading the program to prevent erratic motion!**
 
 ## control robot
+
+You can control the robot using the *screen* serial terminal:
 
 ```
 screen /dev/ttyUSB0 115200
