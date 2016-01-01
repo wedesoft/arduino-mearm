@@ -1,6 +1,7 @@
 #!/usr/bin/env ruby
 require 'Qt4'
 require_relative 'mearmwidget'
+require_relative 'client'
 
 DEVICE = '/dev/ttyUSB0'
 BAUD = 115200
