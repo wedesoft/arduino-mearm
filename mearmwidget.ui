@@ -16,6 +16,12 @@
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
     <widget class="QSlider" name="baseSlider">
+     <property name="minimum">
+      <number>-90</number>
+     </property>
+     <property name="maximum">
+      <number>90</number>
+     </property>
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>
