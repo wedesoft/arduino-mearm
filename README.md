@@ -22,6 +22,12 @@ Here is the list of parts I used.
 * insulated wire (colours red, black, and other colour)
 * a computer
 
+[![JR plug](etc/jrplug.jpg)](etc/jrplug.jpg)
+
+[![Screw terminal](etc/screwterminal.jpg)](etc/screwterminal.jpg)
+
+[![MeArm connected to Arduino](etc/overview.jpg)](etc/overview.jpg)
+
 ## build
 
 Install the dependencies as follows:
