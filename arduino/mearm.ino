@@ -34,6 +34,16 @@ public:
     Serial.print(round(pwm));
     Serial.write("\r\n");
   }
+  void reportConfiguration(float base, float shoulder, float elbow, float gripper) {
+    Serial.print(base);
+    Serial.write(" ");
+    Serial.print(shoulder);
+    Serial.write(" ");
+    Serial.print(elbow);
+    Serial.write(" ");
+    Serial.print(gripper);
+    Serial.write("\r\n");
+  }
   void writePWM(int drive, int pwm) {
     m_servo[drive].writeMicroseconds(pwm);
   }

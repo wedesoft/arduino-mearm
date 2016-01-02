@@ -28,4 +28,9 @@ describe Client do
     expect(client).to receive(:read_serial).and_return "0\r\n"
     expect(client.ready?).to be_false
   end
+  it 'should query configuration' do
+    expect(client).to receive(:write_serial).with('c')
+    expect(client).to receive(:read_serial).and_return "1 2 3 4\r\n"
+    expect(client.pos).to eq [1, 2, 3, 4]
+  end
 end

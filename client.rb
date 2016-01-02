@@ -12,6 +12,10 @@ class Client
   def target *values
     write_serial "#{values.join " "}c"
   end
+  def pos
+    write_serial 'c'
+    read_serial.split(' ').collect &:to_f
+  end
   def ready?
     write_serial 'r'
     read_serial.to_i != 0

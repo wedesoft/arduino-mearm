@@ -116,6 +116,9 @@ public:
     for (int drive=0; drive<DRIVES; drive++)
       m_curve[drive].stop(m_curve[drive].pos());
   }
+  bool hasNumber(void) {
+    return m_sign != 0;
+  }
   float number(void) {
     float fraction = (m_fraction == 0) ? 1 : m_fraction;
     return m_number * fraction * m_sign;
@@ -158,12 +161,11 @@ public:
         resetParser();
         break;
       case 't':
-        if (m_sign == 0)
-          reportTime();
-        else {
+        if (hasNumber()) {
           takeConfigurationValue();
           reportRequired(timeRequired(m_configuration));
-        };
+        } else
+          reportTime();
         resetParser();
         break;
       case '.':
@@ -185,7 +187,7 @@ public:
       case 'E':
       case 'S':
       case 'G':
-        if (m_sign != 0) {
+        if (hasNumber()) {
           if (isupper(c))
             targetPWM(drive(c), number());
           else
@@ -221,8 +223,11 @@ public:
         takeConfigurationValue();
         break;
       case 'c':
-        takeConfigurationValue();
-        targetPoint(m_configuration);
+        if (hasNumber()) {
+          takeConfigurationValue();
+          targetPoint(m_configuration);
+        } else
+          reportConfiguration(m_curve[0].pos(), m_curve[1].pos(), m_curve[2].pos(), m_curve[3].pos());
         resetParser();
         break;
       default:
@@ -239,6 +244,7 @@ public:
   virtual void reportRequired(float time) = 0;
   virtual void reportAngle(float) = 0;
   virtual void reportPWM(float) = 0;
+  virtual void reportConfiguration(float, float, float, float) = 0;
   virtual void writePWM(int, int) = 0;
 protected:
   float m_number;

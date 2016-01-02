@@ -8,12 +8,13 @@ describe MeArmWidget do
     double 'Client'
   end
   let :widget do
+    expect(client).to receive(:pos).and_return([1, 2, 3, 4])
     MeArmWidget.new client
   end
   context 'when moving the base slider' do
     it 'should move the base' do
       expect(client).to receive(:ready?).and_return true
-      expect(client).to receive(:target).with(10, 0, 0, 0)
+      expect(client).to receive(:target).with(10, 2, 3, 4)
       widget.ui.baseSlider.setValue 10
     end
     it 'should start polling if robot not ready' do
@@ -40,17 +41,17 @@ describe MeArmWidget do
   end
   it 'should use values from the shoulder slider' do
     expect(client).to receive(:ready?).and_return true
-    expect(client).to receive(:target).with(0, 10, 0, 0)
+    expect(client).to receive(:target).with(1, 10, 3, 4)
     widget.ui.shoulderSlider.setValue 10
   end
   it 'should use values from the elbow slider' do
     expect(client).to receive(:ready?).and_return true
-    expect(client).to receive(:target).with(0, 0, 10, 0)
+    expect(client).to receive(:target).with(1, 2, 10, 4)
     widget.ui.elbowSlider.setValue 10
   end
   it 'should use values from the gripper slider' do
     expect(client).to receive(:ready?).and_return true
-    expect(client).to receive(:target).with(0, 0, 0, 10)
+    expect(client).to receive(:target).with(1, 2, 3, 10)
     widget.ui.gripperSlider.setValue 10
   end
 end

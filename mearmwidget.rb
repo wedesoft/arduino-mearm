@@ -10,7 +10,9 @@ class MeArmWidget < Qt::Widget
     @ui = Ui::MeArmWidget.new
     @ui.setupUi self
     @sliders = [@ui.baseSlider, @ui.shoulderSlider, @ui.elbowSlider, @ui.gripperSlider]
-    @sliders.each do |slider|
+    pos = client.pos
+    @sliders.zip(pos).each do |slider, value|
+      slider.value = value
       connect slider, SIGNAL('valueChanged(int)'), self, SLOT('target()')
     end
     @timer = nil

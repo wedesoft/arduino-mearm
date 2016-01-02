@@ -203,6 +203,7 @@ public:
   MOCK_METHOD1(reportAngle, void(float));
   MOCK_METHOD1(reportPWM, void(float));
   MOCK_METHOD2(writePWM, void(int,int));
+  MOCK_METHOD4(reportConfiguration, void(float,float,float,float));
 };
 
 class ControllerTest: public ::testing::Test {
@@ -611,6 +612,11 @@ TEST_F(ControllerTest, BaseDriveNotReady) {
 TEST_F(ControllerTest, ShoulderDriveNotReady) {
   EXPECT_CALL(m_controller, reportReady(false));
   send("0s10sr");
+}
+
+TEST_F(ControllerTest, ReportConfiguration) {
+  EXPECT_CALL(m_controller, reportConfiguration(45, -10, 20, 30));
+  send("c");
 }
 
 int main(int argc, char **argv) {
