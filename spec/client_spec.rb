@@ -15,8 +15,8 @@ describe Client do
     expect(client.time_required(30)).to eq 1.5
   end
   it 'should set drive targets' do
-    expect(client).to receive(:write_serial).with('30c')
-    client.target 30
+    expect(client).to receive(:write_serial).with('1 2 3 4c')
+    client.target 1, 2, 3, 4
   end
   it 'should inform about robot being ready' do
     expect(client).to receive(:write_serial).with('r')

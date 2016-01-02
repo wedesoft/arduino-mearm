@@ -13,7 +13,7 @@ describe MeArmWidget do
   context 'when moving the base slider' do
     it 'should move the base' do
       expect(client).to receive(:ready?).and_return true
-      expect(client).to receive(:target).with(10)
+      expect(client).to receive(:target).with(10, 0, 0, 0)
       widget.ui.baseSlider.setValue 10
     end
     it 'should start polling if robot not ready' do
@@ -22,16 +22,35 @@ describe MeArmWidget do
       widget.ui.baseSlider.setValue 10
     end
   end
-  it 'should process pending updates' do
-    widget.defer
-    expect(client).to receive(:ready?).and_return true
-    expect(client).to receive(:target)
-    widget.pending
+  context 'with pending updates' do
+    before :each do
+      widget.defer
+    end
+    it 'should process them when ready' do
+      expect(client).to receive(:ready?).and_return true
+      expect(client).to receive(:target)
+      widget.pending
+    end
+    it 'should defer them if robot is not ready' do
+      widget.defer
+      expect(client).to receive(:ready?).and_return false
+      expect(widget).to receive(:defer)
+      widget.pending
+    end
   end
-  it 'should defer pending updates if robot is not ready' do
-    widget.defer
-    expect(client).to receive(:ready?).and_return false
-    expect(widget).to receive(:defer)
-    widget.pending
+  it 'should use values from the shoulder slider' do
+    expect(client).to receive(:ready?).and_return true
+    expect(client).to receive(:target).with(0, 10, 0, 0)
+    widget.ui.shoulderSlider.setValue 10
+  end
+  it 'should use values from the elbow slider' do
+    expect(client).to receive(:ready?).and_return true
+    expect(client).to receive(:target).with(0, 0, 10, 0)
+    widget.ui.elbowSlider.setValue 10
+  end
+  it 'should use values from the gripper slider' do
+    expect(client).to receive(:ready?).and_return true
+    expect(client).to receive(:target).with(0, 0, 0, 10)
+    widget.ui.gripperSlider.setValue 10
   end
 end

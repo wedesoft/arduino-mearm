@@ -2,28 +2,31 @@ require 'Qt4'
 require_relative 'ui_mearmwidget'
 
 class MeArmWidget < Qt::Widget
-  slots 'baseChange(int)'
+  slots 'target()'
   attr_reader :ui
   def initialize client, parent = nil
     super parent
     @client = client
     @ui = Ui::MeArmWidget.new
     @ui.setupUi self
-    connect @ui.baseSlider, SIGNAL('valueChanged(int)'), self, SLOT('baseChange(int)')
+    @sliders = [@ui.baseSlider, @ui.shoulderSlider, @ui.elbowSlider, @ui.gripperSlider]
+    @sliders.each do |slider|
+      connect slider, SIGNAL('valueChanged(int)'), self, SLOT('target()')
+    end
     @timer = nil
   end
   def timerEvent e
     pending if e.timerId == @timer
   end
-  def value
-    @ui.baseSlider.value
+  def values
+    @sliders.collect { |slider| slider.value }
   end
   def defer
     @timer = startTimer 0 unless @timer
   end
   def target
     if @client.ready?
-      @client.target value
+      @client.target *values
     else
       defer
     end
@@ -31,9 +34,6 @@ class MeArmWidget < Qt::Widget
   def pending
     killTimer @timer
     @timer = nil
-    target
-  end
-  def baseChange value
     target
   end
 end

@@ -9,8 +9,8 @@ class Client
     write_serial "#{value}t"
     read_serial.to_f
   end
-  def target value
-    write_serial "#{value}c"
+  def target *values
+    write_serial "#{values.join " "}c"
   end
   def ready?
     write_serial 'r'
