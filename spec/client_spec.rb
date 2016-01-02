@@ -2,7 +2,9 @@ require_relative '../client'
 
 describe Client do
   before :each do
-    SerialPort.stub(:new) { nil }
+    port = double 'SerialPort'
+    expect(port).to receive(:read_timeout=).with(2000)
+    SerialPort.stub(:new) { port }
   end
   let :client do
     Client.new 'device', 1234

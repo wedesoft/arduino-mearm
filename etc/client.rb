@@ -1,12 +1,9 @@
 #!/usr/bin/env ruby
 require 'serialport'
 s = SerialPort.new '/dev/ttyUSB0', 115200
-s.write 't'
-print s.readline
-3.times do
-  s.write '-45g'
-  sleep 1
-  s.write '45g'
-  sleep 1
+s.read_timeout = 2000
+10.times do
+  s.write 'r'
+  s.flush
+  puts s.readline
 end
-s.write '0g'

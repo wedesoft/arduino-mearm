@@ -2,7 +2,8 @@ require 'serialport'
 
 class Client
   def initialize device, baud
-    @serial = SerialPort.new device, baud: baud
+    @serial = SerialPort.new device, baud
+    @serial.read_timeout = 2000
   end
   def time_required value
     write_serial "#{value}t"
@@ -17,6 +18,7 @@ class Client
   end
   def write_serial str
     @serial.write str
+    @serial.flush
   end
   def read_serial
     @serial.readline
