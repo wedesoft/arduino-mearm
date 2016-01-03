@@ -14,25 +14,29 @@ public:
   float resolution(int drive) { return RESOLUTION[drive]; }
   int lower(int drive) { return MIN[drive]; }
   int upper(int drive) { return MAX[drive]; }
-  void reportReady(bool ready) {
-    Serial.print(ready ? 1 : 0);
+  void reportInteger(int value) {
+    Serial.print(value);
+    Serial.write("\r\n");
+  }
+  void reportFloat(float value) {
+    Serial.print(value);
     Serial.write("\r\n");
   }
   void reportTime(void) {
     Serial.print(millis());
     Serial.write("\r\n");
   }
+  void reportReady(bool ready) {
+    reportInteger(ready ? 1 : 0);
+  }
   void reportRequired(float time) {
-    Serial.print(time);
-    Serial.write("\r\n");
+    reportFloat(time);
   }
   void reportAngle(float angle) {
-    Serial.print(angle);
-    Serial.write("\r\n");
+    reportFloat(angle);
   }
-  void reportPWM(float pwm) {
-    Serial.print(round(pwm));
-    Serial.write("\r\n");
+  void reportPWM(int pwm) {
+    reportInteger(pwm);
   }
   void reportConfiguration(float base, float shoulder, float elbow, float gripper) {
     Serial.print(base);
@@ -43,6 +47,12 @@ public:
     Serial.write(" ");
     Serial.print(gripper);
     Serial.write("\r\n");
+  }
+  void reportLower(float base, float shoulder, float elbow, float gripper) {
+    reportConfiguration(base, shoulder, elbow, gripper);
+  }
+  void reportUpper(float base, float shoulder, float elbow, float gripper) {
+    reportConfiguration(base, shoulder, elbow, gripper);
   }
   void writePWM(int drive, int pwm) {
     m_servo[drive].writeMicroseconds(pwm);
@@ -63,10 +73,8 @@ void setup() {
 
 void loop() {
   int dt = millis() - t0;
-  if (Serial.available()) {
-    char c = Serial.read();
-    controller.parseChar(c);
-  };
+  if (Serial.available())
+    controller.parseChar(Serial.read());
   controller.update(dt * 0.001);
   t0 += dt;
 }

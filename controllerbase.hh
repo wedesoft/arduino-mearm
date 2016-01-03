@@ -194,7 +194,7 @@ public:
             targetAngle(drive(c), number());
         } else
           if (isupper(c))
-            reportPWM(angleToPWM(drive(c), m_curve[drive(c)].pos()));
+            reportPWM(round(angleToPWM(drive(c), m_curve[drive(c)].pos())));
           else
             reportAngle(m_curve[drive(c)].pos());
         resetParser();
@@ -230,6 +230,20 @@ public:
           reportConfiguration(m_curve[0].pos(), m_curve[1].pos(), m_curve[2].pos(), m_curve[3].pos());
         resetParser();
         break;
+      case 'l':
+        reportLower((lower(0) - offset(0)) / resolution(0),
+                    (lower(1) - offset(1)) / resolution(1),
+                    (lower(2) - offset(2)) / resolution(2),
+                    (lower(3) - offset(3)) / resolution(3));
+        resetParser();
+        break;
+      case 'u':
+        reportUpper((upper(0) - offset(0)) / resolution(0),
+                    (upper(1) - offset(1)) / resolution(1),
+                    (upper(2) - offset(2)) / resolution(2),
+                    (upper(3) - offset(3)) / resolution(3));
+        resetParser();
+        break;
       default:
         stopDrives();
       };
@@ -243,8 +257,10 @@ public:
   virtual void reportTime(void) = 0;
   virtual void reportRequired(float time) = 0;
   virtual void reportAngle(float) = 0;
-  virtual void reportPWM(float) = 0;
+  virtual void reportPWM(int) = 0;
   virtual void reportConfiguration(float, float, float, float) = 0;
+  virtual void reportLower(float, float, float, float) = 0;
+  virtual void reportUpper(float, float, float, float) = 0;
   virtual void writePWM(int, int) = 0;
 protected:
   float m_number;

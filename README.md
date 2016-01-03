@@ -87,6 +87,8 @@ Examples of servo commands are:
 * **E**: get elbow servo pulse width
 * **G**: get gripper servo pulse width
 * *c*: get current configuration (base, shoulder, elbow, and gripper)
+* *l*: get lower limits for servos
+* *u*: get upper limits for servos
 * **45b**: set base servo angle to 45 degrees
 * **-12.5s**: set shoulder servo angle to -12.5 degrees
 * **10e**: set elbow servo angle to 10 degrees

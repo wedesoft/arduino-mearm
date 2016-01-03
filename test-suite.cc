@@ -4,6 +4,8 @@
 #include "profile.hh"
 #include "path.hh"
 
+using namespace testing;
+
 TEST(ProfileTest, DefaultProfile)
 {
   EXPECT_EQ(0, Profile().value(-1));
@@ -59,7 +61,7 @@ TEST(ProfileTest, StartAndEndStationary)
   EXPECT_FLOAT_EQ(123, Profile(123, 10).value(11));
 }
 
-class PathTest: public ::testing::Test {
+class PathTest: public Test {
 protected:
   Path m_path;
 };
@@ -201,12 +203,14 @@ public:
   MOCK_METHOD0(reportTime, void());
   MOCK_METHOD1(reportRequired, void(float));
   MOCK_METHOD1(reportAngle, void(float));
-  MOCK_METHOD1(reportPWM, void(float));
+  MOCK_METHOD1(reportPWM, void(int));
   MOCK_METHOD2(writePWM, void(int,int));
   MOCK_METHOD4(reportConfiguration, void(float,float,float,float));
+  MOCK_METHOD4(reportLower, void(float,float,float,float));
+  MOCK_METHOD4(reportUpper, void(float,float,float,float));
 };
 
-class ControllerTest: public ::testing::Test {
+class ControllerTest: public Test {
 public:
   ControllerTest(void) {
     m_controller.curve(BASE    ).stop(45);
@@ -233,7 +237,7 @@ TEST_F(ControllerTest, ReportBase) {
 }
 
 TEST_F(ControllerTest, ReportBasePWM) {
-  EXPECT_CALL(m_controller, reportPWM(2040.0));
+  EXPECT_CALL(m_controller, reportPWM(2040));
   send("B");
 }
 
@@ -348,7 +352,7 @@ TEST_F(ControllerTest, ReportElbow) {
 }
 
 TEST_F(ControllerTest, ReportElbowPWM) {
-  EXPECT_CALL(m_controller, reportPWM(1740.0));
+  EXPECT_CALL(m_controller, reportPWM(1740));
   send("E");
 }
 
@@ -363,7 +367,7 @@ TEST_F(ControllerTest, ReportShoulder) {
 }
 
 TEST_F(ControllerTest, ReportShoulderPWM) {
-  EXPECT_CALL(m_controller, reportPWM(1380.0));
+  EXPECT_CALL(m_controller, reportPWM(1380));
   send("S");
 }
 
@@ -373,7 +377,7 @@ TEST_F(ControllerTest, ReportGripper) {
 }
 
 TEST_F(ControllerTest, ReportGripperPWM) {
-  EXPECT_CALL(m_controller, reportPWM(1860.0));
+  EXPECT_CALL(m_controller, reportPWM(1860));
   send("G");
 }
 
@@ -456,7 +460,7 @@ TEST_F(ControllerTest, ApproachTeachPoint) {
 
 TEST_F(ControllerTest, FinishTeachPointSelection) {
   send("'b");
-  EXPECT_CALL(m_controller, reportAngle(45));
+  EXPECT_CALL(m_controller, reportAngle(_));
   send("b");
 }
 
@@ -473,7 +477,7 @@ TEST_F(ControllerTest, WrongTeachPointKeyStopsDrives) {
 
 TEST_F(ControllerTest, TeachPointLoadingClearsNumber) {
   send("0'b");
-  EXPECT_CALL(m_controller, reportAngle(45));
+  EXPECT_CALL(m_controller, reportAngle(_));
   send("b");
 }
 
@@ -486,15 +490,13 @@ TEST_F(ControllerTest, SaveTeachPoint) {
 }
 
 TEST_F(ControllerTest, FinishTeachPointSaving) {
-  send("mb");
-  EXPECT_CALL(m_controller, reportAngle(45));
-  send("b");
+  EXPECT_CALL(m_controller, reportAngle(_));
+  send("mbb");
 }
 
 TEST_F(ControllerTest, TeachPointSavingClearsNumber) {
-  send("0mb");
-  EXPECT_CALL(m_controller, reportAngle(45));
-  m_controller.parseChar('b');
+  EXPECT_CALL(m_controller, reportAngle(_));
+  send("0mbb");
 }
 
 TEST_F(ControllerTest, WrongTeachPointSelectionStopsDrives) {
@@ -583,14 +585,14 @@ TEST_F(ControllerTest, ZeroTimeRequired) {
 }
 
 TEST_F(ControllerTest, NonZeroTimeRequired) {
-  EXPECT_CALL(m_controller, reportRequired(::testing::Gt(0)));
+  EXPECT_CALL(m_controller, reportRequired(Gt(0)));
   send("50 -10 20 30t");
 }
 
 TEST_F(ControllerTest, ReportingTimeRequiredClearsNumber) {
   EXPECT_CALL(m_controller, reportRequired(0));
   send("45 -10 20 30t0c");
-  EXPECT_EQ(0, m_controller.curve(BASE    ).target());
+  EXPECT_EQ(0, m_controller.curve(BASE).target());
 }
 
 TEST_F(ControllerTest, DrivesReady) {
@@ -599,8 +601,8 @@ TEST_F(ControllerTest, DrivesReady) {
 }
 
 TEST_F(ControllerTest, ReportingReadyStateClearsNumber) {
-  EXPECT_CALL(m_controller, reportReady(true));
-  EXPECT_CALL(m_controller, reportAngle(45));
+  EXPECT_CALL(m_controller, reportReady(_));
+  EXPECT_CALL(m_controller, reportAngle(_));
   send("0rb");
 }
 
@@ -619,7 +621,31 @@ TEST_F(ControllerTest, ReportConfiguration) {
   send("c");
 }
 
+TEST_F(ControllerTest, ReportLowerLimits) {
+  float lower = -79.666667f;
+  EXPECT_CALL(m_controller, reportLower(lower, lower, lower, lower));
+  send("l");
+}
+
+TEST_F(ControllerTest, ReportingLowerLimitsClearsNumber) {
+  EXPECT_CALL(m_controller, reportLower(_, _, _, _));
+  EXPECT_CALL(m_controller, reportAngle(_));
+  send("0lb");
+}
+
+TEST_F(ControllerTest, ReportUpperLimits) {
+  float upper = 75.0f;
+  EXPECT_CALL(m_controller, reportUpper(upper, upper, upper, upper));
+  send("u");
+}
+
+TEST_F(ControllerTest, ReportingUpperLimitsClearsNumber) {
+  EXPECT_CALL(m_controller, reportUpper(_, _, _, _));
+  EXPECT_CALL(m_controller, reportAngle(_));
+  send("0ub");
+}
+
 int main(int argc, char **argv) {
-  ::testing::InitGoogleTest(&argc, argv);
+  InitGoogleTest(&argc, argv);
   return RUN_ALL_TESTS();
 }
