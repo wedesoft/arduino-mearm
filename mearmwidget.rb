@@ -9,11 +9,11 @@ class MeArmWidget < Qt::Widget
     @client = client
     @ui = Ui::MeArmWidget.new
     @ui.setupUi self
-    @sliders = [@ui.baseSlider, @ui.shoulderSlider, @ui.elbowSlider, @ui.gripperSlider]
+    @spin_boxes = [@ui.baseSpin, @ui.shoulderSpin, @ui.elbowSpin, @ui.gripperSpin]
     pos = client.pos
-    @sliders.zip(pos).each do |slider, value|
+    @spin_boxes.zip(pos).each do |slider, value|
       slider.value = value
-      connect slider, SIGNAL('valueChanged(int)'), self, SLOT('target()')
+      connect slider, SIGNAL('valueChanged(double)'), self, SLOT('target()')
     end
     @timer = nil
   end
@@ -21,7 +21,7 @@ class MeArmWidget < Qt::Widget
     pending if e.timerId == @timer
   end
   def values
-    @sliders.collect { |slider| slider.value }
+    @spin_boxes.collect { |slider| slider.value }
   end
   def defer
     @timer = startTimer 0 unless @timer

@@ -6,63 +6,91 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>200</height>
+    <width>135</width>
+    <height>168</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>MeArm</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout">
-   <item>
-    <widget class="QSlider" name="baseSlider">
+  <layout class="QGridLayout" name="gridLayout">
+   <item row="2" column="1">
+    <widget class="QDoubleSpinBox" name="elbowSpin">
      <property name="minimum">
-      <number>-90</number>
+      <double>-90.000000000000000</double>
      </property>
      <property name="maximum">
-      <number>90</number>
-     </property>
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
+      <double>90.000000000000000</double>
      </property>
     </widget>
    </item>
-   <item>
-    <widget class="QSlider" name="shoulderSlider">
-     <property name="minimum">
-      <number>-90</number>
+   <item row="3" column="0">
+    <widget class="QLabel" name="gripperLabel">
+     <property name="text">
+      <string>&amp;gripper</string>
      </property>
-     <property name="maximum">
-      <number>90</number>
-     </property>
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
+     <property name="buddy">
+      <cstring>gripperSpin</cstring>
      </property>
     </widget>
    </item>
-   <item>
-    <widget class="QSlider" name="elbowSlider">
+   <item row="3" column="1">
+    <widget class="QDoubleSpinBox" name="gripperSpin">
      <property name="minimum">
-      <number>-90</number>
+      <double>-90.000000000000000</double>
      </property>
      <property name="maximum">
-      <number>90</number>
-     </property>
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
+      <double>90.000000000000000</double>
      </property>
     </widget>
    </item>
-   <item>
-    <widget class="QSlider" name="gripperSlider">
+   <item row="1" column="1">
+    <widget class="QDoubleSpinBox" name="shoulderSpin">
      <property name="minimum">
-      <number>-90</number>
+      <double>-90.000000000000000</double>
      </property>
      <property name="maximum">
-      <number>90</number>
+      <double>90.000000000000000</double>
      </property>
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
+    </widget>
+   </item>
+   <item row="2" column="0">
+    <widget class="QLabel" name="elbowLabel">
+     <property name="text">
+      <string>&amp;elbow</string>
+     </property>
+     <property name="buddy">
+      <cstring>elbowSpin</cstring>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="0">
+    <widget class="QLabel" name="baseLabel">
+     <property name="text">
+      <string>&amp;base</string>
+     </property>
+     <property name="buddy">
+      <cstring>baseSpin</cstring>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="1">
+    <widget class="QDoubleSpinBox" name="baseSpin">
+     <property name="minimum">
+      <double>-90.000000000000000</double>
+     </property>
+     <property name="maximum">
+      <double>90.000000000000000</double>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="0">
+    <widget class="QLabel" name="shoulderLabel">
+     <property name="text">
+      <string>&amp;shoulder</string>
+     </property>
+     <property name="buddy">
+      <cstring>shoulderSpin</cstring>
      </property>
     </widget>
    </item>
