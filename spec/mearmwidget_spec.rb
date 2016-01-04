@@ -9,8 +9,8 @@ describe MeArmWidget do
   end
   let :widget do
     expect(client).to receive(:pos).and_return([1, 2, 3, 4])
-    expect(client).to receive(:lower).and_return([-10, -20, -30, -40])
-    expect(client).to receive(:upper).and_return([+10, +20, +30, +40])
+    expect(client).to receive(:lower).and_return([-10, -20, -30, -45])
+    expect(client).to receive(:upper).and_return([+10, +20, +30, +45])
     MeArmWidget.new client
   end
   context 'when moving the base spin box' do
@@ -60,12 +60,58 @@ describe MeArmWidget do
     expect(widget.ui.baseSpin.minimum    ).to eq -10
     expect(widget.ui.shoulderSpin.minimum).to eq -20
     expect(widget.ui.elbowSpin.minimum   ).to eq -30
-    expect(widget.ui.gripperSpin.minimum ).to eq -40
+    expect(widget.ui.gripperSpin.minimum ).to eq -45
   end
   it 'should set the upper limits for the spin boxes' do
     expect(widget.ui.baseSpin.maximum    ).to eq +10
     expect(widget.ui.shoulderSpin.maximum).to eq +20
     expect(widget.ui.elbowSpin.maximum   ).to eq +30
-    expect(widget.ui.gripperSpin.maximum ).to eq +40
+    expect(widget.ui.gripperSpin.maximum ).to eq +45
+  end
+  context 'synchronising GUI elements' do
+    before :each do
+      expect(client).to receive(:ready?).and_return true
+      expect(client).to receive(:target)
+    end
+    it 'should update the base slider if the base spin box is changed' do
+      widget.ui.baseSpin.setValue 10
+      expect(widget.ui.baseSlider.value).to eq 10000
+    end
+    it 'should update the base spin box if the base slider is changed' do
+      widget.ui.baseSlider.setValue 10000
+      expect(widget.ui.baseSpin.value).to eq 10
+    end
+    it 'should update the shoulder slider if the shoulder spin box is changed' do
+      widget.ui.shoulderSpin.setValue 0
+      expect(widget.ui.shoulderSlider.value).to eq 5000
+    end
+    it 'should update the shoulder spin box if the shoulder slider is changed' do
+      widget.ui.shoulderSlider.setValue 5000
+      expect(widget.ui.shoulderSpin.value).to eq 0
+    end
+    it 'should update the elbow slider if the elbow spin box is changed' do
+      widget.ui.elbowSpin.setValue 30
+      expect(widget.ui.elbowSlider.value).to eq 10000
+    end
+    it 'should update the elbow spin box if the elbow slider is changed' do
+      widget.ui.elbowSlider.setValue 10000
+      expect(widget.ui.elbowSpin.value).to eq 30
+    end
+    it 'should update the spin box associated with open gripper state' do
+      widget.ui.gripperSpin.setValue 10
+      expect(widget.ui.gripperOpenSpin.value).to eq 10
+    end
+    context 'with closed gripper radio button toggled' do
+      before :each do
+        widget.ui.gripperClose.setChecked true
+      end
+      it 'should update the gripper spin' do
+        expect(widget.ui.gripperSpin.value).to eq 45
+      end
+      it 'should update the spin box associated with closed gripper state' do
+        widget.ui.gripperSpin.setValue 10
+        expect(widget.ui.gripperCloseSpin.value).to eq 10
+      end
+    end
   end
 end

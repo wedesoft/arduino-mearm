@@ -3,6 +3,14 @@ require_relative 'ui_mearmwidget'
 
 class MeArmWidget < Qt::Widget
   slots 'target()'
+  slots 'updateBaseSlider(double)'
+  slots 'updateBaseSpin(int)'
+  slots 'updateShoulderSlider(double)'
+  slots 'updateShoulderSpin(int)'
+  slots 'updateElbowSlider(double)'
+  slots 'updateElbowSpin(int)'
+  slots 'updateGripperGroup(double)'
+  slots 'updateGripperOpen(bool)'
   attr_reader :ui
   def initialize client, parent = nil
     super parent
@@ -10,12 +18,27 @@ class MeArmWidget < Qt::Widget
     @ui = Ui::MeArmWidget.new
     @ui.setupUi self
     @spin_boxes = [@ui.baseSpin, @ui.shoulderSpin, @ui.elbowSpin, @ui.gripperSpin]
-    @spin_boxes.zip(client.pos, client.lower, client.upper).each do |spin_box, pos, lower, upper|
+    connect @ui.baseSpin, SIGNAL('valueChanged(double)'), self, SLOT('updateBaseSlider(double)')
+    connect @ui.baseSlider, SIGNAL('valueChanged(int)'), self, SLOT('updateBaseSpin(int)')
+    connect @ui.shoulderSpin, SIGNAL('valueChanged(double)'), self, SLOT('updateShoulderSlider(double)')
+    connect @ui.shoulderSlider, SIGNAL('valueChanged(int)'), self, SLOT('updateShoulderSpin(int)')
+    connect @ui.elbowSpin, SIGNAL('valueChanged(double)'), self, SLOT('updateElbowSlider(double)')
+    connect @ui.elbowSlider, SIGNAL('valueChanged(int)'), self, SLOT('updateElbowSpin(int)')
+    connect @ui.gripperSpin, SIGNAL('valueChanged(double)'), self, SLOT('updateGripperGroup(double)')
+    connect @ui.gripperOpen, SIGNAL('toggled(bool)'), self, SLOT('updateGripperOpen(bool)')
+    @spin_boxes.zip(client.lower, client.upper).each do |spin_box, lower, upper|
       spin_box.minimum = lower
       spin_box.maximum = upper
+    end
+    @ui.gripperOpenSpin.minimum = @ui.gripperSpin.minimum
+    @ui.gripperOpenSpin.maximum = @ui.gripperSpin.maximum
+    @ui.gripperCloseSpin.minimum = @ui.gripperSpin.minimum
+    @ui.gripperCloseSpin.maximum = @ui.gripperSpin.maximum
+    @spin_boxes.zip(client.pos).each do |spin_box, pos|
       spin_box.value = pos
       connect spin_box, SIGNAL('valueChanged(double)'), self, SLOT('target()')
     end
+    @ui.gripperOpenSpin.value = @ui.gripperSpin.value
     @timer = nil
   end
   def timerEvent e
@@ -33,6 +56,33 @@ class MeArmWidget < Qt::Widget
     else
       defer
     end
+  end
+  def sync dest, source
+    dest.value = (dest.maximum - dest.minimum) * (source.value - source.minimum) / (source.maximum - source.minimum) + dest.minimum
+  end
+  def updateBaseSlider value
+    sync @ui.baseSlider, @ui.baseSpin
+  end
+  def updateBaseSpin value
+    sync @ui.baseSpin, @ui.baseSlider
+  end
+  def updateShoulderSlider value
+    sync @ui.shoulderSlider, @ui.shoulderSpin
+  end
+  def updateShoulderSpin value
+    sync @ui.shoulderSpin, @ui.shoulderSlider
+  end
+  def updateElbowSlider value
+    sync @ui.elbowSlider, @ui.elbowSpin
+  end
+  def updateElbowSpin value
+    sync @ui.elbowSpin, @ui.elbowSlider
+  end
+  def updateGripperGroup value
+    sync @ui.gripperOpen.isChecked ? @ui.gripperOpenSpin : @ui.gripperCloseSpin, @ui.gripperSpin
+  end
+  def updateGripperOpen value
+    sync @ui.gripperSpin, value ? @ui.gripperOpenSpin : @ui.gripperCloseSpin
   end
   def pending
     killTimer @timer

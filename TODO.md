@@ -1,6 +1,6 @@
 # TODO
 
-* use double spin box and slider
+* stop button
 * open/closed position for gripper
 * visualise nominal vs actual position
 * instructions (screw terminal)
