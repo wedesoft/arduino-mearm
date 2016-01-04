@@ -70,8 +70,8 @@ describe MeArmWidget do
   end
   context 'synchronising GUI elements' do
     before :each do
-      expect(client).to receive(:ready?).and_return true
-      expect(client).to receive(:target)
+      expect(client).to receive(:ready?).at_least(:once).and_return true
+      expect(client).to receive(:target).at_least(:once)
     end
     it 'should update the base slider if the base spin box is changed' do
       widget.ui.baseSpin.setValue 10

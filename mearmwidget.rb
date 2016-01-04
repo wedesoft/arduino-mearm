@@ -38,6 +38,9 @@ class MeArmWidget < Qt::Widget
       spin_box.value = pos
       connect spin_box, SIGNAL('valueChanged(double)'), self, SLOT('target()')
     end
+    sync @ui.baseSlider, @ui.baseSpin
+    sync @ui.shoulderSlider, @ui.shoulderSpin
+    sync @ui.elbowSlider, @ui.elbowSpin
     @ui.gripperOpenSpin.value = @ui.gripperSpin.value
     @timer = nil
   end

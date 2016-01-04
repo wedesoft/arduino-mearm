@@ -52,6 +52,9 @@
           </item>
           <item row="0" column="1">
            <widget class="QDoubleSpinBox" name="gripperOpenSpin">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
             <property name="minimum">
              <double>-45.000000000000000</double>
             </property>
@@ -69,6 +72,9 @@
           </item>
           <item row="1" column="1">
            <widget class="QDoubleSpinBox" name="gripperCloseSpin">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
             <property name="minimum">
              <double>-45.000000000000000</double>
             </property>
@@ -235,6 +241,9 @@
      </property>
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="invertedAppearance">
+      <bool>true</bool>
      </property>
     </widget>
    </item>

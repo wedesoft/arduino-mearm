@@ -12,9 +12,18 @@ class Client
   def target *values
     write_serial "#{values.join " "}c"
   end
-  def pos
-    write_serial 'c'
+  def configuration c
+    write_serial c
     read_serial.split(' ').collect &:to_f
+  end
+  def pos
+    configuration 'c'
+  end
+  def lower
+    configuration 'l'
+  end
+  def upper
+    configuration 'u'
   end
   def ready?
     write_serial 'r'

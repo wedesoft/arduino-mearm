@@ -33,4 +33,14 @@ describe Client do
     expect(client).to receive(:read_serial).and_return "1 2 3 4\r\n"
     expect(client.pos).to eq [1, 2, 3, 4]
   end
+  it 'should read the lower limits' do
+    expect(client).to receive(:write_serial).with('l')
+    expect(client).to receive(:read_serial).and_return "-10 -20 -30 -45\r\n"
+    expect(client.lower).to eq [-10, -20, -30, -45]
+  end
+  it 'should read the upper limits' do
+    expect(client).to receive(:write_serial).with('u')
+    expect(client).to receive(:read_serial).and_return "10 20 30 45\r\n"
+    expect(client.upper).to eq [10, 20, 30, 45]
+  end
 end
