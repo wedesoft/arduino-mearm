@@ -43,4 +43,8 @@ describe Client do
     expect(client).to receive(:read_serial).and_return "10 20 30 45\r\n"
     expect(client.upper).to eq [10, 20, 30, 45]
   end
+  it 'should allow stopping of drives' do
+    expect(client).to receive(:write_serial).with('x')
+    client.stop
+  end
 end

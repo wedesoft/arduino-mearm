@@ -29,6 +29,9 @@ class Client
     write_serial 'r'
     read_serial.to_i != 0
   end
+  def stop
+    write_serial 'x'
+  end
   def write_serial str
     @serial.write str
     @serial.flush

@@ -8,21 +8,44 @@ describe MeArmWidget do
     double 'Client'
   end
   let :widget do
-    expect(client).to receive(:pos).and_return([1, 2, 3, 4])
+    expect(client).to receive(:pos).at_least(:once).and_return([1, 2, 3, 4])
     expect(client).to receive(:lower).and_return([-10, -20, -30, -45])
     expect(client).to receive(:upper).and_return([+10, +20, +30, +45])
     MeArmWidget.new client
   end
   context 'when moving the base spin box' do
-    it 'should move the base' do
-      expect(client).to receive(:ready?).and_return true
-      expect(client).to receive(:target).with(10, 2, 3, 4)
-      widget.ui.baseSpin.setValue 10
+    context 'if robot is ready' do
+      before :each do
+        expect(client).to receive(:ready?).and_return true
+      end
+      it 'should move the base' do
+        expect(client).to receive(:target).with(10, 2, 3, 4)
+        widget.ui.baseSpin.setValue 10
+      end
+      it 'should halt the drives if stop is pressed' do
+        expect(client).to receive(:target)
+        expect(client).to receive(:stop)
+        widget.ui.baseSpin.setValue 10
+        widget.ui.stopButton.clicked
+        expect(widget.ui.baseSpin.value).to eq 1
+      end
     end
-    it 'should start polling if robot not ready' do
-      expect(client).to receive(:ready?).and_return false
-      expect(widget).to receive(:defer)
-      widget.ui.baseSpin.setValue 10
+    context 'if robot is busy' do
+      before :each do
+        expect(client).to receive(:ready?).and_return false
+      end
+      it 'should start polling' do
+        expect(widget).to receive(:defer)
+        widget.ui.baseSpin.setValue 10
+      end
+      it 'should stop polling if the stop button is pressed' do
+        expect(widget).to receive(:defer)
+        expect(widget).to receive(:kill_timer)
+        expect(client).to receive(:stop)
+        widget.ui.baseSpin.setValue 10
+        widget.ui.stopButton.clicked
+        expect(widget.ui.baseSpin.value).to eq 1
+      end
     end
   end
   context 'with pending updates' do

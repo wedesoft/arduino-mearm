@@ -11,6 +11,7 @@ class MeArmWidget < Qt::Widget
   slots 'updateElbowSpin(int)'
   slots 'updateGripperGroup(double)'
   slots 'updateGripperOpen(bool)'
+  slots 'stop()'
   attr_reader :ui
   def initialize client, parent = nil
     super parent
@@ -26,6 +27,7 @@ class MeArmWidget < Qt::Widget
     connect @ui.elbowSlider, SIGNAL('valueChanged(int)'), self, SLOT('updateElbowSpin(int)')
     connect @ui.gripperSpin, SIGNAL('valueChanged(double)'), self, SLOT('updateGripperGroup(double)')
     connect @ui.gripperOpen, SIGNAL('toggled(bool)'), self, SLOT('updateGripperOpen(bool)')
+    connect @ui.stopButton, SIGNAL('clicked()'), self, SLOT('stop()')
     @spin_boxes.zip(client.lower, client.upper).each do |spin_box, lower, upper|
       spin_box.minimum = lower
       spin_box.maximum = upper
@@ -34,18 +36,29 @@ class MeArmWidget < Qt::Widget
     @ui.gripperOpenSpin.maximum = @ui.gripperSpin.maximum
     @ui.gripperCloseSpin.minimum = @ui.gripperSpin.minimum
     @ui.gripperCloseSpin.maximum = @ui.gripperSpin.maximum
-    @spin_boxes.zip(client.pos).each do |spin_box, pos|
-      spin_box.value = pos
-      connect spin_box, SIGNAL('valueChanged(double)'), self, SLOT('target()')
-    end
+    update_controls
     sync @ui.baseSlider, @ui.baseSpin
     sync @ui.shoulderSlider, @ui.shoulderSpin
     sync @ui.elbowSlider, @ui.elbowSpin
     @ui.gripperOpenSpin.value = @ui.gripperSpin.value
     @timer = nil
   end
+  def update_controls
+    @spin_boxes.zip(@client.pos).each do |spin_box, pos|
+      disconnect spin_box, SIGNAL('valueChanged(double)'), self, SLOT('target()')
+      spin_box.value = pos
+      connect spin_box, SIGNAL('valueChanged(double)'), self, SLOT('target()')
+    end
+  end
   def timerEvent e
     pending if e.timerId == @timer
+  end
+  def keyPressEvent e
+    if e.key == Qt.Key_Escape
+      stop
+    else
+      super e
+    end
   end
   def values
     @spin_boxes.collect { |spin_box| spin_box.value }
@@ -87,9 +100,19 @@ class MeArmWidget < Qt::Widget
   def updateGripperOpen value
     sync @ui.gripperSpin, value ? @ui.gripperOpenSpin : @ui.gripperCloseSpin
   end
+  def kill_timer
+    if @timer
+      killTimer @timer
+      @timer = nil
+    end
+  end
+  def stop
+    @client.stop
+    kill_timer
+    update_controls
+  end
   def pending
-    killTimer @timer
-    @timer = nil
+    kill_timer
     target
   end
 end

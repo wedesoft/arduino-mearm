@@ -264,11 +264,11 @@
      </item>
      <item>
       <widget class="QPushButton" name="stopButton">
-       <property name="enabled">
-        <bool>false</bool>
-       </property>
        <property name="text">
         <string>Sto&amp;p</string>
+       </property>
+       <property name="autoDefault">
+        <bool>true</bool>
        </property>
       </widget>
      </item>
