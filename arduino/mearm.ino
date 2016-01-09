@@ -54,6 +54,9 @@ public:
   void reportUpper(float base, float shoulder, float elbow, float gripper) {
     reportConfiguration(base, shoulder, elbow, gripper);
   }
+  void reportTeachPoint(float base, float shoulder, float elbow, float gripper) {
+    reportConfiguration(base, shoulder, elbow, gripper);
+  }
   void writePWM(int drive, int pwm) {
     m_servo[drive].writeMicroseconds(pwm);
   }

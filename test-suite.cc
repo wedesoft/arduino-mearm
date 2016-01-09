@@ -208,6 +208,7 @@ public:
   MOCK_METHOD4(reportConfiguration, void(float,float,float,float));
   MOCK_METHOD4(reportLower, void(float,float,float,float));
   MOCK_METHOD4(reportUpper, void(float,float,float,float));
+  MOCK_METHOD4(reportTeachPoint, void(float,float,float,float));
 };
 
 class ControllerTest: public Test {
@@ -487,6 +488,16 @@ TEST_F(ControllerTest, SaveTeachPoint) {
   EXPECT_EQ(-10, m_controller.curve(SHOULDER).target());
   EXPECT_EQ( 20, m_controller.curve(ELBOW   ).target());
   EXPECT_EQ( 30, m_controller.curve(GRIPPER ).target());
+}
+
+TEST_F(ControllerTest, PrintDefaultTeachPoint) {
+  EXPECT_CALL(m_controller, reportTeachPoint(0, 0, 0, 0));
+  send("pa");
+}
+
+TEST_F(ControllerTest, PrintTeachPoint) {
+  EXPECT_CALL(m_controller, reportTeachPoint(45, -10, 20, 30));
+  send("mbpb");
 }
 
 TEST_F(ControllerTest, FinishTeachPointSaving) {

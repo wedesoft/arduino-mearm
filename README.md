@@ -100,7 +100,8 @@ Examples of servo commands are:
 * **1 2 3 4c**: set configuration (base, shoulder, elbow, and gripper) to 1, 2, 3, and 4 degrees
 * **1 2 3 4t**: time required to reach the specified configuration
 * **ma**: save teach point *a* (there are 12 teach points from *a* to *l*)
-* **'a**: go to teach point *a* (there are 12 teach points from *a* to *l*)
+* **'a**: go to teach point *a*
+* **pa**: display configuration of teach point *a*
 * **x**: stop all servos (in fact any undefined key should do)
 
 You can exit the *screen* terminal using Ctrl-A \\.

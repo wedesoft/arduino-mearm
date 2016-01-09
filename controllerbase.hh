@@ -13,7 +13,7 @@ const int DRIVES   = 4;
 class ControllerBase
 {
 public:
-  ControllerBase(void): m_number(0), m_fraction(0), m_sign(0), m_load(false), m_save(false), m_index(0) {
+  ControllerBase(void): m_number(0), m_fraction(0), m_sign(0), m_teachFun(NULL), m_index(0) {
     memset(m_teach, 0, sizeof(m_teach));
     memset(m_configuration, 0, sizeof(m_configuration));
   }
@@ -70,6 +70,12 @@ public:
   void saveTeachPoint(int index) {
     for (int i=0; i<DRIVES; i++)
       m_teach[index][i] = target(i);
+  }
+  void loadTeachPoint(int index) {
+    targetPoint(m_teach[index]);
+  }
+  void displayTeachPoint(int index) {
+    reportTeachPoint(m_teach[index][0], m_teach[index][1], m_teach[index][2], m_teach[index][3]);
   }
   void takeConfigurationValue(void) {
     if (m_index < 4) {
@@ -140,20 +146,13 @@ public:
     return retval;
   }
   void parseChar(char c) {
-    if (m_load) {
+    if (m_teachFun) {
       if (c >= 'a' && c <= 'l')
-        targetPoint(m_teach[c - 'a']);
+        (this->*m_teachFun)(c - 'a');
       else
         stopDrives();
       resetParser();
-      m_load = false;
-    } else if (m_save) {
-      if (c >= 'a' && c <= 'l')
-        saveTeachPoint(c - 'a');
-      else
-        stopDrives();
-      resetParser();
-      m_save = false;
+      m_teachFun = NULL;
     } else {
       switch (c) {
       case 'r':
@@ -214,10 +213,13 @@ public:
         if (m_sign == 0) m_sign = 1;
         break;
       case '\'':
-        m_load = true;
+        m_teachFun = &ControllerBase::loadTeachPoint;
         break;
       case 'm':
-        m_save = true;
+        m_teachFun = &ControllerBase::saveTeachPoint;
+        break;
+      case 'p':
+        m_teachFun = &ControllerBase::displayTeachPoint;
         break;
       case ' ':
         takeConfigurationValue();
@@ -261,13 +263,13 @@ public:
   virtual void reportConfiguration(float, float, float, float) = 0;
   virtual void reportLower(float, float, float, float) = 0;
   virtual void reportUpper(float, float, float, float) = 0;
+  virtual void reportTeachPoint(float, float, float, float) = 0;
   virtual void writePWM(int, int) = 0;
 protected:
   float m_number;
   float m_fraction;
   char m_sign;
-  bool m_load;
-  bool m_save;
+  void (ControllerBase::*m_teachFun)(int);
   float m_teach[12][DRIVES];
   int m_index;
   float m_configuration[4];
