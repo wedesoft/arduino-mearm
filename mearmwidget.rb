@@ -11,6 +11,7 @@ class MeArmWidget < Qt::Widget
   slots 'updateElbowSpin(int)'
   slots 'updateGripperGroup(double)'
   slots 'updateGripperOpen(bool)'
+  slots 'saveTeachPoint()'
   slots 'stop()'
   attr_reader :ui
   def initialize client, parent = nil
@@ -28,6 +29,7 @@ class MeArmWidget < Qt::Widget
     connect @ui.gripperSpin, SIGNAL('valueChanged(double)'), self, SLOT('updateGripperGroup(double)')
     connect @ui.gripperOpen, SIGNAL('toggled(bool)'), self, SLOT('updateGripperOpen(bool)')
     connect @ui.stopButton, SIGNAL('clicked()'), self, SLOT('stop()')
+    connect @ui.saveButton, SIGNAL('clicked()'), self, SLOT('saveTeachPoint()')
     @spin_boxes.zip(client.lower, client.upper).each do |spin_box, lower, upper|
       spin_box.minimum = lower
       spin_box.maximum = upper
@@ -95,6 +97,9 @@ class MeArmWidget < Qt::Widget
   end
   def updateGripperOpen value
     sync @ui.gripperSpin, value ? @ui.gripperOpenSpin : @ui.gripperCloseSpin
+  end
+  def saveTeachPoint
+    @client.save_teach_point @ui.teachPointCombo.currentIndex
   end
   def kill_timer
     if @timer

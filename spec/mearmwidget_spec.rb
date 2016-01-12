@@ -26,7 +26,7 @@ describe MeArmWidget do
         expect(client).to receive(:target)
         expect(client).to receive(:stop)
         widget.ui.baseSpin.setValue 10
-        widget.ui.stopButton.clicked
+        emit widget.ui.stopButton.clicked
         expect(widget.ui.baseSpin.value).to eq 1
       end
       it 'should halt the drives if the Escape key is pressed' do
@@ -151,5 +151,14 @@ describe MeArmWidget do
         expect(widget.ui.gripperCloseSpin.value).to eq 10
       end
     end
+  end
+  it 'should save teach point \'a\'' do
+    expect(client).to receive(:save_teach_point).with 0
+    emit widget.ui.saveButton.clicked
+  end
+  it 'should save teach point \'c\'' do
+    expect(client).to receive(:save_teach_point).with 2
+    widget.ui.teachPointCombo.setCurrentIndex 2
+    emit widget.ui.saveButton.clicked
   end
 end

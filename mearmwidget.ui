@@ -66,7 +66,7 @@
           <item row="1" column="0">
            <widget class="QRadioButton" name="gripperClose">
             <property name="text">
-             <string>C&amp;lose</string>
+             <string>&amp;Close</string>
             </property>
            </widget>
           </item>
@@ -250,6 +250,84 @@
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
+      <widget class="QPushButton" name="saveButton">
+       <property name="text">
+        <string>S&amp;ave</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QComboBox" name="teachPointCombo">
+       <item>
+        <property name="text">
+         <string>a</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>b</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>c</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>d</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>e</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>f</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>g</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>h</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>i</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>j</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>k</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>l</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="loadButton">
+       <property name="text">
+        <string>&amp;Load</string>
+       </property>
+      </widget>
+     </item>
+     <item>
       <spacer name="horizontalSpacer">
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
@@ -271,19 +349,6 @@
         <bool>true</bool>
        </property>
       </widget>
-     </item>
-     <item>
-      <spacer name="horizontalSpacer_2">
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>40</width>
-         <height>20</height>
-        </size>
-       </property>
-      </spacer>
      </item>
     </layout>
    </item>
