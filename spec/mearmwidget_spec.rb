@@ -178,4 +178,16 @@ describe MeArmWidget do
     expect(widget.ui.elbowSpin.value   ).to eq +5
     expect(widget.ui.gripperSpin.value ).to eq +7
   end
+  it 'should select the second teach point when \'b\' is pressed' do
+    e = double 'Qt::KeyPressEvent'
+    e.stub key: Qt.Key_B
+    widget.keyPressEvent e
+    expect(widget.ui.teachPointCombo.currentIndex).to be 1
+  end
+  it 'should select the last teach point when \'l\' is pressed' do
+    e = double 'Qt::KeyPressEvent'
+    e.stub key: Qt.Key_L
+    widget.keyPressEvent e
+    expect(widget.ui.teachPointCombo.currentIndex).to be 11
+  end
 end

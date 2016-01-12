@@ -58,7 +58,11 @@ class MeArmWidget < Qt::Widget
     pending if e.timerId == @timer
   end
   def keyPressEvent e
-    stop if e.key == Qt.Key_Escape
+    if e.key == Qt.Key_Escape
+      stop
+    elsif e.key >= Qt.Key_A and e.key <= Qt.Key_L
+      @ui.teachPointCombo.setCurrentIndex e.key - Qt.Key_A
+    end
   end
   def values
     @spin_boxes.collect { |spin_box| spin_box.value }
