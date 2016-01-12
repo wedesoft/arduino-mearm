@@ -162,12 +162,20 @@ describe MeArmWidget do
     emit widget.ui.saveButton.clicked
   end
   it 'should target teach point \'a\'' do
-    expect(client).to receive(:load_teach_point).with 0
+    expect(client).to receive(:load_teach_point).with(0).and_return [2, 3, 5, 7]
     emit widget.ui.loadButton.clicked
   end
   it 'should target teach point \'c\'' do
-    expect(client).to receive(:load_teach_point).with 2
+    expect(client).to receive(:load_teach_point).with(2).and_return [2, 3, 5, 7]
     widget.ui.teachPointCombo.setCurrentIndex 2
     emit widget.ui.loadButton.clicked
+  end
+  it 'should update the controls when targeting a teach point' do
+    expect(client).to receive(:load_teach_point).with(0).and_return [2, 3, 5, 7]
+    emit widget.ui.loadButton.clicked
+    expect(widget.ui.baseSpin.value    ).to eq +2
+    expect(widget.ui.shoulderSpin.value).to eq +3
+    expect(widget.ui.elbowSpin.value   ).to eq +5
+    expect(widget.ui.gripperSpin.value ).to eq +7
   end
 end

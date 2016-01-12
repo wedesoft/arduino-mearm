@@ -40,15 +40,15 @@ class MeArmWidget < Qt::Widget
     @ui.gripperOpenSpin.maximum = @ui.gripperSpin.maximum
     @ui.gripperCloseSpin.minimum = @ui.gripperSpin.minimum
     @ui.gripperCloseSpin.maximum = @ui.gripperSpin.maximum
-    update_controls
+    update_controls @client.pos
     sync @ui.baseSlider, @ui.baseSpin
     sync @ui.shoulderSlider, @ui.shoulderSpin
     sync @ui.elbowSlider, @ui.elbowSpin
     @ui.gripperOpenSpin.value = @ui.gripperSpin.value
     @timer = nil
   end
-  def update_controls
-    @spin_boxes.zip(@client.pos).each do |spin_box, pos|
+  def update_controls configuration
+    @spin_boxes.zip(configuration).each do |spin_box, pos|
       disconnect spin_box, SIGNAL('valueChanged(double)'), self, SLOT('target()')
       spin_box.value = pos
       connect spin_box, SIGNAL('valueChanged(double)'), self, SLOT('target()')
@@ -107,7 +107,7 @@ class MeArmWidget < Qt::Widget
     @client.save_teach_point teach_point_index
   end
   def loadTeachPoint
-    @client.load_teach_point teach_point_index
+    update_controls @client.load_teach_point(teach_point_index)
   end
   def kill_timer
     if @timer
@@ -118,7 +118,7 @@ class MeArmWidget < Qt::Widget
   def stop
     @client.stop
     kill_timer
-    update_controls
+    update_controls @client.pos
   end
   def pending
     kill_timer
