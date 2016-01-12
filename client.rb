@@ -12,8 +12,8 @@ class Client
   def target *values
     write_serial "#{values.join " "}c"
   end
-  def configuration c
-    write_serial c
+  def configuration str
+    write_serial str
     read_serial.split(' ').collect &:to_f
   end
   def pos
@@ -28,6 +28,16 @@ class Client
   def ready?
     write_serial 'r'
     read_serial.to_i != 0
+  end
+  def teach_point_name index
+    (index + 'a'.ord).chr
+  end
+  def save_teach_point index
+    write_serial "m#{teach_point_name(index)}"
+  end
+  def load_teach_point index
+    c = teach_point_name index
+    configuration "'#{c}p#{c}"
   end
   def stop
     write_serial 'x'

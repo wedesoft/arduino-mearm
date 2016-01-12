@@ -47,4 +47,17 @@ describe Client do
     expect(client).to receive(:write_serial).with('x')
     client.stop
   end
+  it 'should save first teach point' do
+    expect(client).to receive(:write_serial).with('ma')
+    client.save_teach_point 0
+  end
+  it 'should save third teach point' do
+    expect(client).to receive(:write_serial).with('mc')
+    client.save_teach_point 2
+  end
+  it 'should approach teach points' do
+    expect(client).to receive(:write_serial).with('\'epe')
+    expect(client).to receive(:read_serial).and_return "2 3 5 7\r\n"
+    expect(client.load_teach_point(4)).to eq [2, 3, 5, 7]
+  end
 end
