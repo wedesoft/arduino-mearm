@@ -161,4 +161,13 @@ describe MeArmWidget do
     widget.ui.teachPointCombo.setCurrentIndex 2
     emit widget.ui.saveButton.clicked
   end
+  it 'should target teach point \'a\'' do
+    expect(client).to receive(:load_teach_point).with 0
+    emit widget.ui.loadButton.clicked
+  end
+  it 'should target teach point \'c\'' do
+    expect(client).to receive(:load_teach_point).with 2
+    widget.ui.teachPointCombo.setCurrentIndex 2
+    emit widget.ui.loadButton.clicked
+  end
 end
