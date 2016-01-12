@@ -29,6 +29,21 @@ describe MeArmWidget do
         widget.ui.stopButton.clicked
         expect(widget.ui.baseSpin.value).to eq 1
       end
+      it 'should halt the drives if the Escape key is pressed' do
+        expect(client).to receive(:target)
+        expect(client).to receive(:stop)
+        widget.ui.baseSpin.setValue 10
+        e = double 'Qt::KeyPressEvent'
+        e.stub key: Qt.Key_Escape
+        widget.keyPressEvent e
+      end
+      it 'should not do anything if the Space key is pressed' do
+        expect(client).to receive(:target)
+        widget.ui.baseSpin.setValue 10
+        e = double 'Qt::KeyPressEvent'
+        e.stub key: Qt.Key_Space
+        widget.keyPressEvent e
+      end
     end
     context 'if robot is busy' do
       before :each do

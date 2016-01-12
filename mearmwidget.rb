@@ -54,11 +54,7 @@ class MeArmWidget < Qt::Widget
     pending if e.timerId == @timer
   end
   def keyPressEvent e
-    if e.key == Qt.Key_Escape
-      stop
-    else
-      super e
-    end
+    stop if e.key == Qt.Key_Escape
   end
   def values
     @spin_boxes.collect { |spin_box| spin_box.value }
