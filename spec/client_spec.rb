@@ -4,7 +4,7 @@ describe Client do
   before :each do
     port = double 'SerialPort'
     expect(port).to receive(:read_timeout=).with(2000)
-    SerialPort.stub(:new) { port }
+    allow(SerialPort).to receive(:new).and_return port
   end
   let :client do
     Client.new 'device', 1234
@@ -21,12 +21,12 @@ describe Client do
   it 'should inform about robot being ready' do
     expect(client).to receive(:write_serial).with('r')
     expect(client).to receive(:read_serial).and_return "1\r\n"
-    expect(client.ready?).to be_true
+    expect(client.ready?).to be true
   end
   it 'should inform about robot being busy' do
     expect(client).to receive(:write_serial).with('r')
     expect(client).to receive(:read_serial).and_return "0\r\n"
-    expect(client.ready?).to be_false
+    expect(client.ready?).to be false
   end
   it 'should query configuration' do
     expect(client).to receive(:write_serial).with('c')
