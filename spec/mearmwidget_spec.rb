@@ -34,14 +34,14 @@ describe MeArmWidget do
         expect(client).to receive(:stop)
         widget.ui.baseSpin.setValue 10
         e = double 'Qt::KeyPressEvent'
-        e.stub key: Qt.Key_Escape
+        allow(e).to receive(:key).and_return Qt.Key_Escape
         widget.keyPressEvent e
       end
       it 'should not do anything if the Space key is pressed' do
         expect(client).to receive(:target)
         widget.ui.baseSpin.setValue 10
         e = double 'Qt::KeyPressEvent'
-        e.stub key: Qt.Key_Space
+        allow(e).to receive(:key).and_return Qt.Key_Space
         widget.keyPressEvent e
       end
     end
@@ -180,13 +180,13 @@ describe MeArmWidget do
   end
   it 'should select the second teach point when \'b\' is pressed' do
     e = double 'Qt::KeyPressEvent'
-    e.stub key: Qt.Key_B
+    allow(e).to receive(:key).and_return Qt.Key_B
     widget.keyPressEvent e
     expect(widget.ui.teachPointCombo.currentIndex).to be 1
   end
   it 'should select the last teach point when \'l\' is pressed' do
     e = double 'Qt::KeyPressEvent'
-    e.stub key: Qt.Key_L
+    allow(e).to receive(:key).and_return Qt.Key_L
     widget.keyPressEvent e
     expect(widget.ui.teachPointCombo.currentIndex).to be 11
   end
