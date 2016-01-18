@@ -76,7 +76,7 @@ void setup() {
 
 void loop() {
   int dt = millis() - t0;
-  if (Serial.available())
+  while (Serial.available())
     controller.parseChar(Serial.read());
   controller.update(dt * 0.001);
   t0 += dt;
