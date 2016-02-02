@@ -132,6 +132,10 @@ The zero configuration should look as follows:
 * elbow horizontal
 * gripper tongs at -45 and +45 degree
 
+# Credits
+
+Thanks to Ian Patient for pointing out the Bernstein polynomials for achieving smooth robot motion.
+
 # External Links
 
 * [MeArm][1]
