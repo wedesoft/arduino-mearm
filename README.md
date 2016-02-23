@@ -153,6 +153,7 @@ Thanks to Ian Patient for pointing out the Bernstein polynomials for achieving s
 * [Arduino Servo issues][13]
 * [Compiling Arduino sketches using Makefile][16]
 * [Arduino - The Documentary][18]
+* [Sainsmart DIY 6-axis robotic arm][19]
 
 [1]: http://mearm.com/
 [2]: https://www.arduino.cc/
@@ -172,3 +173,4 @@ Thanks to Ian Patient for pointing out the Bernstein polynomials for achieving s
 [16]: http://hardwarefun.com/tutorials/compiling-arduino-sketches-using-makefile
 [17]: http://forum.arduino.cc/
 [18]: https://vimeo.com/18539129
+[19]: http://www.sainsmart.com/diy-6-axis-servos-control-palletizing-robot-arm-model-for-arduino-uno-mega2560.html
