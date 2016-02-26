@@ -154,6 +154,8 @@ Thanks to Ian Patient for pointing out the Bernstein polynomials for achieving s
 * [Compiling Arduino sketches using Makefile][16]
 * [Arduino - The Documentary][18]
 * [Sainsmart DIY 6-axis robotic arm][19]
+* [ROS: Robot Operating System][20]
+* [Orocos: Open robot control software][21]
 
 [1]: http://mearm.com/
 [2]: https://www.arduino.cc/
@@ -174,3 +176,5 @@ Thanks to Ian Patient for pointing out the Bernstein polynomials for achieving s
 [17]: http://forum.arduino.cc/
 [18]: https://vimeo.com/18539129
 [19]: http://www.sainsmart.com/diy-6-axis-servos-control-palletizing-robot-arm-model-for-arduino-uno-mega2560.html
+[20]: http://www.ros.org/
+[21]: http://www.orocos.org/
