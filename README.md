@@ -156,6 +156,7 @@ Thanks to Ian Patient for pointing out the Bernstein polynomials for achieving s
 * [Sainsmart DIY 6-axis robotic arm][19]
 * [ROS: Robot Operating System][20]
 * [Orocos: Open robot control software][21]
+* [Spong - Robot Dynamics and Control][22]
 
 [1]: http://mearm.com/
 [2]: https://www.arduino.cc/
@@ -178,3 +179,4 @@ Thanks to Ian Patient for pointing out the Bernstein polynomials for achieving s
 [19]: http://www.sainsmart.com/diy-6-axis-servos-control-palletizing-robot-arm-model-for-arduino-uno-mega2560.html
 [20]: http://www.ros.org/
 [21]: http://www.orocos.org/
+[22]: http://smpp.northwestern.edu/savedLiterature/Spong_Textbook.pdf
