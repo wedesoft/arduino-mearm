@@ -42,6 +42,8 @@ Create the initial calibration file:
 cp calibration.hh.default calibration.hh
 ```
 
+Note: You might have to change the *BOARD_TAG* in the *arduino/Makefile*.
+
 Then build the Arduino program using *make*:
 
 ```
