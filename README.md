@@ -43,6 +43,7 @@ cp calibration.hh.default calibration.hh
 ```
 
 Note: You might have to change the *BOARD_TAG* in the *arduino/Makefile*.
+See */usr/share/arduino/hardware/arduino/boards.txt* for supported board tags.
 
 Then build the Arduino program using *make*:
 
