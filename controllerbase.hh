@@ -78,7 +78,7 @@ public:
     reportTeachPoint(m_teach[index][0], m_teach[index][1], m_teach[index][2], m_teach[index][3]);
   }
   void takeConfigurationValue(void) {
-    if (m_index < 4) {
+    if (m_index < DRIVES) {
       float angle = limitElbowAngle(m_index, clipAngle(m_index, number()), m_configuration[SHOULDER]);
       m_configuration[m_index] = angle;
       m_index++;
@@ -272,7 +272,7 @@ protected:
   void (ControllerBase::*m_teachFun)(int);
   float m_teach[12][DRIVES];
   int m_index;
-  float m_configuration[4];
+  float m_configuration[DRIVES];
   Path m_curve[DRIVES];
 };
 
