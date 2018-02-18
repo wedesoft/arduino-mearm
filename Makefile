@@ -1,7 +1,7 @@
 .SUFFIXES: .rb .ui
 
-GTEST=/usr/src/gtest
-GMOCK=/usr/src/gmock
+GTEST=/usr/src/googletest/googletest
+GMOCK=/usr/src/googletest/googlemock
 CXX = g++
 RSPEC = rspec
 RBUIC = rbuic4
