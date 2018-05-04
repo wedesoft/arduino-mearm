@@ -15,6 +15,10 @@ class MeArmWidget < Qt::Widget
   slots 'loadTeachPoint()'
   slots 'stop()'
   attr_reader :ui
+  # Fix "/usr/lib/ruby/vendor_ruby/2.3.0/Qt/qtruby4.rb:187:in `find_pclassid'" when running rspec.
+  def self.name
+    'MeArmWidget'
+  end
   def initialize client, parent = nil
     super parent
     @client = client
